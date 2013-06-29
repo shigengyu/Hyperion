@@ -1,13 +1,12 @@
 package com.shigengyu.hyperion.models;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
-
-import org.hibernate.annotations.Entity;
-import org.hibernate.annotations.Table;
+import javax.persistence.Table;
 
 @Entity
-@Table(appliesTo = "COURSE")
+@Table(name = "COURSE")
 public class Course {
 	private int courseID;
 	private String courseName;

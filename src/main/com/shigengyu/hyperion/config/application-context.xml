@@ -23,12 +23,6 @@
 		<property name="password" value="${jdbc.password}" />
 	</bean>
 
-	<jdbc:initialize-database data-source="dataSource"
-		ignore-failures="DROPS">
-		<jdbc:script location="classpath:com/shigengyu/hyperion/testdb/schema.sql" />
-		<jdbc:script location="classpath:com/shigengyu/hyperion/testdb/data.sql" />
-	</jdbc:initialize-database>
-
 	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
@@ -38,14 +32,15 @@
 				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
 				<prop key="hibernate.cache.provider_class">${hibernate.cache.provider_class}</prop>
 				<prop key="hibernate.cache.use_query_cache">${hibernate.cache.use_query_cache}</prop>
-				<prop key="javax.persistence.validation.mode">none</prop>  
+				<prop key="javax.persistence.validation.mode">none</prop>
+
+				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+				<prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+				<prop key="hibernate.current_session_context_class">thread</prop>
+				<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
 			</props>
 		</property>
 
-		<property name="packagesToScan">
-			<array>
-				<value>com.shigengyu.hyperion.models</value>
-			</array>
-		</property>
+		<property name="packagesToScan" value="com.shigengyu.hyperion.models" />
 	</bean>
 </beans>
