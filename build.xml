@@ -47,13 +47,13 @@
 	</target>
 
 	<target name="compile" depends="init,resolve" description="compile the source ">
-		<mkdir dir="${build.dir}/main" />
+		<mkdir dir="${build.dir}/main/" />
 
-		<javac classpathref="lib.path.id" srcdir="${src.dir}/main" destdir="${build.dir}/main" optimize="on" debug="on" encoding="UTF-8">
+		<javac classpathref="lib.path.id" srcdir="${src.dir}/main/java" destdir="${build.dir}/main" optimize="on" debug="on" encoding="UTF-8">
 			<compilerarg value="-Xlint:unchecked" />
 		</javac>
 
-		<copy todir="${build.dir}/main">
+		<copy todir="${build.dir}/main/">
 			<fileset dir="${src.dir}/main" excludes="**/*.java" />
 		</copy>
 	</target>
@@ -62,10 +62,10 @@
 		<mkdir dir="${build.dir}/main" />
 		<mkdir dir="${build.dir}/test" />
 
-		<javac classpathref="lib.path.id" srcdir="${src.dir}/main" destdir="${build.dir}/main" optimize="on" debug="on" encoding="UTF-8">
+		<javac classpathref="lib.path.id" srcdir="${src.dir}/main/java" destdir="${build.dir}/main" optimize="on" debug="on" encoding="UTF-8">
 			<compilerarg value="-Xlint:unchecked" />
 		</javac>
-		<javac classpathref="run.path.id" srcdir="${src.dir}/test" destdir="${build.dir}/test" optimize="on" debug="on" encoding="UTF-8">
+		<javac classpathref="run.path.id" srcdir="${src.dir}/test/java" destdir="${build.dir}/test" optimize="on" debug="on" encoding="UTF-8">
 			<compilerarg value="-Xlint:unchecked" />
 		</javac>
 
@@ -84,8 +84,8 @@
 	</target>
 
 	<target name="dist" depends="jar,jar-test,javadoc" description="generate the distribution">
-		<jar jarfile="${dist.dir}/hyperion-${version}-sources.jar" basedir="${src.dir}/main" />
-		<jar jarfile="${dist.dir}/hyperion-${version}-sources-test.jar" basedir="${src.dir}/test" />
+		<jar jarfile="${dist.dir}/hyperion-${version}-sources.jar" basedir="${src.dir}/main/java" />
+		<jar jarfile="${dist.dir}/hyperion-${version}-sources-test.jar" basedir="${src.dir}/test/java" />
 		<jar jarfile="${dist.dir}/hyperion-${version}-javadoc.jar" basedir="${javadoc.dir}" />
 	</target>
 

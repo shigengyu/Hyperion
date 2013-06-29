@@ -8,8 +8,8 @@
 	                    http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd">
 
 	<context:property-placeholder
-		location="file:config/config-global.properties,
-		          file:config/config-${CONFIG_MODE}.properties" />
+		location="classpath:config-global.properties,
+		          classpath:config-${CONFIG_MODE}.properties" />
 
 	<bean id="executionService" class="com.shigengyu.hyperion.services.ExecutionService">
 		<property name="name" value="${name}" />
