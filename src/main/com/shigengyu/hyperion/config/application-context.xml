@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+	                    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+	                    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+	                    http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd">
 
 	<context:property-placeholder
 		location="file:config/config-global.properties,
@@ -10,5 +13,39 @@
 
 	<bean id="executionService" class="com.shigengyu.hyperion.services.ExecutionService">
 		<property name="name" value="${name}" />
+	</bean>
+
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${jdbc.driver.class}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+	</bean>
+
+	<jdbc:initialize-database data-source="dataSource"
+		ignore-failures="DROPS">
+		<jdbc:script location="classpath:com/shigengyu/hyperion/testdb/schema.sql" />
+		<jdbc:script location="classpath:com/shigengyu/hyperion/testdb/data.sql" />
+	</jdbc:initialize-database>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.cache.provider_class">${hibernate.cache.provider_class}</prop>
+				<prop key="hibernate.cache.use_query_cache">${hibernate.cache.use_query_cache}</prop>
+				<prop key="javax.persistence.validation.mode">none</prop>  
+			</props>
+		</property>
+
+		<property name="packagesToScan">
+			<array>
+				<value>com.shigengyu.hyperion.models</value>
+			</array>
+		</property>
 	</bean>
 </beans>
