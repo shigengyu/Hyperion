@@ -14,27 +14,22 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.shigengyu.hyperion.entities;
+package com.shigengyu.hyperion.core;
 
-import java.util.List;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+public @interface State {
 
-@Entity
-@Table(name = "WORKFLOW_STATE_COLLECTION")
-public class WorkflowStateCollectionEntity {
+	public String displayName() default "";
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "WORKFLOW_STATE_COLLECTION_ID")
-	private Integer workflowStateCollectionId;
+	public String id();
 
-	@OneToMany
-	private List<WorkflowStateEntity> workflowStates;
+	public String name();
 }

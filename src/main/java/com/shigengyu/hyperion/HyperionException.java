@@ -14,27 +14,26 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.shigengyu.hyperion.entities;
+package com.shigengyu.hyperion;
 
-import java.util.List;
+public class HyperionException extends RuntimeException {
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+	private static final long serialVersionUID = 1L;
 
-@Entity
-@Table(name = "WORKFLOW_STATE_COLLECTION")
-public class WorkflowStateCollectionEntity {
+	public HyperionException(final String message) {
+		super(message);
+	}
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "WORKFLOW_STATE_COLLECTION_ID")
-	private Integer workflowStateCollectionId;
+	public HyperionException(final String message, final Throwable cause) {
+		super(message, cause);
+	}
 
-	@OneToMany
-	private List<WorkflowStateEntity> workflowStates;
+	public HyperionException(final String message, final Throwable cause,
+			final boolean enableSuppression, final boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+	}
+
+	public HyperionException(final Throwable cause) {
+		super(cause);
+	}
 }
