@@ -49,6 +49,6 @@ public class ReflectionsHelper {
 	}
 
 	public static Reflections createReflections(final String... packageNames) {
-		return new Reflections(packageNames);
+		return new Reflections((Object[]) packageNames);
 	}
 }
