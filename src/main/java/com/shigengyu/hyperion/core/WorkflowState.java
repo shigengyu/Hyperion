@@ -16,18 +16,46 @@
 
 package com.shigengyu.hyperion.core;
 
+import org.springframework.util.StringUtils;
+
 public abstract class WorkflowState {
 
-	private String displayName;
+	private final String displayName;
 
-	private String name;
+	private final String name;
 
-	private String workflowStateId;
+	private final String workflowStateId;
 
 	protected WorkflowState() {
 		final State annotation = this.getClass().getAnnotation(State.class);
 		if (annotation == null) {
-
+			throw new WorkflowStateException(
+					"Workflow state [{}] does not have [{}] annotation specified",
+					this.getClass().getName(), State.class.getName());
 		}
+
+		workflowStateId = annotation.id();
+		name = StringUtils.isEmpty(annotation.name()) ? this.getClass()
+				.getSimpleName() : annotation.name();
+		displayName = StringUtils.isEmpty(annotation.displayName()) ? name
+				: annotation.displayName();
+	}
+
+	public boolean among(final Class<?>... workflowClasses) {
+		if (workflowClasses == null || workflowClasses.length == 0) {
+			return false;
+		}
+
+		for (final Class<?> clazz : workflowClasses) {
+			if (this.getClass().equals(clazz)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public <T extends WorkflowState> boolean is(final Class<T> workflowClass) {
+		return this.getClass().equals(workflowClass);
 	}
 }

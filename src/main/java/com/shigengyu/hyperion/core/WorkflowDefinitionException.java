@@ -14,37 +14,40 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.shigengyu.hyperion;
+package com.shigengyu.hyperion.core;
 
-import com.shigengyu.hyperion.common.StringMessage;
+import com.shigengyu.hyperion.HyperionException;
 
-public class HyperionException extends RuntimeException {
+public class WorkflowDefinitionException extends HyperionException {
 
 	private static final long serialVersionUID = 1L;
 
-	public HyperionException(final String message) {
+	public WorkflowDefinitionException(final String message) {
 		super(message);
 	}
 
-	public HyperionException(final String message, final Object... args) {
-		super(StringMessage.with(message, args));
+	public WorkflowDefinitionException(final String message,
+			final Object... args) {
+		super(message, args);
 	}
 
-	public HyperionException(final String message, final Throwable cause) {
+	public WorkflowDefinitionException(final String message,
+			final Throwable cause) {
 		super(message, cause);
 	}
 
-	public HyperionException(final String message, final Throwable cause,
-			final boolean enableSuppression, final boolean writableStackTrace) {
+	public WorkflowDefinitionException(final String message,
+			final Throwable cause, final boolean enableSuppression,
+			final boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 
-	public HyperionException(final String message, final Throwable cause,
-			final Object... args) {
-		super(StringMessage.with(message, args), cause);
+	public WorkflowDefinitionException(final String message,
+			final Throwable cause, final Object... args) {
+		super(message, cause, args);
 	}
 
-	public HyperionException(final Throwable cause) {
+	public WorkflowDefinitionException(final Throwable cause) {
 		super(cause);
 	}
 }
