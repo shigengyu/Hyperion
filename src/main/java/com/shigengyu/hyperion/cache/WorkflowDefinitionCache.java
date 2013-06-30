@@ -16,6 +16,7 @@
 
 package com.shigengyu.hyperion.cache;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
@@ -26,8 +27,15 @@ import org.springframework.beans.factory.annotation.Value;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
+import com.shigengyu.hyperion.core.WorkflowStateException;
 
 public class WorkflowDefinitionCache {
+
+	private static WorkflowDefinitionCache instance;
+
+	public static WorkflowDefinitionCache getInstance() {
+		return instance;
+	}
 
 	private LoadingCache<Class<? extends WorkflowDefinition>, WorkflowDefinition> cache;
 
@@ -40,14 +48,28 @@ public class WorkflowDefinitionCache {
 	@Autowired
 	private WorkflowDefinitionCacheLoader workflowDefinitionCacheLoader;
 
+	public <T extends WorkflowDefinition> WorkflowDefinition get(
+			final Class<T> workflowDefinitionClass) {
+		try {
+			return cache.get(workflowDefinitionClass);
+		} catch (final ExecutionException e) {
+			throw new WorkflowStateException(
+					"Failed to get workflow definition by type [{}]",
+					workflowDefinitionClass, e);
+		}
+	}
+
 	public int getTimeoutDuration() {
 		return timeoutDuration;
 	}
 
 	@PostConstruct
-	private void initialize() {
+	private void initialize(
+			final WorkflowDefinitionCacheLoader workflowDefinitionCacheLoader) {
 		cache = CacheBuilder.newBuilder()
 				.expireAfterAccess(timeoutDuration, timeoutTimeUnit)
 				.build(workflowDefinitionCacheLoader);
+
+		instance = this;
 	}
 }

@@ -16,6 +16,10 @@
 
 package com.shigengyu.hyperion.workflow;
 
-public class DummyWorkflowState {
+import com.shigengyu.hyperion.core.State;
+import com.shigengyu.hyperion.core.WorkflowState;
+
+@State(id = "e7cfbb88-0d97-47b6-882b-5ff974420bee")
+public class DummyWorkflowState extends WorkflowState {
 
 }

@@ -18,7 +18,14 @@ package com.shigengyu.hyperion.core;
 
 import org.springframework.util.StringUtils;
 
+import com.shigengyu.hyperion.cache.WorkflowStateCache;
+
 public abstract class WorkflowState {
+
+	public static <T extends WorkflowState> WorkflowState of(
+			final Class<T> workflowStateClass) {
+		return WorkflowStateCache.getInstance().get(workflowStateClass);
+	}
 
 	private final String displayName;
 
@@ -53,6 +60,18 @@ public abstract class WorkflowState {
 		}
 
 		return false;
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getWorkflowStateId() {
+		return workflowStateId;
 	}
 
 	public <T extends WorkflowState> boolean is(final Class<T> workflowClass) {

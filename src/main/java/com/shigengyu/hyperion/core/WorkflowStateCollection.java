@@ -16,9 +16,14 @@
 
 package com.shigengyu.hyperion.core;
 
+import java.util.Arrays;
 import java.util.Collection;
 
+import javax.annotation.Nullable;
+
+import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import com.shigengyu.hyperion.cache.WorkflowStateCache;
 
 public class WorkflowStateCollection {
 
@@ -31,5 +36,41 @@ public class WorkflowStateCollection {
 	protected WorkflowStateCollection(
 			final Collection<WorkflowState> workflowStates) {
 		this.workflowStates = workflowStates;
+	}
+
+	protected WorkflowStateCollection(final WorkflowState... workflowStates) {
+		this.workflowStates = Lists.newArrayList(workflowStates);
+	}
+
+	public WorkflowStateCollection merge(final Class<?>... workflowStateClasses) {
+		return this.merge(Lists.transform(Arrays.asList(workflowStateClasses),
+				new Function<Class<?>, WorkflowState>() {
+
+					@Override
+					@SuppressWarnings("unchecked")
+					public WorkflowState apply(@Nullable final Class<?> input) {
+						if (!input.isAssignableFrom(WorkflowState.class)) {
+							return null;
+						}
+
+						return WorkflowStateCache.getInstance().get(
+								(Class<? extends WorkflowState>) input);
+					}
+
+				}).toArray(new WorkflowState[0]));
+	}
+
+	public WorkflowStateCollection merge(final WorkflowState... workflowStates) {
+		if (workflowStates == null || workflowStates.length == 0) {
+			return this;
+		}
+
+		for (final WorkflowState workflowState : workflowStates) {
+			if (workflowState != null) {
+				this.workflowStates.add(workflowState);
+			}
+		}
+
+		return this;
 	}
 }

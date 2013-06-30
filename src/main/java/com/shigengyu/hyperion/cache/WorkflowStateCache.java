@@ -16,6 +16,7 @@
 
 package com.shigengyu.hyperion.cache;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
@@ -27,9 +28,16 @@ import org.springframework.stereotype.Service;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
 import com.shigengyu.hyperion.core.WorkflowState;
+import com.shigengyu.hyperion.core.WorkflowStateException;
 
 @Service
 public class WorkflowStateCache {
+
+	private static WorkflowStateCache instance;
+
+	public static WorkflowStateCache getInstance() {
+		return instance;
+	}
 
 	private LoadingCache<Class<? extends WorkflowState>, WorkflowState> cache;
 
@@ -42,6 +50,17 @@ public class WorkflowStateCache {
 	@Autowired
 	private WorkflowStateCacheLoader workflowStateCacheLoader;
 
+	public <T extends WorkflowState> WorkflowState get(
+			final Class<T> workflowStateClass) {
+		try {
+			return cache.get(workflowStateClass);
+		} catch (final ExecutionException e) {
+			throw new WorkflowStateException(
+					"Failed to get workflow state by type [{}]",
+					workflowStateClass, e);
+		}
+	}
+
 	public int getTimeoutDuration() {
 		return timeoutDuration;
 	}
@@ -51,5 +70,7 @@ public class WorkflowStateCache {
 		cache = CacheBuilder.newBuilder()
 				.expireAfterAccess(timeoutDuration, timeoutTimeUnit)
 				.build(workflowStateCacheLoader);
+
+		instance = this;
 	}
 }

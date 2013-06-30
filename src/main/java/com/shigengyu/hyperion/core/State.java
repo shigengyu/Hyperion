@@ -29,7 +29,13 @@ public @interface State {
 
 	public String displayName() default "";
 
+	/**
+	 * The unique ID of the workflow state. Can be generated from
+	 * http://www.guidgenerator.com
+	 * 
+	 * @return
+	 */
 	public String id();
 
-	public String name();
+	public String name() default "";
 }

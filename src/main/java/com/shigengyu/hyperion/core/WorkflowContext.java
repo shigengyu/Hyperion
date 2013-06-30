@@ -37,6 +37,7 @@ public class WorkflowContext {
 	public WorkflowContext() {
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T> T get(final String key) {
 		return (T) innerMap.get(key);
 	}

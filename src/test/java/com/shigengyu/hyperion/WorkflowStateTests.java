@@ -16,6 +16,21 @@
 
 package com.shigengyu.hyperion;
 
-public class DummyTest {
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.util.Assert;
 
+import com.shigengyu.hyperion.core.WorkflowState;
+import com.shigengyu.hyperion.workflow.DummyWorkflowState;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("classpath:com/shigengyu/hyperion/config/application-context.xml")
+public class WorkflowStateTests {
+
+	@Test
+	public void testWorkflowState() {
+		Assert.notNull(WorkflowState.of(DummyWorkflowState.class));
+	}
 }
