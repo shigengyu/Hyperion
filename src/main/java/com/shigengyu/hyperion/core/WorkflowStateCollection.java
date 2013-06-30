@@ -1,14 +1,15 @@
 package com.shigengyu.hyperion.core;
 
-import java.util.ArrayList;
 import java.util.Collection;
+
+import com.google.common.collect.Lists;
 
 public class WorkflowStateCollection {
 
 	private final Collection<WorkflowState> workflowStates;
 
 	public WorkflowStateCollection() {
-		workflowStates = new ArrayList<>();
+		workflowStates = Lists.newArrayList();
 	}
 
 	protected WorkflowStateCollection(

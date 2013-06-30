@@ -1,5 +1,8 @@
 package com.shigengyu.hyperion.dao;
 
-public class WorkflowStateDaoImpl {
+import org.springframework.stereotype.Service;
+
+@Service("workflowStateDao")
+public class WorkflowStateDaoImpl implements WorkflowStateDao {
 
 }

@@ -9,7 +9,7 @@
 	<configs>
 		<config>src/main/java/com/shigengyu/hyperion/config/hyperion-dao.xml</config>
 		<config>src/main/java/com/shigengyu/hyperion/config/hyperion-common.xml</config>
-		<config>src/main/java/com/shigengyu/hyperion/config/hyperion-service.xml</config>
+		<config>src/main/java/com/shigengyu/hyperion/config/hyperion-services.xml</config>
 	</configs>
 	<configSets>
 	</configSets>
