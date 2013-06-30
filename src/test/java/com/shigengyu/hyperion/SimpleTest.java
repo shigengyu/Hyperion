@@ -5,6 +5,8 @@ import org.hibernate.SessionFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.shigengyu.hyperion.entities.WorkflowProcessEntity;
+
 public class SimpleTest {
 
 	/**
@@ -17,5 +19,11 @@ public class SimpleTest {
 		final SessionFactory sessionFactory = (SessionFactory) applicationContext
 				.getBean("sessionFactory");
 		final Session session = sessionFactory.openSession();
+
+		final WorkflowProcessEntity workflowProcessEntity = new WorkflowProcessEntity();
+		workflowProcessEntity.setName("Test");
+
+		session.save(workflowProcessEntity);
+		session.flush();
 	}
 }
