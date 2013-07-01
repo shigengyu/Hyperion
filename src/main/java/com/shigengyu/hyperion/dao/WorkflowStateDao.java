@@ -16,6 +16,11 @@
 
 package com.shigengyu.hyperion.dao;
 
+import com.shigengyu.hyperion.entities.WorkflowStateEntity;
+
 public interface WorkflowStateDao {
 
+	WorkflowStateEntity get(String workflowStateId);
+
+	void saveOrUpdate(WorkflowStateEntity workflowStateEntity);
 }

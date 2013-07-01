@@ -16,9 +16,27 @@
 
 package com.shigengyu.hyperion.dao;
 
+import javax.annotation.Resource;
+
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Service;
+
+import com.shigengyu.hyperion.entities.WorkflowStateEntity;
 
 @Service("workflowStateDao")
 public class WorkflowStateDaoImpl implements WorkflowStateDao {
 
+	@Resource
+	private SessionFactory sessionFactory;
+
+	@Override
+	public WorkflowStateEntity get(final String workflowStateId) {
+		return (WorkflowStateEntity) sessionFactory.getCurrentSession().get(
+				WorkflowStateEntity.class, workflowStateId);
+	}
+
+	@Override
+	public void saveOrUpdate(final WorkflowStateEntity workflowStateEntity) {
+		sessionFactory.getCurrentSession().saveOrUpdate(workflowStateEntity);
+	}
 }

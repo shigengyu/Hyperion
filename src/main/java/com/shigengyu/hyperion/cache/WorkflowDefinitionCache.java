@@ -20,15 +20,19 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
 import com.shigengyu.hyperion.core.WorkflowStateException;
 
+@Service
+@Lazy(false)
 public class WorkflowDefinitionCache {
 
 	private static WorkflowDefinitionCache instance;
@@ -45,7 +49,7 @@ public class WorkflowDefinitionCache {
 	@Value("${hyperion.workflow.cache.definition.timeout.timeunit}")
 	private TimeUnit timeoutTimeUnit;
 
-	@Autowired
+	@Resource
 	private WorkflowDefinitionCacheLoader workflowDefinitionCacheLoader;
 
 	public <T extends WorkflowDefinition> WorkflowDefinition get(
@@ -64,8 +68,7 @@ public class WorkflowDefinitionCache {
 	}
 
 	@PostConstruct
-	private void initialize(
-			final WorkflowDefinitionCacheLoader workflowDefinitionCacheLoader) {
+	private void initialize() {
 		cache = CacheBuilder.newBuilder()
 				.expireAfterAccess(timeoutDuration, timeoutTimeUnit)
 				.build(workflowDefinitionCacheLoader);

@@ -23,6 +23,7 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.google.common.cache.CacheBuilder;
@@ -31,6 +32,7 @@ import com.shigengyu.hyperion.core.WorkflowState;
 import com.shigengyu.hyperion.core.WorkflowStateException;
 
 @Service
+@Lazy(false)
 public class WorkflowStateCache {
 
 	private static WorkflowStateCache instance;
