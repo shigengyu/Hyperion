@@ -31,6 +31,12 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 @Lazy(false)
 public class WorkflowContextSerializer {
 
+	private static WorkflowContextSerializer instance;
+
+	public static WorkflowContextSerializer getInstance() {
+		return instance;
+	}
+
 	@Value("${hyperion.workflow.context.format.datetime}")
 	private String dateTimeFormat;
 
@@ -40,9 +46,10 @@ public class WorkflowContextSerializer {
 		xStream.registerConverter(new DateConverter(dateTimeFormat,
 				new String[0]));
 		xStream.autodetectAnnotations(true);
+
+		instance = this;
 	}
 
-	@SuppressWarnings("unchecked")
 	public <T extends WorkflowContext> T deserialize(final String xml) {
 		return (T) xStream.fromXML(xml);
 	}

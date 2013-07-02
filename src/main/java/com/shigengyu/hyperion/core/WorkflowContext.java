@@ -18,8 +18,6 @@ package com.shigengyu.hyperion.core;
 
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.google.common.collect.Maps;
 import com.shigengyu.hyperion.services.WorkflowContextSerializer;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
@@ -31,19 +29,15 @@ public class WorkflowContext {
 
 	private final Map<String, Object> innerMap = Maps.newHashMap();
 
-	@Autowired
-	private WorkflowContextSerializer workflowContextSerializer;
-
 	public WorkflowContext() {
 	}
 
-	@SuppressWarnings("unchecked")
 	public <T> T get(final String key) {
 		return (T) innerMap.get(key);
 	}
 
 	public WorkflowContext loadXml(final String xml) {
-		return workflowContextSerializer.deserialize(xml);
+		return WorkflowContextSerializer.getInstance().deserialize(xml);
 	}
 
 	public <T> void put(final String key, final T value) {
@@ -51,6 +45,6 @@ public class WorkflowContext {
 	}
 
 	public String toXml() {
-		return workflowContextSerializer.serialize(this);
+		return WorkflowContextSerializer.getInstance().serialize(this);
 	}
 }
