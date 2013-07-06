@@ -16,7 +16,32 @@
 
 package com.shigengyu.hyperion;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+@Component
 public class TestEnvironment {
 
-	public static final String APPLICATION_CONTEXT_CONFIG = "classpath:com/shigengyu/hyperion/config/application-context.xml";
+	public static final String APPLICATION_CONTEXT_CONFIG = "classpath:com/shigengyu/hyperion/config/application-context-test.xml";
+
+	@Value("hyperion.context.definition.scan")
+	private String workflowContextScanPackage;
+
+	@Value("hyperion.workflow.definition.scan")
+	private String workflowDefinitionScanPackage;
+
+	@Value("hyperion.state.definition.scan")
+	private String workflowStateScanPackage;
+
+	public String getWorkflowContextScanPackage() {
+		return workflowContextScanPackage;
+	}
+
+	public String getWorkflowDefinitionScanPackage() {
+		return workflowDefinitionScanPackage;
+	}
+
+	public String getWorkflowStateScanPackage() {
+		return workflowStateScanPackage;
+	}
 }
