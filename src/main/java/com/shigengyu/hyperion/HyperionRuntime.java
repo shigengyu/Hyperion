@@ -16,7 +16,8 @@
 
 package com.shigengyu.hyperion;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 
 import com.shigengyu.hyperion.cache.WorkflowDefinitionCache;
@@ -24,7 +25,7 @@ import com.shigengyu.hyperion.cache.WorkflowDefinitionCache;
 @Service
 public class HyperionRuntime {
 
-	@Autowired
+	@Resource
 	private WorkflowDefinitionCache workflowDefinitionCache;
 
 	public void loadPackages(final String... packageNames) {

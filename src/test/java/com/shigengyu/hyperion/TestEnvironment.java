@@ -14,9 +14,9 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.shigengyu.hyperion.workflow;
+package com.shigengyu.hyperion;
 
+public class TestEnvironment {
 
-public class DummyWorkflow {
-
+	public static final String APPLICATION_CONTEXT_CONFIG = "classpath:com/shigengyu/hyperion/config/application-context.xml";
 }

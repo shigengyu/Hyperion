@@ -14,28 +14,14 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.shigengyu.hyperion.dao;
+package com.shigengyu.hyperion;
 
-import java.io.Serializable;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(TestEnvironment.APPLICATION_CONTEXT_CONFIG)
+public class WorkflowDefinitionTests {
 
-import org.hibernate.SessionFactory;
-
-public abstract class HyperionDaoBase<TEntity, TIdentity extends Serializable> implements
-		HyperionDao<TEntity, TIdentity> {
-
-	@Resource
-	protected SessionFactory sessionFactory;
-
-	@Override
-	public TEntity get(final TIdentity id) {
-		return (TEntity) sessionFactory.getCurrentSession().get(getEntityClass(), id);
-
-	}
-
-	@Override
-	public void saveOrUpdate(final TEntity entity) {
-		sessionFactory.getCurrentSession().saveOrUpdate(entity);
-	}
 }

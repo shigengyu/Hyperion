@@ -26,7 +26,7 @@ import com.shigengyu.hyperion.core.WorkflowState;
 import com.shigengyu.hyperion.workflow.DummyWorkflowState;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:com/shigengyu/hyperion/config/application-context.xml")
+@ContextConfiguration(TestEnvironment.APPLICATION_CONTEXT_CONFIG)
 public class WorkflowStateTests {
 
 	@Test

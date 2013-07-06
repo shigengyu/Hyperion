@@ -14,28 +14,12 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.shigengyu.hyperion.dao;
+package com.shigengyu.hyperion.workflow;
 
-import java.io.Serializable;
+import com.shigengyu.hyperion.core.Workflow;
+import com.shigengyu.hyperion.core.WorkflowDefinition;
 
-import javax.annotation.Resource;
+@Workflow(initialState = DummyWorkflowState.class)
+public class DummyWorkflowDefinition extends WorkflowDefinition {
 
-import org.hibernate.SessionFactory;
-
-public abstract class HyperionDaoBase<TEntity, TIdentity extends Serializable> implements
-		HyperionDao<TEntity, TIdentity> {
-
-	@Resource
-	protected SessionFactory sessionFactory;
-
-	@Override
-	public TEntity get(final TIdentity id) {
-		return (TEntity) sessionFactory.getCurrentSession().get(getEntityClass(), id);
-
-	}
-
-	@Override
-	public void saveOrUpdate(final TEntity entity) {
-		sessionFactory.getCurrentSession().saveOrUpdate(entity);
-	}
 }

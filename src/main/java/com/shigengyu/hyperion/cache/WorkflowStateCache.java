@@ -20,8 +20,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -49,17 +49,15 @@ public class WorkflowStateCache {
 	@Value("${hyperion.workflow.cache.state.timeout.timeunit}")
 	private TimeUnit timeoutTimeUnit;
 
-	@Autowired
+	@Resource
 	private WorkflowStateCacheLoader workflowStateCacheLoader;
 
-	public <T extends WorkflowState> WorkflowState get(
-			final Class<T> workflowStateClass) {
+	public <T extends WorkflowState> WorkflowState get(final Class<T> workflowStateClass) {
 		try {
 			return cache.get(workflowStateClass);
-		} catch (final ExecutionException e) {
-			throw new WorkflowStateException(
-					"Failed to get workflow state by type [{}]",
-					workflowStateClass, e);
+		}
+		catch (final ExecutionException e) {
+			throw new WorkflowStateException("Failed to get workflow state by type [{}]", workflowStateClass, e);
 		}
 	}
 
@@ -69,8 +67,7 @@ public class WorkflowStateCache {
 
 	@PostConstruct
 	private void initialize() {
-		cache = CacheBuilder.newBuilder()
-				.expireAfterAccess(timeoutDuration, timeoutTimeUnit)
+		cache = CacheBuilder.newBuilder().expireAfterAccess(timeoutDuration, timeoutTimeUnit)
 				.build(workflowStateCacheLoader);
 
 		instance = this;
