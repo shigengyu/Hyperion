@@ -22,8 +22,7 @@ import com.shigengyu.hyperion.cache.WorkflowStateCache;
 
 public abstract class WorkflowState {
 
-	public static <T extends WorkflowState> WorkflowState of(
-			final Class<T> workflowStateClass) {
+	public static <T extends WorkflowState> WorkflowState of(final Class<T> workflowStateClass) {
 		return WorkflowStateCache.getInstance().get(workflowStateClass);
 	}
 
@@ -36,16 +35,13 @@ public abstract class WorkflowState {
 	protected WorkflowState() {
 		final State annotation = this.getClass().getAnnotation(State.class);
 		if (annotation == null) {
-			throw new WorkflowStateException(
-					"Workflow state [{}] does not have [{}] annotation specified",
-					this.getClass().getName(), State.class.getName());
+			throw new WorkflowStateException("Workflow state [{}] does not have [{}] annotation specified", this
+					.getClass().getName(), State.class.getName());
 		}
 
 		workflowStateId = annotation.id();
-		name = StringUtils.isEmpty(annotation.name()) ? this.getClass()
-				.getSimpleName() : annotation.name();
-		displayName = StringUtils.isEmpty(annotation.displayName()) ? name
-				: annotation.displayName();
+		name = StringUtils.isEmpty(annotation.name()) ? this.getClass().getSimpleName() : annotation.name();
+		displayName = StringUtils.isEmpty(annotation.displayName()) ? name : annotation.displayName();
 	}
 
 	public boolean among(final Class<?>... workflowClasses) {

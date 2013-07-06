@@ -22,14 +22,19 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
+import org.reflections.Reflections;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
+import com.shigengyu.hyperion.common.StringMessage;
+import com.shigengyu.hyperion.core.Workflow;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
+import com.shigengyu.hyperion.core.WorkflowDefinitionException;
 import com.shigengyu.hyperion.core.WorkflowStateException;
+import com.shigengyu.hyperion.utils.ReflectionsHelper;
 
 @Service
 @Lazy(false)
@@ -52,14 +57,13 @@ public class WorkflowDefinitionCache {
 	@Resource
 	private WorkflowDefinitionCacheLoader workflowDefinitionCacheLoader;
 
-	public <T extends WorkflowDefinition> WorkflowDefinition get(
-			final Class<T> workflowDefinitionClass) {
+	public <T extends WorkflowDefinition> WorkflowDefinition get(final Class<T> workflowDefinitionClass) {
 		try {
 			return cache.get(workflowDefinitionClass);
-		} catch (final ExecutionException e) {
-			throw new WorkflowStateException(
-					"Failed to get workflow definition by type [{}]",
-					workflowDefinitionClass, e);
+		}
+		catch (final ExecutionException e) {
+			throw new WorkflowStateException("Failed to get workflow definition by type [{}]", workflowDefinitionClass,
+					e);
 		}
 	}
 
@@ -69,10 +73,25 @@ public class WorkflowDefinitionCache {
 
 	@PostConstruct
 	private void initialize() {
-		cache = CacheBuilder.newBuilder()
-				.expireAfterAccess(timeoutDuration, timeoutTimeUnit)
+		cache = CacheBuilder.newBuilder().expireAfterAccess(timeoutDuration, timeoutTimeUnit)
 				.build(workflowDefinitionCacheLoader);
 
 		instance = this;
+	}
+
+	public void loadPackages(final String... packageNames) {
+		final Reflections reflections = ReflectionsHelper.createReflections(packageNames);
+		for (final Class<?> clazz : reflections.getTypesAnnotatedWith(Workflow.class)) {
+			if (!WorkflowDefinition.class.isAssignableFrom(clazz)) {
+				final String message = StringMessage.with(
+						"Class [{}] with @Workflow annotation does not extend [{}] class", clazz.getName(),
+						WorkflowDefinition.class.getName());
+				throw new WorkflowDefinitionException(message);
+			}
+
+			@SuppressWarnings("unchecked")
+			final Class<WorkflowDefinition> workflowDefinitionClass = (Class<WorkflowDefinition>) clazz;
+			final WorkflowDefinition workflowDefinition = this.get(workflowDefinitionClass);
+		}
 	}
 }

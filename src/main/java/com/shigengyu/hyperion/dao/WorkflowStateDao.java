@@ -18,9 +18,6 @@ package com.shigengyu.hyperion.dao;
 
 import com.shigengyu.hyperion.entities.WorkflowStateEntity;
 
-public interface WorkflowStateDao {
+public interface WorkflowStateDao extends HyperionDao<WorkflowStateEntity, String> {
 
-	WorkflowStateEntity get(String workflowStateId);
-
-	void saveOrUpdate(WorkflowStateEntity workflowStateEntity);
 }

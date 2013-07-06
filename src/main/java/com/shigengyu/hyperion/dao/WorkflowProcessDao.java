@@ -16,9 +16,8 @@
 
 package com.shigengyu.hyperion.dao;
 
-import com.shigengyu.hyperion.core.WorkflowProcess;
+import com.shigengyu.hyperion.entities.WorkflowProcessEntity;
 
-public interface WorkflowProcessDao {
+public interface WorkflowProcessDao extends HyperionDao<WorkflowProcessEntity, Integer> {
 
-	WorkflowProcess getWorkflowProcess(int workflowProcessId);
 }
