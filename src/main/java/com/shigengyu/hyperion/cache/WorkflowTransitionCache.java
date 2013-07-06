@@ -16,14 +16,46 @@
 
 package com.shigengyu.hyperion.cache;
 
+import java.util.concurrent.ExecutionException;
+
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.LoadingCache;
+import com.shigengyu.hyperion.core.WorkflowTransition;
+import com.shigengyu.hyperion.core.WorkflowTransitionException;
+
 @Service
 public class WorkflowTransitionCache {
+
+	private static WorkflowTransitionCache instance;
+
+	public static WorkflowTransitionCache getInstance() {
+		return instance;
+	}
+
+	private LoadingCache<Class<? extends WorkflowTransition>, WorkflowTransition> cache;
 
 	@Resource
 	private WorkflowTransitionCacheLoader workflowTransitionCacheLoader;
 
+	public <T extends WorkflowTransition> WorkflowTransition get(final Class<T> WorkflowTransitionClass) {
+		try {
+			return cache.get(WorkflowTransitionClass);
+		}
+		catch (final ExecutionException e) {
+			throw new WorkflowTransitionException("Failed to get workflow transition by type [{}]",
+					WorkflowTransitionClass, e);
+		}
+	}
+
+	@PostConstruct
+	private void initialize() {
+		cache = CacheBuilder.newBuilder().build(workflowTransitionCacheLoader);
+
+		instance = this;
+	}
 }

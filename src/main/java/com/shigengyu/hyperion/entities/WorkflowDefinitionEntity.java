@@ -30,5 +30,21 @@ public class WorkflowDefinitionEntity {
 
 	@Id
 	@Column(name = "WORKFLOW_DEFINITION_ID", length = 36)
-	private Integer workflowDefinitionId;
+	private String workflowDefinitionId;
+
+	public String getName() {
+		return name;
+	}
+
+	public String getWorkflowDefinitionId() {
+		return workflowDefinitionId;
+	}
+
+	public void setName(final String name) {
+		this.name = name;
+	}
+
+	public void setWorkflowDefinitionId(final String workflowDefinitionId) {
+		this.workflowDefinitionId = workflowDefinitionId;
+	}
 }

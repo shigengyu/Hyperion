@@ -24,5 +24,9 @@ public interface HyperionDao<TEntity, TIdentity extends Serializable> {
 
 	Class<?> getEntityClass();
 
+	TIdentity save(TEntity entity);
+
 	void saveOrUpdate(TEntity entity);
+
+	void update(TEntity entity);
 }

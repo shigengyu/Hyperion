@@ -17,13 +17,11 @@
 package com.shigengyu.hyperion.cache;
 
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import org.reflections.Reflections;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -48,16 +46,10 @@ public class WorkflowDefinitionCache {
 
 	private LoadingCache<Class<? extends WorkflowDefinition>, WorkflowDefinition> cache;
 
-	@Value("${hyperion.workflow.cache.definition.timeout.duration}")
-	private int timeoutDuration;
-
-	@Value("${hyperion.workflow.cache.definition.timeout.timeunit}")
-	private TimeUnit timeoutTimeUnit;
-
 	@Resource
 	private WorkflowDefinitionCacheLoader workflowDefinitionCacheLoader;
 
-	public <T extends WorkflowDefinition> WorkflowDefinition get(final Class<T> workflowDefinitionClass) {
+	public synchronized <T extends WorkflowDefinition> WorkflowDefinition get(final Class<T> workflowDefinitionClass) {
 		try {
 			return cache.get(workflowDefinitionClass);
 		}
@@ -67,14 +59,9 @@ public class WorkflowDefinitionCache {
 		}
 	}
 
-	public int getTimeoutDuration() {
-		return timeoutDuration;
-	}
-
 	@PostConstruct
 	private void initialize() {
-		cache = CacheBuilder.newBuilder().expireAfterAccess(timeoutDuration, timeoutTimeUnit)
-				.build(workflowDefinitionCacheLoader);
+		cache = CacheBuilder.newBuilder().build(workflowDefinitionCacheLoader);
 
 		instance = this;
 	}
@@ -91,7 +78,8 @@ public class WorkflowDefinitionCache {
 
 			@SuppressWarnings("unchecked")
 			final Class<WorkflowDefinition> workflowDefinitionClass = (Class<WorkflowDefinition>) clazz;
-			final WorkflowDefinition workflowDefinition = this.get(workflowDefinitionClass);
+			// Touch the workflow definition to cache it
+			this.get(workflowDefinitionClass);
 		}
 	}
 }

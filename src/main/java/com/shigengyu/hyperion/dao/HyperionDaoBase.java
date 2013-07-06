@@ -30,12 +30,27 @@ public abstract class HyperionDaoBase<TEntity, TIdentity extends Serializable> i
 
 	@Override
 	public TEntity get(final TIdentity id) {
-		return (TEntity) sessionFactory.getCurrentSession().get(getEntityClass(), id);
+		final TEntity entity = (TEntity) sessionFactory.getCurrentSession().get(getEntityClass(), id);
+		sessionFactory.getCurrentSession().flush();
+		return entity;
+	}
 
+	@Override
+	public TIdentity save(final TEntity entity) {
+		final TIdentity id = (TIdentity) sessionFactory.getCurrentSession().save(entity);
+		sessionFactory.getCurrentSession().flush();
+		return id;
 	}
 
 	@Override
 	public void saveOrUpdate(final TEntity entity) {
 		sessionFactory.getCurrentSession().saveOrUpdate(entity);
+		sessionFactory.getCurrentSession().flush();
+	}
+
+	@Override
+	public void update(final TEntity entity) {
+		sessionFactory.getCurrentSession().update(entity);
+		sessionFactory.getCurrentSession().flush();
 	}
 }

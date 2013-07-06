@@ -22,6 +22,8 @@ import com.shigengyu.hyperion.common.StringMessage;
 
 public abstract class WorkflowDefinition {
 
+	private final String id;
+
 	private final WorkflowState initialState;
 
 	private final String name;
@@ -39,10 +41,15 @@ public abstract class WorkflowDefinition {
 			throw new WorkflowDefinitionException(message);
 		}
 
+		id = workflow.id();
 		workflowDefinitionType = clazz;
 		name = StringUtils.isEmpty(workflow.name()) ? clazz.getSimpleName() : workflow.name();
 		initialState = WorkflowState.of(workflow.initialState());
 		workflowContextType = workflow.contextType() == null ? WorkflowContext.class : workflow.contextType();
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public WorkflowState getInitialState() {

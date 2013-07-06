@@ -19,7 +19,7 @@ package com.shigengyu.hyperion.workflow;
 import com.shigengyu.hyperion.core.Workflow;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
 
-@Workflow(initialState = DummyWorkflowState.class)
+@Workflow(id = "2f660a3f-54bf-45eb-b860-e8e29c690371", initialState = DummyWorkflowState.class)
 public class DummyWorkflowDefinition extends WorkflowDefinition {
 
 }

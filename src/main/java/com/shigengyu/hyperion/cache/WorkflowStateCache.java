@@ -17,12 +17,10 @@
 package com.shigengyu.hyperion.cache;
 
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -43,12 +41,6 @@ public class WorkflowStateCache {
 
 	private LoadingCache<Class<? extends WorkflowState>, WorkflowState> cache;
 
-	@Value("${hyperion.workflow.cache.state.timeout.duration}")
-	private int timeoutDuration;
-
-	@Value("${hyperion.workflow.cache.state.timeout.timeunit}")
-	private TimeUnit timeoutTimeUnit;
-
 	@Resource
 	private WorkflowStateCacheLoader workflowStateCacheLoader;
 
@@ -61,14 +53,9 @@ public class WorkflowStateCache {
 		}
 	}
 
-	public int getTimeoutDuration() {
-		return timeoutDuration;
-	}
-
 	@PostConstruct
 	private void initialize() {
-		cache = CacheBuilder.newBuilder().expireAfterAccess(timeoutDuration, timeoutTimeUnit)
-				.build(workflowStateCacheLoader);
+		cache = CacheBuilder.newBuilder().build(workflowStateCacheLoader);
 
 		instance = this;
 	}

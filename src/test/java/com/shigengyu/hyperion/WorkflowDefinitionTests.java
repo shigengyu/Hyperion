@@ -16,12 +16,19 @@
 
 package com.shigengyu.hyperion;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.shigengyu.hyperion.cache.WorkflowDefinitionCache;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(TestEnvironment.APPLICATION_CONTEXT_CONFIG)
 public class WorkflowDefinitionTests {
 
+	@Test
+	public void testLoadDefinitions() {
+		WorkflowDefinitionCache.getInstance().loadPackages("com.shigengyu.hyperion");
+	}
 }

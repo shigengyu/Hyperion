@@ -29,6 +29,14 @@ public @interface Workflow {
 
 	Class<? extends WorkflowContext> contextType() default WorkflowContext.class;
 
+	/**
+	 * The unique ID of the workflow definition. Can be generated from
+	 * http://www.guidgenerator.com
+	 * 
+	 * @return
+	 */
+	String id();
+
 	Class<? extends WorkflowState> initialState();
 
 	String name() default "";
