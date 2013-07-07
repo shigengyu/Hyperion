@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.shigengyu.hyperion;
+package com.shigengyu.hyperion.environment;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

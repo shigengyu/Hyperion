@@ -17,19 +17,22 @@
 package com.shigengyu.hyperion.services;
 
 import org.reflections.Reflections;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.shigengyu.hyperion.core.WorkflowContext;
 import com.shigengyu.hyperion.utils.ReflectionsHelper;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.converters.basic.DateConverter;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
 @Service
 @Lazy(false)
-public class WorkflowContextSerializer {
+public class WorkflowContextSerializer implements BeanPostProcessor {
 
 	private static WorkflowContextSerializer instance;
 
@@ -43,8 +46,7 @@ public class WorkflowContextSerializer {
 	protected XStream xStream = new XStream(new DomDriver());
 
 	private WorkflowContextSerializer() {
-		xStream.registerConverter(new DateConverter(dateTimeFormat,
-				new String[0]));
+		xStream.registerConverter(new DateConverter(dateTimeFormat, new String[0]));
 		xStream.autodetectAnnotations(true);
 
 		instance = this;
@@ -55,15 +57,29 @@ public class WorkflowContextSerializer {
 	}
 
 	public void initialize(final String... packageNames) {
-		final Reflections reflections = ReflectionsHelper
-				.createReflections(packageNames);
-		for (final Class<?> clazz : reflections
-				.getSubTypesOf(WorkflowContext.class)) {
+		final Reflections reflections = ReflectionsHelper.createReflections(packageNames);
+		for (final Class<?> clazz : reflections.getSubTypesOf(WorkflowContext.class)) {
 			try {
 				Class.forName(clazz.getName());
-			} catch (final ClassNotFoundException e) {
+			}
+			catch (final ClassNotFoundException e) {
 			}
 		}
+	}
+
+	@Override
+	public Object postProcessAfterInitialization(final Object bean, final String beanName) throws BeansException {
+		return bean;
+	}
+
+	@Override
+	public Object postProcessBeforeInitialization(final Object bean, final String beanName) throws BeansException {
+		if (bean.getClass().isAnnotationPresent(XStreamAlias.class)) {
+			final XStreamAlias alias = bean.getClass().getAnnotation(XStreamAlias.class);
+			xStream.alias(alias.value(), bean.getClass());
+		}
+
+		return bean;
 	}
 
 	public String serialize(final WorkflowContext workflowContext) {
