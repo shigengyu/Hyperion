@@ -16,7 +16,7 @@
 		</layout>
 
 		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-			<FileNamePattern>${hyperion.log.dir}/mkyongapp.%i.log.zip</FileNamePattern>
+			<FileNamePattern>${hyperion.log.dir}/hyperion.%i.log.zip</FileNamePattern>
 			<MinIndex>1</MinIndex>
 			<MaxIndex>10</MaxIndex>
 		</rollingPolicy>
@@ -25,14 +25,40 @@
 			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
 			<MaxFileSize>2MB</MaxFileSize>
 		</triggeringPolicy>
+	</appender>
+	
+	<appender name="HIBERNATE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${hyperion.log.dir}/hyperion.hibernate.log</file>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+		</layout>
 
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<FileNamePattern>${hyperion.log.dir}/hyperion.hibernate.%i.log.zip</FileNamePattern>
+			<MinIndex>1</MinIndex>
+			<MaxIndex>10</MaxIndex>
+		</rollingPolicy>
+
+		<triggeringPolicy
+			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<MaxFileSize>2MB</MaxFileSize>
+		</triggeringPolicy>
 	</appender>
 
-	<logger name="org.hibernate.type" level="ALL" />
-	<logger name="org.hibernate" level="DEBUG" />
-
-	<root level="INFO">
+	<logger name="org.hibernate.type" level="ALL" additivity="false">
+		<appender-ref ref="HIBERNATE" />
+	</logger>
+	
+	<logger name="org.hibernate" level="DEBUG" additivity="false">
+		<appender-ref ref="HIBERNATE" />
+	</logger>
+	
+	<logger name="com.shigengyu.hyperion" level="DEBUG" additivity="false">
 		<appender-ref ref="FILE" />
+	</logger>
+
+	<root level="DEBUG">
 		<appender-ref ref="STDOUT" />
 	</root>
 
