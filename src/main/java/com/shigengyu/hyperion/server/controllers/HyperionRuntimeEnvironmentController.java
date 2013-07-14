@@ -13,12 +13,12 @@ import com.google.common.collect.Lists;
 import com.shigengyu.hyperion.cache.WorkflowDefinitionCache;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
 
-@Path("/runtime")
-@Produces(MediaType.TEXT_HTML)
+@Path("/runtime/")
+@Produces(MediaType.TEXT_PLAIN)
 public class HyperionRuntimeEnvironmentController {
 
 	@GET
-	@Path("/workflow/list")
+	@Path("/workflow/list/")
 	public String getWorkflowDefinitions() {
 		return StringUtils.join(
 				Lists.transform(

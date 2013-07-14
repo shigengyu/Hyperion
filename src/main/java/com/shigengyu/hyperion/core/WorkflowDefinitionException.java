@@ -26,24 +26,15 @@ public class WorkflowDefinitionException extends HyperionException {
 		super(message);
 	}
 
-	public WorkflowDefinitionException(final String message,
-			final Object... args) {
+	public WorkflowDefinitionException(final String message, final Object... args) {
 		super(message, args);
 	}
 
-	public WorkflowDefinitionException(final String message,
-			final Throwable cause) {
+	public WorkflowDefinitionException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
-	public WorkflowDefinitionException(final String message,
-			final Throwable cause, final boolean enableSuppression,
-			final boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
-
-	public WorkflowDefinitionException(final String message,
-			final Throwable cause, final Object... args) {
+	public WorkflowDefinitionException(final String message, final Throwable cause, final Object... args) {
 		super(message, cause, args);
 	}
 

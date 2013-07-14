@@ -34,13 +34,7 @@ public class HyperionException extends RuntimeException {
 		super(message, cause);
 	}
 
-	public HyperionException(final String message, final Throwable cause,
-			final boolean enableSuppression, final boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
-
-	public HyperionException(final String message, final Throwable cause,
-			final Object... args) {
+	public HyperionException(final String message, final Throwable cause, final Object... args) {
 		super(StringMessage.with(message, args), cause);
 	}
 

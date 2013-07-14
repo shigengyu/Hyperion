@@ -24,8 +24,9 @@ public class StringMessage {
 			while (value.contains("{}")) {
 				value = value.replaceFirst("{}", "%" + ++count + "$s");
 			}
-		} catch (final Exception e) {
-			throw e;
+		}
+		catch (final Exception e) {
+			throw new RuntimeException(e);
 		}
 
 		return String.format(value, args);

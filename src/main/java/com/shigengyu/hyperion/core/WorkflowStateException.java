@@ -34,13 +34,7 @@ public class WorkflowStateException extends HyperionException {
 		super(message, cause);
 	}
 
-	public WorkflowStateException(final String message, final Throwable cause,
-			final boolean enableSuppression, final boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
-
-	public WorkflowStateException(final String message, final Throwable cause,
-			final Object... args) {
+	public WorkflowStateException(final String message, final Throwable cause, final Object... args) {
 		super(message, cause, args);
 	}
 

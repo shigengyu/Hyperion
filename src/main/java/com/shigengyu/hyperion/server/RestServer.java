@@ -1,28 +1,47 @@
 package com.shigengyu.hyperion.server;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 import org.apache.cxf.jaxrs.lifecycle.SingletonResourceProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Service;
 
 import com.shigengyu.hyperion.server.controllers.HyperionRuntimeEnvironmentController;
 
+@Service
 public class RestServer {
 
-	public static void main(final String args[]) throws Exception {
-		new RestServer();
-		System.out.println("Server ready...");
+	private static ClassPathXmlApplicationContext applicationContext;
 
-		Thread.sleep(5 * 6000 * 1000);
-		System.out.println("Server exiting");
-		System.exit(0);
+	private static final Logger LOGGER = LoggerFactory.getLogger(RestServer.class);
+
+	public static void main(final String args[]) throws Exception {
+
+		applicationContext = new ClassPathXmlApplicationContext(
+				"classpath:com/shigengyu/hyperion/config/application-context.xml");
+		applicationContext.getBean(RestServer.class);
 	}
 
-	protected RestServer() throws Exception {
+	@Value("${hyperion.rest.server.host}")
+	private String restServerHost;
+
+	@Value("${hyperion.rest.server.port}")
+	private int restServerPort;
+
+	@PostConstruct
+	private void startServer() {
 		final JAXRSServerFactoryBean sf = new JAXRSServerFactoryBean();
 		sf.setResourceClasses(HyperionRuntimeEnvironmentController.class);
 		sf.setResourceProvider(HyperionRuntimeEnvironmentController.class, new SingletonResourceProvider(
 				new HyperionRuntimeEnvironmentController()));
-		sf.setAddress("http://localhost:9999/");
-
+		final String address = "http://" + restServerHost + ":" + restServerPort + "/";
+		sf.setAddress(address);
 		sf.create();
+
+		LOGGER.info("REST server started on " + address);
 	}
 }

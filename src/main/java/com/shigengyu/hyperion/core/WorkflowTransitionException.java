@@ -26,24 +26,15 @@ public class WorkflowTransitionException extends HyperionException {
 		super(message);
 	}
 
-	public WorkflowTransitionException(final String message,
-			final Object... args) {
+	public WorkflowTransitionException(final String message, final Object... args) {
 		super(message, args);
 	}
 
-	public WorkflowTransitionException(final String message,
-			final Throwable cause) {
+	public WorkflowTransitionException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
-	public WorkflowTransitionException(final String message,
-			final Throwable cause, final boolean enableSuppression,
-			final boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
-
-	public WorkflowTransitionException(final String message,
-			final Throwable cause, final Object... args) {
+	public WorkflowTransitionException(final String message, final Throwable cause, final Object... args) {
 		super(message, cause, args);
 	}
 
