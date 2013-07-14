@@ -28,6 +28,9 @@ public class HyperionRuntime {
 	@Resource
 	private WorkflowDefinitionCache workflowDefinitionCache;
 
+	/**
+	 * @param packageNames
+	 */
 	public void loadPackages(final String... packageNames) {
 
 	}

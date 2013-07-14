@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableList;
 import com.shigengyu.hyperion.common.StringMessage;
 import com.shigengyu.hyperion.core.Workflow;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
@@ -59,6 +60,10 @@ public class WorkflowDefinitionCache {
 		}
 	}
 
+	public ImmutableList<WorkflowDefinition> getAll() {
+		return ImmutableList.copyOf(cache.asMap().values());
+	}
+
 	@PostConstruct
 	private void initialize() {
 		cache = CacheBuilder.newBuilder().build(workflowDefinitionCacheLoader);
@@ -66,7 +71,7 @@ public class WorkflowDefinitionCache {
 		instance = this;
 	}
 
-	public void loadPackages(final String... packageNames) {
+	public WorkflowDefinitionCache loadPackages(final String... packageNames) {
 		final Reflections reflections = ReflectionsHelper.createReflections(packageNames);
 		for (final Class<?> clazz : reflections.getTypesAnnotatedWith(Workflow.class)) {
 			if (!WorkflowDefinition.class.isAssignableFrom(clazz)) {
@@ -81,5 +86,7 @@ public class WorkflowDefinitionCache {
 			// Touch the workflow definition to cache it
 			this.get(workflowDefinitionClass);
 		}
+
+		return this;
 	}
 }

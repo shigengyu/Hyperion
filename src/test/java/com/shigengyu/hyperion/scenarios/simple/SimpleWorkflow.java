@@ -8,10 +8,16 @@ import com.shigengyu.hyperion.core.WorkflowProcess;
 @Workflow(id = "bfc0c860-e52e-421e-95b6-1fbd5b9d710e", initialState = InitializedState.class)
 public class SimpleWorkflow extends WorkflowDefinition {
 
+	/**
+	 * @param workflowProcess
+	 */
 	@Transition
 	public void complete(final WorkflowProcess workflowProcess) {
 	}
 
+	/**
+	 * @param workflowProcess
+	 */
 	@Transition
 	public void start(final WorkflowProcess workflowProcess) {
 	}
