@@ -8,11 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.stereotype.Service;
 
 import com.shigengyu.hyperion.server.controllers.HyperionRuntimeEnvironmentController;
 
-@Service
 public class RestServer {
 
 	private static ClassPathXmlApplicationContext applicationContext;

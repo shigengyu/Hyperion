@@ -1,13 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+	<property resource="config-${CONFIG_MODE}.properties" />
 
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-		<encoder>
-			<pattern>%-4relative [%thread] %-5level %logger{35} - %msg %n
-			</pattern>
-		</encoder>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</Pattern>
+		</layout>
 	</appender>
 
-	<root level="DEBUG">
+	<appender name="FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${hyperion.log.dir}/hyperion.log</file>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+		</layout>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<FileNamePattern>${hyperion.log.dir}/mkyongapp.%i.log.zip</FileNamePattern>
+			<MinIndex>1</MinIndex>
+			<MaxIndex>10</MaxIndex>
+		</rollingPolicy>
+
+		<triggeringPolicy
+			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<MaxFileSize>2MB</MaxFileSize>
+		</triggeringPolicy>
+
+	</appender>
+
+	<logger name="org.hibernate.type" level="ALL" />
+	<logger name="org.hibernate" level="DEBUG" />
+
+	<root level="INFO">
+		<appender-ref ref="FILE" />
 		<appender-ref ref="STDOUT" />
 	</root>
 

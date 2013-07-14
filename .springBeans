@@ -10,6 +10,7 @@
 		<config>src/main/java/com/shigengyu/hyperion/config/hyperion-dao.xml</config>
 		<config>src/main/java/com/shigengyu/hyperion/config/hyperion-common.xml</config>
 		<config>src/main/java/com/shigengyu/hyperion/config/hyperion-services.xml</config>
+		<config>src/main/java/com/shigengyu/hyperion/config/application-context-shared.xml</config>
 	</configs>
 	<configSets>
 	</configSets>

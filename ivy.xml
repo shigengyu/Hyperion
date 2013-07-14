@@ -43,8 +43,15 @@
 			<artifact name="h2" ext="jar" conf="runtime" />
 		</dependency>
 
+		<!-- 
 		<dependency org="org.slf4j" name="slf4j-log4j12" rev="1.7.5" conf="runtime">
 			<artifact name="slf4j-log4j12" ext="jar" conf="runtime" />
+		</dependency>
+		 -->
+		<dependency org="org.slf4j" name="slf4j-api" rev="1.7.5" conf="runtime" />
+		<dependency org="ch.qos.logback" name="logback-core" rev="1.0.13" conf="runtime" />
+		<dependency org="ch.qos.logback" name="logback-classic" rev="1.0.13" conf="runtime">
+			<artifact name="logback-classic" ext="jar" conf="runtime" />
 		</dependency>
 
 		<dependency org="org.reflections" name="reflections" rev="0.9.9-RC1" conf="runtime">

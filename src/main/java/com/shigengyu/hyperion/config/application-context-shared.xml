@@ -7,7 +7,12 @@
 	                    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
 	                    http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd">
 
-	<import resource="application-context-shared.xml" />
+	<import resource="hyperion-dao.xml" />
+	<import resource="hyperion-services.xml" />
 
-	<bean id="restServer" class="com.shigengyu.hyperion.server.RestServer" />
+	<context:component-scan
+		base-package="com.shigengyu.hyperion.services,
+		              com.shigengyu.hyperion.dao,
+		              com.shigengyu.hyperion.cache" />
+
 </beans>

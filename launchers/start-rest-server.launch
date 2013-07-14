@@ -8,4 +8,5 @@
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.shigengyu.hyperion.server.RestServer"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="Hyperion"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-DCONFIG_MODE=dev"/>
 </launchConfiguration>
