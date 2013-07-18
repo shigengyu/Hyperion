@@ -20,12 +20,12 @@ public class SimpleScenarioTests {
 	private TestEnvironment testEnvironment;
 
 	@Test
-	public void testLoadDefinitions() {
+	public void loadDefinitions() {
 		WorkflowDefinitionCache.getInstance().loadPackages("com.shigengyu.hyperion.scenarios.simple");
 	}
 
 	@Test
-	public void testLoadStates() {
+	public void loadStates() {
 		Assert.notNull(WorkflowState.of(InitializedState.class));
 	}
 }

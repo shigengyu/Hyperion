@@ -46,7 +46,7 @@
 		</triggeringPolicy>
 	</appender>
 
-	<logger name="org.hibernate.type" level="ALL" additivity="false">
+	<logger name="org.hibernate.type" level="TRACE" additivity="false">
 		<appender-ref ref="HIBERNATE" />
 	</logger>
 	
