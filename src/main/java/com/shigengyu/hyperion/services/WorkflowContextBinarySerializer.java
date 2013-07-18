@@ -16,11 +16,24 @@
 
 package com.shigengyu.hyperion.services;
 
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
+
 import com.shigengyu.hyperion.core.WorkflowContext;
 
-public interface WorkflowContextSerializer {
+@Service("workflowContextBinarySerializer")
+@Lazy(false)
+public class WorkflowContextBinarySerializer implements WorkflowContextSerializer {
 
-	public String serialize(final WorkflowContext workflowContext);
+	@Override
+	public <T extends WorkflowContext> T deserialize(String xml) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-	public <T extends WorkflowContext> T deserialize(final String xml);
+	@Override
+	public String serialize(WorkflowContext workflowContext) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

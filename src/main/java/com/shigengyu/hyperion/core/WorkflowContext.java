@@ -19,7 +19,7 @@ package com.shigengyu.hyperion.core;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
-import com.shigengyu.hyperion.services.WorkflowContextSerializer;
+import com.shigengyu.hyperion.services.WorkflowContextXmlSerializer;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 @XStreamAlias("WorkflowContext")
@@ -37,7 +37,7 @@ public class WorkflowContext {
 	}
 
 	public WorkflowContext loadXml(final String xml) {
-		return WorkflowContextSerializer.getInstance().deserialize(xml);
+		return WorkflowContextXmlSerializer.getInstance().deserialize(xml);
 	}
 
 	public <T> void put(final String key, final T value) {
@@ -45,6 +45,6 @@ public class WorkflowContext {
 	}
 
 	public String toXml() {
-		return WorkflowContextSerializer.getInstance().serialize(this);
+		return WorkflowContextXmlSerializer.getInstance().serialize(this);
 	}
 }
