@@ -44,6 +44,9 @@ public class WorkflowStateCache {
 	@Resource
 	private WorkflowStateCacheLoader workflowStateCacheLoader;
 
+	private WorkflowStateCache() {
+	}
+
 	public <T extends WorkflowState> WorkflowState get(final Class<T> workflowStateClass) {
 		try {
 			return cache.get(workflowStateClass);

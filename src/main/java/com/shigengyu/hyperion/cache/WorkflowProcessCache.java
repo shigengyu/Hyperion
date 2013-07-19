@@ -50,6 +50,9 @@ public class WorkflowProcessCache {
 	@Resource
 	private WorkflowProcessCacheLoader WorkflowProcessCacheLoader;
 
+	private WorkflowProcessCache() {
+	}
+
 	public <T extends WorkflowProcess> WorkflowProcess get(final Integer workflowProcessId) {
 		try {
 			return cache.get(workflowProcessId);
