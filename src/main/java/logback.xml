@@ -45,16 +45,66 @@
 			<MaxFileSize>2MB</MaxFileSize>
 		</triggeringPolicy>
 	</appender>
+	
+	<appender name="HIBERNATE-SQL"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${hyperion.log.dir}/hyperion.hibernate.sql.log</file>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+		</layout>
 
-	<logger name="org.hibernate.type" level="TRACE" additivity="false">
-		<appender-ref ref="HIBERNATE" />
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<FileNamePattern>${hyperion.log.dir}/hyperion.hibernate.sql.%i.log.zip</FileNamePattern>
+			<MinIndex>1</MinIndex>
+			<MaxIndex>10</MaxIndex>
+		</rollingPolicy>
+
+		<triggeringPolicy
+			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<MaxFileSize>2MB</MaxFileSize>
+		</triggeringPolicy>
+	</appender>
+	
+	<appender name="SPRING"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${hyperion.log.dir}/hyperion.spring.log</file>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+		</layout>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<FileNamePattern>${hyperion.log.dir}/hyperion.spring.%i.log.zip</FileNamePattern>
+			<MinIndex>1</MinIndex>
+			<MaxIndex>10</MaxIndex>
+		</rollingPolicy>
+
+		<triggeringPolicy
+			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<MaxFileSize>2MB</MaxFileSize>
+		</triggeringPolicy>
+	</appender>
+	
+	<logger name="org.hibernate.SQL" level="DEBUG" additivity="true">
+		<appender-ref ref="HIBERNATE-SQL" />
+	</logger>
+	
+	<logger name="org.hibernate.type" level="TRACE" additivity="true">
+		<appender-ref ref="HIBERNATE-SQL" />
 	</logger>
 	
 	<logger name="org.hibernate" level="DEBUG" additivity="false">
 		<appender-ref ref="HIBERNATE" />
 	</logger>
 	
-	<logger name="com.shigengyu.hyperion" level="DEBUG" additivity="false">
+	<logger name="org.springframework" level="INFO" additivity="false">
+		<appender-ref ref="SPRING" />
+	</logger>
+	
+	<logger name="net.sf.ehcache" level="INFO" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	
+	<logger name="com.shigengyu.hyperion" level="DEBUG" additivity="true">
 		<appender-ref ref="FILE" />
 	</logger>
 
