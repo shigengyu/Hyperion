@@ -25,6 +25,8 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableList;
+import com.shigengyu.hyperion.core.WorkflowDefinition;
 import com.shigengyu.hyperion.core.WorkflowTransition;
 import com.shigengyu.hyperion.core.WorkflowTransitionException;
 
@@ -37,25 +39,31 @@ public class WorkflowTransitionCache {
 		return instance;
 	}
 
-	private LoadingCache<Class<? extends WorkflowTransition>, WorkflowTransition> cache;
+	private LoadingCache<WorkflowDefinition, ImmutableList<WorkflowTransition>> cache;
 
 	@Resource
 	private WorkflowTransitionCacheLoader workflowTransitionCacheLoader;
 
-	public <T extends WorkflowTransition> WorkflowTransition get(final Class<T> WorkflowTransitionClass) {
+	public <T extends WorkflowTransition> ImmutableList<WorkflowTransition> get(
+			final WorkflowDefinition workflowDefinition) {
 		try {
-			return cache.get(WorkflowTransitionClass);
+			ImmutableList<WorkflowTransition> transitions = cache.getIfPresent(workflowDefinition);
+			if (transitions != null) {
+				return transitions;
+			}
+
+			transitions = cache.get(workflowDefinition);
+			return transitions;
 		}
 		catch (final ExecutionException e) {
-			throw new WorkflowTransitionException("Failed to get workflow transition by type [{}]",
-					WorkflowTransitionClass, e);
+			throw new WorkflowTransitionException("Failed to get workflow transitions by definition [{}]",
+					workflowDefinition.getName(), e);
 		}
 	}
 
 	@PostConstruct
 	private void initialize() {
 		cache = CacheBuilder.newBuilder().build(workflowTransitionCacheLoader);
-
 		instance = this;
 	}
 }

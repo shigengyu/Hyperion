@@ -16,16 +16,19 @@
 
 package com.shigengyu.hyperion.cache;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.springframework.stereotype.Service;
 
 import com.google.common.cache.CacheLoader;
+import com.google.common.collect.ImmutableList;
+import com.shigengyu.hyperion.core.WorkflowDefinition;
 import com.shigengyu.hyperion.core.WorkflowTransition;
 
 @Service
-public class WorkflowTransitionCacheLoader extends CacheLoader<Class<? extends WorkflowTransition>, WorkflowTransition> {
+public class WorkflowTransitionCacheLoader extends CacheLoader<WorkflowDefinition, ImmutableList<WorkflowTransition>> {
 
 	@Override
-	public WorkflowTransition load(final Class<? extends WorkflowTransition> key) throws Exception {
-		return key.getConstructor().newInstance();
+	public ImmutableList<WorkflowTransition> load(WorkflowDefinition key) throws Exception {
+		throw new NotImplementedException();
 	}
 }
