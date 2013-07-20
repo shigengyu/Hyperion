@@ -18,8 +18,6 @@ package com.shigengyu.hyperion.cache;
 
 import javax.annotation.Resource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,12 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.common.cache.CacheLoader;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
 import com.shigengyu.hyperion.dao.WorkflowDefinitionDao;
-import com.shigengyu.hyperion.entities.WorkflowDefinitionEntity;
 
 @Service
 public class WorkflowDefinitionCacheLoader extends CacheLoader<Class<? extends WorkflowDefinition>, WorkflowDefinition> {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(WorkflowDefinitionCacheLoader.class);
 
 	@Resource
 	private WorkflowDefinitionDao workflowDefinitionDao;
@@ -40,27 +35,15 @@ public class WorkflowDefinitionCacheLoader extends CacheLoader<Class<? extends W
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
 	public WorkflowDefinition load(final Class<? extends WorkflowDefinition> key) throws Exception {
-
 		final WorkflowDefinition workflowDefinition = key.getConstructor().newInstance();
+		workflowDefinitionDao.saveOrUpdate(workflowDefinition.toEntity());
 
-		WorkflowDefinitionEntity entity = workflowDefinitionDao.get(workflowDefinition.getId());
-		if (entity == null) {
-			entity = new WorkflowDefinitionEntity();
-			entity.setWorkflowDefinitionId(workflowDefinition.getId());
-			entity.setName(workflowDefinition.getName());
-			workflowDefinitionDao.save(entity);
-
-			LOGGER.info("Workflow definition [{}] saved. ID = [{}]", workflowDefinition.getName(),
-					workflowDefinition.getId());
-		}
-		else {
-			entity.setName(workflowDefinition.getName());
-			workflowDefinitionDao.update(entity);
-
-			LOGGER.info("Workflow definition [{}] updated. ID = [{}]", workflowDefinition.getName(),
-					workflowDefinition.getId());
-		}
+		WorkflowTransitionCache.getInstance().get(workflowDefinition);
 
 		return workflowDefinition;
+	}
+
+	private void loadStates() {
+
 	}
 }

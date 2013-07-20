@@ -45,7 +45,7 @@ public class WorkflowTransition {
 		if (method.getReturnType() == WorkflowStateSet.class) {
 			dynamic = true;
 		}
-		else if (method.getReturnType() == null) {
+		else if (method.getReturnType() == Void.TYPE) {
 			dynamic = false;
 		}
 		else {

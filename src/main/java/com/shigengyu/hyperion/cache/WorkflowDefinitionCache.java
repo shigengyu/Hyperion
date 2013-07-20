@@ -67,7 +67,6 @@ public class WorkflowDefinitionCache {
 	@PostConstruct
 	private void initialize() {
 		cache = CacheBuilder.newBuilder().build(workflowDefinitionCacheLoader);
-
 		instance = this;
 	}
 
@@ -83,6 +82,7 @@ public class WorkflowDefinitionCache {
 
 			@SuppressWarnings("unchecked")
 			final Class<WorkflowDefinition> workflowDefinitionClass = (Class<WorkflowDefinition>) clazz;
+
 			// Touch the workflow definition to cache it
 			this.get(workflowDefinitionClass);
 		}

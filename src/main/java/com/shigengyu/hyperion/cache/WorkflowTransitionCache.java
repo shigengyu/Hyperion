@@ -46,13 +46,7 @@ public class WorkflowTransitionCache {
 
 	public ImmutableList<WorkflowTransition> get(final WorkflowDefinition workflowDefinition) {
 		try {
-			ImmutableList<WorkflowTransition> transitions = cache.getIfPresent(workflowDefinition);
-			if (transitions != null) {
-				return transitions;
-			}
-
-			transitions = cache.get(workflowDefinition);
-			return transitions;
+			return cache.get(workflowDefinition);
 		}
 		catch (final ExecutionException e) {
 			throw new WorkflowTransitionException("Failed to get workflow transitions by definition [{}]",

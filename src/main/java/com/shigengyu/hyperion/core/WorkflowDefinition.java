@@ -19,16 +19,17 @@ package com.shigengyu.hyperion.core;
 import org.springframework.util.StringUtils;
 
 import com.shigengyu.hyperion.common.StringMessage;
+import com.shigengyu.hyperion.entities.WorkflowDefinitionEntity;
 
 public abstract class WorkflowDefinition {
-
-	private final String id;
 
 	private final WorkflowState initialState;
 
 	private final String name;
 
 	private final Class<? extends WorkflowContext> workflowContextType;
+
+	private final String workflowDefinitionId;
 
 	private final Class<? extends WorkflowDefinition> workflowDefinitionType;
 
@@ -41,15 +42,11 @@ public abstract class WorkflowDefinition {
 			throw new WorkflowDefinitionException(message);
 		}
 
-		id = workflow.id();
+		workflowDefinitionId = workflow.id();
 		workflowDefinitionType = clazz;
 		name = StringUtils.isEmpty(workflow.name()) ? clazz.getSimpleName() : workflow.name();
 		initialState = WorkflowState.of(workflow.initialState());
 		workflowContextType = workflow.contextType() == null ? WorkflowContext.class : workflow.contextType();
-	}
-
-	public String getId() {
-		return id;
 	}
 
 	public WorkflowState getInitialState() {
@@ -64,7 +61,18 @@ public abstract class WorkflowDefinition {
 		return workflowContextType;
 	}
 
+	public String getWorkflowDefinitionId() {
+		return workflowDefinitionId;
+	}
+
 	public Class<? extends WorkflowDefinition> getWorkflowDefinitionType() {
 		return workflowDefinitionType;
+	}
+
+	public WorkflowDefinitionEntity toEntity() {
+		WorkflowDefinitionEntity entity = new WorkflowDefinitionEntity();
+		entity.setWorkflowDefinitionId(workflowDefinitionId);
+		entity.setName(name);
+		return entity;
 	}
 }
