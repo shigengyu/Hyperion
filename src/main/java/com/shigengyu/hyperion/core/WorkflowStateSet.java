@@ -32,6 +32,22 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 		return new WorkflowStateSet();
 	}
 
+	@SafeVarargs
+	public static WorkflowStateSet from(Class<? extends WorkflowState>... workflowStates) {
+		if (workflowStates == null || workflowStates.length == 0) {
+			return WorkflowStateSet.empty();
+		}
+
+		return new WorkflowStateSet(Lists.transform(Lists.newArrayList(workflowStates),
+				new Function<Class<? extends WorkflowState>, WorkflowState>() {
+
+					@Override
+					public WorkflowState apply(@Nullable Class<? extends WorkflowState> input) {
+						return WorkflowStateCache.getInstance().get(input);
+					}
+				}));
+	}
+
 	public static WorkflowStateSet from(Iterable<WorkflowState> workflowStates) {
 		return new WorkflowStateSet(workflowStates);
 	}

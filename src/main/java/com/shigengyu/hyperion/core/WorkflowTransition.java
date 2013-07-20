@@ -23,21 +23,65 @@ public class WorkflowTransition {
 
 	private final boolean auto;
 	private final TransitionConditionSet conditions;
-	private boolean dynamic;
-	private WorkflowStateSet fromStates;
-	private boolean hidden;
-	private int maxEntry;
-	private Method method;
-	private boolean multiEntry;
-	private String name;
-	private StateTransitionStyle stateTransitionStyle;
+	private final boolean dynamic;
+	private final WorkflowStateSet fromStates;
+	private final boolean hidden;
+	private final int maxEntry;
+	private final Method method;
+	private final boolean multiEntry;
+	private final String name;
+	private final StateTransitionStyle stateTransitionStyle;
 
-	private WorkflowStateSet toStates;
+	private final WorkflowStateSet toStates;
 
 	public WorkflowTransition(Method method, Transition transition, TransitionShared transitionShared) {
-		auto = transition.override() ? transition.auto() : transitionShared.auto();
+		this.method = method;
+		name = transition.override() ? transition.name() : transitionShared.name();
+		fromStates = WorkflowStateSet.from(transition.override() ? transition.fromStates() : transitionShared
+				.fromStates());
+		toStates = WorkflowStateSet.from(transition.override() ? transition.toStates() : transitionShared.toStates());
 		conditions = TransitionConditionSet.from(transition.override() ? transition.conditions() : transitionShared
 				.conditions());
+		if (method.getReturnType() == WorkflowStateSet.class) {
+			dynamic = true;
+		}
+		else if (method.getReturnType() == null) {
+			dynamic = false;
+		}
+		else {
+			throw new WorkflowTransitionException("Transition method return type cannot be other types other than ["
+					+ WorkflowStateSet.class.getName() + "]");
+		}
+		auto = transition.override() ? transition.auto() : transitionShared.auto();
+		hidden = transition.override() ? transition.hidden() : transitionShared.hidden();
+		multiEntry = transition.override() ? transition.multiEntry() : transitionShared.multiEntry();
+		maxEntry = transition.override() ? transition.maxEntry() : transitionShared.maxEntry();
+		stateTransitionStyle = transition.override() ? transition.stateTransitionStyle() : transitionShared
+				.stateTransitionStyle();
+	}
+
+	public TransitionConditionSet getConditions() {
+		return conditions;
+	}
+
+	public WorkflowStateSet getFromStates() {
+		return fromStates;
+	}
+
+	public int getMaxEntry() {
+		return maxEntry;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public StateTransitionStyle getStateTransitionStyle() {
+		return stateTransitionStyle;
+	}
+
+	public WorkflowStateSet getToStates() {
+		return toStates;
 	}
 
 	public WorkflowStateSet invoke(WorkflowInstance workflowInstance) {
@@ -58,5 +102,21 @@ public class WorkflowTransition {
 		catch (Exception e) {
 			throw new WorkflowTransitionException(e);
 		}
+	}
+
+	public boolean isAuto() {
+		return auto;
+	}
+
+	public boolean isDynamic() {
+		return dynamic;
+	}
+
+	public boolean isHidden() {
+		return hidden;
+	}
+
+	public boolean isMultiEntry() {
+		return multiEntry;
 	}
 }
