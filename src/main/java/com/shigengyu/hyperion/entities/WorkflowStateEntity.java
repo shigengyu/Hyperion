@@ -21,6 +21,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.IndexColumn;
+
 @Entity
 @Table(name = "WORKFLOW_STATE")
 public class WorkflowStateEntity {
@@ -33,6 +35,7 @@ public class WorkflowStateEntity {
 
 	@Id
 	@Column(name = "WORKFLOW_STATE_ID", length = 36)
+	@IndexColumn(name = "WORKFLOW_STATE_ID")
 	private String workflowStateId;
 
 	public String getDisplayName() {

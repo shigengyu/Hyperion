@@ -14,36 +14,10 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.shigengyu.hyperion.entities;
+package com.shigengyu.hyperion.core;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+public class WorkflowInstance {
 
-@Entity
-@Table(name = "WORKFLOW_PROCESS")
-public class WorkflowProcessEntity {
+	private int workflowInstanceId;
 
-	@Column(name = "NAME")
-	private String name;
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "WORKFLOW_PROCESS_ID")
-	private int workflowProcessId;
-
-	public String getName() {
-		return name;
-	}
-
-	public int getWorkflowProcessId() {
-		return workflowProcessId;
-	}
-
-	public void setName(final String name) {
-		this.name = name;
-	}
 }

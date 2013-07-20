@@ -19,22 +19,22 @@ package com.shigengyu.hyperion.scenarios.simple;
 import com.shigengyu.hyperion.core.Transition;
 import com.shigengyu.hyperion.core.Workflow;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
-import com.shigengyu.hyperion.core.WorkflowProcess;
+import com.shigengyu.hyperion.core.WorkflowInstance;
 
 @Workflow(id = "bfc0c860-e52e-421e-95b6-1fbd5b9d710e", initialState = InitializedState.class)
 public class SimpleWorkflow extends WorkflowDefinition {
 
 	/**
-	 * @param workflowProcess
+	 * @param workflowInstance
 	 */
 	@Transition
-	public void complete(final WorkflowProcess workflowProcess) {
+	public void complete(final WorkflowInstance workflowInstance) {
 	}
 
 	/**
-	 * @param workflowProcess
+	 * @param workflowInstance
 	 */
 	@Transition
-	public void start(final WorkflowProcess workflowProcess) {
+	public void start(final WorkflowInstance workflowInstance) {
 	}
 }

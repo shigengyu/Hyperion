@@ -18,17 +18,28 @@ package com.shigengyu.hyperion.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.ForeignKey;
 
 @Entity
 @Table(name = "WORKFLOW_EXECUTION")
 public class WorkflowExecutionEntity {
 
+	@Column(name = "TRANSITION_NAME", nullable = false)
+	private String transitionName;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "WORKFLOW_EXECUTION_ID")
-	private int workflowProcessId;
+	private int workflowExecutionId;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@ForeignKey(name = "WORKFLOW_INSTANCE_ID")
+	private WorkflowInstanceEntity workflowInstanceEntity;
 }

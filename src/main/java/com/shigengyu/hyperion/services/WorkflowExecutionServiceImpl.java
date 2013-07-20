@@ -20,14 +20,14 @@ import org.springframework.stereotype.Service;
 
 import com.shigengyu.hyperion.core.TransitionExecutionResult;
 import com.shigengyu.hyperion.core.TransitionExecutor;
-import com.shigengyu.hyperion.core.WorkflowProcess;
+import com.shigengyu.hyperion.core.WorkflowInstance;
 import com.shigengyu.hyperion.core.WorkflowTransition;
 
 @Service("workflowExecutionService")
 public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 
 	@Override
-	public TransitionExecutionResult execute(final WorkflowProcess workflowProcess,
+	public TransitionExecutionResult execute(final WorkflowInstance workflowInstance,
 			final WorkflowTransition transition, final TransitionExecutor executor) {
 
 		final TransitionExecutionResult executionResult = new TransitionExecutionResult();

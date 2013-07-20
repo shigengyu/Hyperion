@@ -36,7 +36,7 @@ public class WorkflowTransitionCollection {
 		return new WorkflowTransitionCollection(transitions);
 	}
 
-	public final WorkflowTransitionCollection filter(WorkflowStateCollection fromStates) {
+	public final WorkflowTransitionCollection filter(WorkflowStateSet fromStates) {
 
 		return new WorkflowTransitionCollection(transitions);
 	}

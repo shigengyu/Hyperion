@@ -23,19 +23,19 @@ import org.springframework.stereotype.Service;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import com.google.common.cache.CacheLoader;
-import com.shigengyu.hyperion.core.WorkflowProcess;
-import com.shigengyu.hyperion.dao.WorkflowProcessDao;
-import com.shigengyu.hyperion.entities.WorkflowProcessEntity;
+import com.shigengyu.hyperion.core.WorkflowInstance;
+import com.shigengyu.hyperion.dao.WorkflowInstanceDao;
+import com.shigengyu.hyperion.entities.WorkflowInstanceEntity;
 
 @Service
-public class WorkflowProcessCacheLoader extends CacheLoader<Integer, WorkflowProcess> {
+public class WorkflowInstanceCacheLoader extends CacheLoader<Integer, WorkflowInstance> {
 
 	@Resource
-	private WorkflowProcessDao workflowProcessDao;
+	private WorkflowInstanceDao workflowInstanceDao;
 
 	@Override
-	public WorkflowProcess load(final Integer key) throws Exception {
-		final WorkflowProcessEntity entity = workflowProcessDao.get(key);
+	public WorkflowInstance load(final Integer key) throws Exception {
+		final WorkflowInstanceEntity entity = workflowInstanceDao.get(key);
 		throw new NotImplementedException();
 	}
 }

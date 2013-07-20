@@ -27,38 +27,38 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
-import com.shigengyu.hyperion.core.WorkflowProcess;
+import com.shigengyu.hyperion.core.WorkflowInstance;
 import com.shigengyu.hyperion.core.WorkflowStateException;
 
 @Service
-public class WorkflowProcessCache {
+public class WorkflowInstanceCache {
 
-	private static WorkflowProcessCache instance;
+	private static WorkflowInstanceCache instance;
 
-	public static WorkflowProcessCache getInstance() {
+	public static WorkflowInstanceCache getInstance() {
 		return instance;
 	}
 
-	private LoadingCache<Integer, WorkflowProcess> cache;
+	private LoadingCache<Integer, WorkflowInstance> cache;
 
-	@Value("${hyperion.workflow.cache.process.timeout.duration}")
+	@Value("${hyperion.workflow.cache.instance.timeout.duration}")
 	private int timeoutDuration;
 
-	@Value("${hyperion.workflow.cache.process.timeout.timeunit}")
+	@Value("${hyperion.workflow.cache.instance.timeout.timeunit}")
 	private TimeUnit timeoutTimeUnit;
 
 	@Resource
-	private WorkflowProcessCacheLoader WorkflowProcessCacheLoader;
+	private WorkflowInstanceCacheLoader WorkflowInstanceCacheLoader;
 
-	private WorkflowProcessCache() {
+	private WorkflowInstanceCache() {
 	}
 
-	public <T extends WorkflowProcess> WorkflowProcess get(final Integer workflowProcessId) {
+	public <T extends WorkflowInstance> WorkflowInstance get(final Integer workflowInstanceId) {
 		try {
-			return cache.get(workflowProcessId);
+			return cache.get(workflowInstanceId);
 		}
 		catch (final ExecutionException e) {
-			throw new WorkflowStateException("Failed to get workflow process [{}]", workflowProcessId, e);
+			throw new WorkflowStateException("Failed to get workflow instance [{}]", workflowInstanceId, e);
 		}
 	}
 
@@ -69,7 +69,7 @@ public class WorkflowProcessCache {
 	@PostConstruct
 	private void initialize() {
 		cache = CacheBuilder.newBuilder().expireAfterAccess(timeoutDuration, timeoutTimeUnit)
-				.build(WorkflowProcessCacheLoader);
+				.build(WorkflowInstanceCacheLoader);
 
 		instance = this;
 	}

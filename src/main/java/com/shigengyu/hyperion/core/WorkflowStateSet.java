@@ -18,6 +18,7 @@ package com.shigengyu.hyperion.core;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 
 import javax.annotation.Nullable;
 
@@ -25,42 +26,44 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.shigengyu.hyperion.cache.WorkflowStateCache;
 
-public class WorkflowStateCollection {
+public class WorkflowStateSet implements Iterable<WorkflowState> {
 
 	private final Collection<WorkflowState> workflowStates;
 
-	public WorkflowStateCollection() {
+	public WorkflowStateSet() {
 		workflowStates = Lists.newArrayList();
 	}
 
-	protected WorkflowStateCollection(
-			final Collection<WorkflowState> workflowStates) {
+	protected WorkflowStateSet(final Collection<WorkflowState> workflowStates) {
 		this.workflowStates = workflowStates;
 	}
 
-	protected WorkflowStateCollection(final WorkflowState... workflowStates) {
+	protected WorkflowStateSet(final WorkflowState... workflowStates) {
 		this.workflowStates = Lists.newArrayList(workflowStates);
 	}
 
-	public WorkflowStateCollection merge(final Class<?>... workflowStateClasses) {
-		return this.merge(Lists.transform(Arrays.asList(workflowStateClasses),
-				new Function<Class<?>, WorkflowState>() {
-
-					@Override
-					@SuppressWarnings("unchecked")
-					public WorkflowState apply(@Nullable final Class<?> input) {
-						if (!input.isAssignableFrom(WorkflowState.class)) {
-							return null;
-						}
-
-						return WorkflowStateCache.getInstance().get(
-								(Class<? extends WorkflowState>) input);
-					}
-
-				}).toArray(new WorkflowState[0]));
+	@Override
+	public Iterator<WorkflowState> iterator() {
+		return workflowStates.iterator();
 	}
 
-	public WorkflowStateCollection merge(final WorkflowState... workflowStates) {
+	public WorkflowStateSet merge(final Class<?>... workflowStateClasses) {
+		return this.merge(Lists.transform(Arrays.asList(workflowStateClasses), new Function<Class<?>, WorkflowState>() {
+
+			@Override
+			@SuppressWarnings("unchecked")
+			public WorkflowState apply(@Nullable final Class<?> input) {
+				if (!input.isAssignableFrom(WorkflowState.class)) {
+					return null;
+				}
+
+				return WorkflowStateCache.getInstance().get((Class<? extends WorkflowState>) input);
+			}
+
+		}).toArray(new WorkflowState[0]));
+	}
+
+	public WorkflowStateSet merge(final WorkflowState... workflowStates) {
 		if (workflowStates == null || workflowStates.length == 0) {
 			return this;
 		}
