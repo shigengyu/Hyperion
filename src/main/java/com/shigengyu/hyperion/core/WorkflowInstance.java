@@ -18,6 +18,43 @@ package com.shigengyu.hyperion.core;
 
 public class WorkflowInstance {
 
+	private WorkflowStateSet backupWorkflowStateSet;
+
+	private WorkflowDefinition workflowDefinition;
+
 	private int workflowInstanceId;
 
+	private WorkflowStateSet workflowStateSet;
+
+	public WorkflowStateSet getBackupWorkflowStateSet() {
+		return backupWorkflowStateSet;
+	}
+
+	public WorkflowDefinition getWorkflowDefinition() {
+		return workflowDefinition;
+	}
+
+	public int getWorkflowInstanceId() {
+		return workflowInstanceId;
+	}
+
+	public WorkflowStateSet getWorkflowStateSet() {
+		return workflowStateSet;
+	}
+
+	public void setBackupWorkflowStateSet(WorkflowStateSet backupWorkflowStateSet) {
+		this.backupWorkflowStateSet = backupWorkflowStateSet;
+	}
+
+	public void setWorkflowDefinition(WorkflowDefinition workflowDefinition) {
+		this.workflowDefinition = workflowDefinition;
+	}
+
+	public void setWorkflowInstanceId(int workflowInstanceId) {
+		this.workflowInstanceId = workflowInstanceId;
+	}
+
+	public void setWorkflowStateSet(WorkflowStateSet workflowStateSet) {
+		this.workflowStateSet = workflowStateSet;
+	}
 }

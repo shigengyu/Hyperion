@@ -16,7 +16,38 @@
 
 package com.shigengyu.hyperion.core;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import com.google.common.collect.ImmutableList;
 
 public class WorkflowTransition {
 
+	private boolean auto;
+	private ImmutableList<TransitionCondition> conditions;
+	private boolean dynamic;
+	private WorkflowStateSet fromStates;
+	private boolean hidden;
+	private int maxEntry;
+	private Method method;
+	private boolean multiEntry;
+	private String name;
+	private StateTransitionStyle stateTransitionStyle;
+
+	private WorkflowStateSet toStates;
+
+	public WorkflowTransition(Method method, Transition transition, TransitionShared transitionShared) {
+	}
+
+	public WorkflowStateSet invoke(WorkflowInstance workflowInstance) {
+		try {
+			method.invoke(workflowInstance.getWorkflowDefinition(), workflowInstance);
+		}
+		catch (InvocationTargetException e) {
+		}
+		catch (Exception e) {
+		}
+
+		return null;
+	}
 }

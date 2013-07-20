@@ -27,4 +27,25 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface Transition {
 
+	boolean auto() default false;
+
+	Class<? extends WorkflowState>[] conditions() default {};
+
+	boolean dynamic() default false;
+
+	Class<? extends WorkflowState>[] fromStates() default {};
+
+	boolean hidden() default false;
+
+	int maxEntry() default 1;
+
+	boolean multiEntry() default false;
+
+	String name() default "";
+
+	boolean override() default true;
+
+	StateTransitionStyle stateTransitionStyle() default StateTransitionStyle.INCREMENTAL;
+
+	Class<? extends WorkflowState>[] toStates() default {};
 }
