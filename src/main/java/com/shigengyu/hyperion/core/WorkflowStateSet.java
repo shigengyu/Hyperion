@@ -17,8 +17,8 @@
 package com.shigengyu.hyperion.core;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -28,17 +28,29 @@ import com.shigengyu.hyperion.cache.WorkflowStateCache;
 
 public class WorkflowStateSet implements Iterable<WorkflowState> {
 
-	private final Collection<WorkflowState> workflowStates;
+	public static WorkflowStateSet empty() {
+		return new WorkflowStateSet();
+	}
 
-	public WorkflowStateSet() {
+	public static WorkflowStateSet from(Iterable<WorkflowState> workflowStates) {
+		return new WorkflowStateSet(workflowStates);
+	}
+
+	public static WorkflowStateSet from(final WorkflowState... workflowStates) {
+		return new WorkflowStateSet(workflowStates);
+	}
+
+	private final List<WorkflowState> workflowStates;
+
+	private WorkflowStateSet() {
 		workflowStates = Lists.newArrayList();
 	}
 
-	protected WorkflowStateSet(final Collection<WorkflowState> workflowStates) {
-		this.workflowStates = workflowStates;
+	private WorkflowStateSet(final Iterable<WorkflowState> workflowStates) {
+		this.workflowStates = Lists.newArrayList(workflowStates);
 	}
 
-	protected WorkflowStateSet(final WorkflowState... workflowStates) {
+	private WorkflowStateSet(final WorkflowState... workflowStates) {
 		this.workflowStates = Lists.newArrayList(workflowStates);
 	}
 

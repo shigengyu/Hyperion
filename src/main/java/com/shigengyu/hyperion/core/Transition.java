@@ -29,9 +29,7 @@ public @interface Transition {
 
 	boolean auto() default false;
 
-	Class<? extends WorkflowState>[] conditions() default {};
-
-	boolean dynamic() default false;
+	Class<? extends TransitionCondition>[] conditions() default {};
 
 	Class<? extends WorkflowState>[] fromStates() default {};
 

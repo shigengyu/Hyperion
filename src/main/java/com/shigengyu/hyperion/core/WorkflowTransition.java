@@ -19,12 +19,10 @@ package com.shigengyu.hyperion.core;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import com.google.common.collect.ImmutableList;
-
 public class WorkflowTransition {
 
-	private boolean auto;
-	private ImmutableList<TransitionCondition> conditions;
+	private final boolean auto;
+	private final TransitionConditionSet conditions;
 	private boolean dynamic;
 	private WorkflowStateSet fromStates;
 	private boolean hidden;
@@ -37,17 +35,28 @@ public class WorkflowTransition {
 	private WorkflowStateSet toStates;
 
 	public WorkflowTransition(Method method, Transition transition, TransitionShared transitionShared) {
+		auto = transition.override() ? transition.auto() : transitionShared.auto();
+		conditions = TransitionConditionSet.from(transition.override() ? transition.conditions() : transitionShared
+				.conditions());
 	}
 
 	public WorkflowStateSet invoke(WorkflowInstance workflowInstance) {
 		try {
-			method.invoke(workflowInstance.getWorkflowDefinition(), workflowInstance);
+			WorkflowStateSet workflowStateSet = (WorkflowStateSet) method.invoke(
+					workflowInstance.getWorkflowDefinition(), workflowInstance);
+			return workflowStateSet;
 		}
 		catch (InvocationTargetException e) {
+			Throwable t = e;
+			do {
+				t = t.getCause();
+			}
+			while (t instanceof InvocationTargetException);
+
+			throw new WorkflowExecutionException(t);
 		}
 		catch (Exception e) {
+			throw new WorkflowTransitionException(e);
 		}
-
-		return null;
 	}
 }
