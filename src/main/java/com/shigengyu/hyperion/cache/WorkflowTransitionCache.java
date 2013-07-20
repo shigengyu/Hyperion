@@ -44,8 +44,7 @@ public class WorkflowTransitionCache {
 	@Resource
 	private WorkflowTransitionCacheLoader workflowTransitionCacheLoader;
 
-	public <T extends WorkflowTransition> ImmutableList<WorkflowTransition> get(
-			final WorkflowDefinition workflowDefinition) {
+	public ImmutableList<WorkflowTransition> get(final WorkflowDefinition workflowDefinition) {
 		try {
 			ImmutableList<WorkflowTransition> transitions = cache.getIfPresent(workflowDefinition);
 			if (transitions != null) {

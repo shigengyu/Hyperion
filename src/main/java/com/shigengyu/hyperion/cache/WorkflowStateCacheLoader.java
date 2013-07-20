@@ -16,18 +16,26 @@
 
 package com.shigengyu.hyperion.cache;
 
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.cache.CacheLoader;
 import com.shigengyu.hyperion.core.WorkflowState;
+import com.shigengyu.hyperion.dao.WorkflowStateDao;
 
 @Service
-public class WorkflowStateCacheLoader extends
-		CacheLoader<Class<? extends WorkflowState>, WorkflowState> {
+public class WorkflowStateCacheLoader extends CacheLoader<Class<? extends WorkflowState>, WorkflowState> {
+
+	@Resource(name = "workflowStateDao")
+	private WorkflowStateDao workflowStateDao;
 
 	@Override
-	public WorkflowState load(final Class<? extends WorkflowState> key)
-			throws Exception {
-		return key.getConstructor().newInstance();
+	@Transactional
+	public WorkflowState load(final Class<? extends WorkflowState> key) throws Exception {
+		WorkflowState workflowState = key.getConstructor().newInstance();
+		workflowStateDao.saveOrUpdate(workflowState.toEntity());
+		return workflowState;
 	}
 }

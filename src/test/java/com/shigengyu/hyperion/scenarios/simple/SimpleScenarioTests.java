@@ -18,22 +18,42 @@ package com.shigengyu.hyperion.scenarios.simple;
 
 import javax.annotation.Resource;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.util.Assert;
 
 import com.shigengyu.hyperion.cache.WorkflowDefinitionCache;
 import com.shigengyu.hyperion.core.WorkflowState;
 import com.shigengyu.hyperion.environment.TestEnvironment;
+import com.shigengyu.hyperion.services.WorkflowContextBinarySerializer;
+import com.shigengyu.hyperion.services.WorkflowContextXmlSerializer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(TestEnvironment.APPLICATION_CONTEXT_CONFIG)
 public class SimpleScenarioTests {
 
 	@Resource
+	private WorkflowContextBinarySerializer binarySerializer;
+
+	@Resource
 	private TestEnvironment testEnvironment;
+
+	@Resource
+	private WorkflowContextXmlSerializer xmlSerializer;
+
+	@Test
+	public void binarySerialization() {
+		SimpleWorkflowContext workflowContext = new SimpleWorkflowContext();
+		workflowContext.setName("shigengyu");
+		workflowContext.setNumber(42);
+		String base64String = binarySerializer.serialize(workflowContext);
+
+		SimpleWorkflowContext deserializedWorkflowContext = binarySerializer.deserialize(base64String);
+		Assert.assertEquals("shigengyu", deserializedWorkflowContext.getName());
+		Assert.assertEquals(42, deserializedWorkflowContext.getNumber());
+	}
 
 	@Test
 	public void loadDefinitions() {
@@ -42,6 +62,18 @@ public class SimpleScenarioTests {
 
 	@Test
 	public void loadStates() {
-		Assert.notNull(WorkflowState.of(InitializedState.class));
+		Assert.assertNotNull(WorkflowState.of(InitializedState.class));
+	}
+
+	@Test
+	public void xmlSerialization() {
+		SimpleWorkflowContext workflowContext = new SimpleWorkflowContext();
+		workflowContext.setName("shigengyu");
+		workflowContext.setNumber(42);
+		String xml = xmlSerializer.serialize(workflowContext);
+
+		SimpleWorkflowContext deserializedWorkflowContext = xmlSerializer.deserialize(xml);
+		Assert.assertEquals("shigengyu", deserializedWorkflowContext.getName());
+		Assert.assertEquals(42, deserializedWorkflowContext.getNumber());
 	}
 }

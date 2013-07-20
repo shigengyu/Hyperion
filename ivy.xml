@@ -35,6 +35,13 @@
 			<artifact name="spring-test" ext="jar" conf="runtime" />
 		</dependency>
 		
+		<dependency org="org.aspectj" name="aspectjrt" rev="1.7.3" conf="runtime">
+			<artifact name="aspectjrt" ext="jar" conf="runtime" />
+		</dependency>
+		<dependency org="org.aspectj" name="aspectjweaver" rev="1.7.3" conf="runtime">
+			<artifact name="aspectjweaver" ext="jar" conf="runtime" />
+		</dependency>
+		
 		<dependency org="org.springframework" name="spring-hibernate3" rev="2.0.8" conf="runtime" />
 		
 		<dependency org="org.hibernate" name="hibernate-core" rev="3.5.6-Final" conf="runtime" />

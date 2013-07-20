@@ -19,6 +19,7 @@ package com.shigengyu.hyperion.core;
 import org.springframework.util.StringUtils;
 
 import com.shigengyu.hyperion.cache.WorkflowStateCache;
+import com.shigengyu.hyperion.entities.WorkflowStateEntity;
 
 public abstract class WorkflowState {
 
@@ -72,5 +73,13 @@ public abstract class WorkflowState {
 
 	public <T extends WorkflowState> boolean is(final Class<T> workflowClass) {
 		return this.getClass().equals(workflowClass);
+	}
+
+	public WorkflowStateEntity toEntity() {
+		WorkflowStateEntity entity = new WorkflowStateEntity();
+		entity.setWorkflowStateId(workflowStateId);
+		entity.setName(name);
+		entity.setDisplayName(displayName);
+		return entity;
 	}
 }

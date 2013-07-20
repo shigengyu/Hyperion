@@ -16,6 +16,7 @@
 
 package com.shigengyu.hyperion.core;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
@@ -23,17 +24,19 @@ import com.shigengyu.hyperion.services.WorkflowContextXmlSerializer;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 @XStreamAlias("WorkflowContext")
-public class WorkflowContext {
+public class WorkflowContext implements Serializable {
 
 	public static final String MAP_ENTRIES_ELEMENT_NAME = "MapEntries";
 
-	private final Map<String, Object> innerMap = Maps.newHashMap();
+	private static final long serialVersionUID = -7410578804012994691L;
+
+	private final Map<String, Object> map = Maps.newHashMap();
 
 	public WorkflowContext() {
 	}
 
 	public <T> T get(final String key) {
-		return (T) innerMap.get(key);
+		return (T) map.get(key);
 	}
 
 	public WorkflowContext loadXml(final String xml) {
@@ -41,7 +44,7 @@ public class WorkflowContext {
 	}
 
 	public <T> void put(final String key, final T value) {
-		innerMap.put(key, value);
+		map.put(key, value);
 	}
 
 	public String toXml() {

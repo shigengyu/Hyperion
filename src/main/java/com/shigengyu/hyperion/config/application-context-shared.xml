@@ -10,9 +10,12 @@
 	<import resource="hyperion-dao.xml" />
 	<import resource="hyperion-services.xml" />
 
+	<aop:aspectj-autoproxy />
+
 	<context:component-scan
 		base-package="com.shigengyu.hyperion.services,
 		              com.shigengyu.hyperion.dao,
-		              com.shigengyu.hyperion.cache" />
+		              com.shigengyu.hyperion.cache,
+		              com.shigengyu.hyperion.logging" />
 
 </beans>

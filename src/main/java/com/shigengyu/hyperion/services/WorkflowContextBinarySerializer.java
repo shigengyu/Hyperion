@@ -16,6 +16,8 @@
 
 package com.shigengyu.hyperion.services;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.SerializationUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -26,14 +28,12 @@ import com.shigengyu.hyperion.core.WorkflowContext;
 public class WorkflowContextBinarySerializer implements WorkflowContextSerializer {
 
 	@Override
-	public <T extends WorkflowContext> T deserialize(String xml) {
-		// TODO Auto-generated method stub
-		return null;
+	public <T extends WorkflowContext> T deserialize(String input) {
+		return (T) SerializationUtils.deserialize(Base64.decodeBase64(input));
 	}
 
 	@Override
 	public String serialize(WorkflowContext workflowContext) {
-		// TODO Auto-generated method stub
-		return null;
+		return Base64.encodeBase64String(SerializationUtils.serialize(workflowContext));
 	}
 }

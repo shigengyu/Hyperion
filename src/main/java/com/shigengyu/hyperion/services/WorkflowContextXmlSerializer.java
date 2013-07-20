@@ -53,8 +53,8 @@ public class WorkflowContextXmlSerializer implements WorkflowContextSerializer, 
 	}
 
 	@Override
-	public <T extends WorkflowContext> T deserialize(final String xml) {
-		return (T) xStream.fromXML(xml);
+	public <T extends WorkflowContext> T deserialize(final String input) {
+		return (T) xStream.fromXML(input);
 	}
 
 	public void initialize(final String... packageNames) {

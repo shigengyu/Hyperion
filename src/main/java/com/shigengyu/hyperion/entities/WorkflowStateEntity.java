@@ -25,10 +25,37 @@ import javax.persistence.Table;
 @Table(name = "WORKFLOW_STATE")
 public class WorkflowStateEntity {
 
+	@Column(name = "DISPLAY_NAME", unique = true)
+	private String displayName;
+
 	@Column(name = "NAME", unique = true)
 	private String name;
 
 	@Id
 	@Column(name = "WORKFLOW_STATE_ID", length = 36)
-	private Integer workflowStateId;
+	private String workflowStateId;
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getWorkflowStateId() {
+		return workflowStateId;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setWorkflowStateId(String workflowStateId) {
+		this.workflowStateId = workflowStateId;
+	}
 }

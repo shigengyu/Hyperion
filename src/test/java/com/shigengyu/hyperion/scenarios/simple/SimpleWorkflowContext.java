@@ -22,4 +22,25 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 @XStreamAlias("SimpleWorkflowContext")
 public class SimpleWorkflowContext extends WorkflowContext {
 
+	private static final long serialVersionUID = 3613090282594518910L;
+
+	private String name;
+
+	private int number;
+
+	public String getName() {
+		return name;
+	}
+
+	public int getNumber() {
+		return number;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setNumber(int number) {
+		this.number = number;
+	}
 }

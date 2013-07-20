@@ -20,7 +20,7 @@ import com.shigengyu.hyperion.core.WorkflowContext;
 
 public interface WorkflowContextSerializer {
 
-	public String serialize(final WorkflowContext workflowContext);
+	public <T extends WorkflowContext> T deserialize(final String input);
 
-	public <T extends WorkflowContext> T deserialize(final String xml);
+	public String serialize(final WorkflowContext workflowContext);
 }
