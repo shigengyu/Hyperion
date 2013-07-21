@@ -34,6 +34,24 @@ public class WorkflowInstance {
 		workflowStateSet = WorkflowStateSet.from(workflowDefinition.getInitialState());
 	}
 
+	private WorkflowInstance(WorkflowInstance workflowInstance) {
+		workflowInstanceId = workflowInstance.workflowInstanceId;
+		workflowDefinition = workflowInstance.workflowDefinition;
+		workflowStateSet = WorkflowStateSet.from(workflowInstance.workflowStateSet);
+	}
+
+	@Override
+	public WorkflowInstance clone() {
+		WorkflowInstance workflowInstance = new WorkflowInstance(this);
+		return workflowInstance;
+	}
+
+	public void fill(WorkflowInstance workflowInstance) {
+		workflowInstanceId = workflowInstance.workflowInstanceId;
+		workflowDefinition = workflowInstance.workflowDefinition;
+		workflowStateSet = workflowInstance.workflowStateSet;
+	}
+
 	public WorkflowDefinition getWorkflowDefinition() {
 		return workflowDefinition;
 	}

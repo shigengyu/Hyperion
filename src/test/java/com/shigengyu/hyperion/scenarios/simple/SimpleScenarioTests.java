@@ -25,6 +25,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.shigengyu.hyperion.cache.WorkflowDefinitionCache;
+import com.shigengyu.hyperion.cache.WorkflowTransitionCache;
+import com.shigengyu.hyperion.core.WorkflowDefinition;
 import com.shigengyu.hyperion.core.WorkflowState;
 import com.shigengyu.hyperion.environment.TestEnvironment;
 import com.shigengyu.hyperion.services.WorkflowContextBinarySerializer;
@@ -63,6 +65,14 @@ public class SimpleScenarioTests {
 	@Test
 	public void loadStates() {
 		Assert.assertNotNull(WorkflowState.of(InitializedState.class));
+	}
+
+	@Test
+	public void loadTransitions() {
+		WorkflowDefinition workflowDefinition = WorkflowDefinitionCache.getInstance().get(SimpleWorkflow.class);
+		Assert.assertNotNull(workflowDefinition);
+
+		Assert.assertEquals(2, WorkflowTransitionCache.getInstance().get(workflowDefinition).size());
 	}
 
 	@Test

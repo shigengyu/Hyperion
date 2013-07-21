@@ -49,8 +49,9 @@ public class WorkflowTransition {
 			dynamic = false;
 		}
 		else {
-			throw new WorkflowTransitionException("Transition method return type cannot be other types other than ["
-					+ WorkflowStateSet.class.getName() + "]");
+			throw new WorkflowTransitionException(
+					"Transition method return type cannot be other types other than [{}]",
+					WorkflowStateSet.class.getName());
 		}
 		auto = transition.override() ? transition.auto() : transitionShared.auto();
 		hidden = transition.override() ? transition.hidden() : transitionShared.hidden();
