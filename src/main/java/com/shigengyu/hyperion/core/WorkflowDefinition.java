@@ -49,6 +49,16 @@ public abstract class WorkflowDefinition {
 		workflowContextType = workflow.contextType() == null ? WorkflowContext.class : workflow.contextType();
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof WorkflowDefinition)) {
+			return false;
+		}
+
+		WorkflowDefinition other = (WorkflowDefinition) obj;
+		return workflowDefinitionId.equals(other.workflowDefinitionId);
+	}
+
 	public WorkflowState getInitialState() {
 		return initialState;
 	}
@@ -67,6 +77,11 @@ public abstract class WorkflowDefinition {
 
 	public Class<? extends WorkflowDefinition> getWorkflowDefinitionType() {
 		return workflowDefinitionType;
+	}
+
+	@Override
+	public int hashCode() {
+		return workflowDefinitionId.hashCode();
 	}
 
 	public WorkflowDefinitionEntity toEntity() {

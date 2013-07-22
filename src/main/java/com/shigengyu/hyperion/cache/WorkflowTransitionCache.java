@@ -16,6 +16,8 @@
 
 package com.shigengyu.hyperion.cache;
 
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import javax.annotation.PostConstruct;
@@ -23,9 +25,12 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.google.common.base.Function;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Maps;
+import com.shigengyu.hyperion.common.ListHashMap;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
 import com.shigengyu.hyperion.core.WorkflowTransition;
 import com.shigengyu.hyperion.core.WorkflowTransitionException;
@@ -41,16 +46,46 @@ public class WorkflowTransitionCache {
 
 	private LoadingCache<WorkflowDefinition, ImmutableList<WorkflowTransition>> cache;
 
+	private final Map<WorkflowDefinition, ListHashMap<String, WorkflowTransition>> map = Maps.newHashMap();
+
 	@Resource
 	private WorkflowTransitionCacheLoader workflowTransitionCacheLoader;
 
 	public ImmutableList<WorkflowTransition> get(final WorkflowDefinition workflowDefinition) {
 		try {
-			return cache.get(workflowDefinition);
+			ImmutableList<WorkflowTransition> transitions = cache.getIfPresent(workflowDefinition);
+			if (transitions != null) {
+				return transitions;
+			}
+
+			transitions = cache.get(workflowDefinition);
+
+			// Cache transitions by workflow definition and transition name
+			ListHashMap<String, WorkflowTransition> listHashMap = new ListHashMap<String, WorkflowTransition>();
+			listHashMap.addAll(transitions, new Function<WorkflowTransition, String>() {
+
+				@Override
+				public String apply(WorkflowTransition input) {
+					return input.getName();
+				}
+			});
+			map.put(workflowDefinition, listHashMap);
+
+			return transitions;
 		}
 		catch (final ExecutionException e) {
 			throw new WorkflowTransitionException("Failed to get workflow transitions by definition [{}]",
 					workflowDefinition.getName(), e);
+		}
+	}
+
+	public ImmutableList<WorkflowTransition> get(final WorkflowDefinition workflowDefinition, String transitionName) {
+		List<WorkflowTransition> list = map.get(workflowDefinition).get(transitionName);
+		if (list != null) {
+			return ImmutableList.copyOf(list);
+		}
+		else {
+			return ImmutableList.of();
 		}
 	}
 

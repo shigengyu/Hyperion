@@ -19,6 +19,8 @@ package com.shigengyu.hyperion.core;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.apache.commons.lang.StringUtils;
+
 public class WorkflowTransition {
 
 	private final boolean auto;
@@ -29,7 +31,7 @@ public class WorkflowTransition {
 	private final int maxEntry;
 	private final Method method;
 	private final boolean multiEntry;
-	private final String name;
+	private String name;
 	private final StateTransitionStyle stateTransitionStyle;
 
 	private final WorkflowStateSet toStates;
@@ -37,11 +39,17 @@ public class WorkflowTransition {
 	public WorkflowTransition(Method method, Transition transition, TransitionShared transitionShared) {
 		this.method = method;
 		name = transition.override() ? transition.name() : transitionShared.name();
+		if (StringUtils.isEmpty(name)) {
+			name = method.getName();
+		}
+
 		fromStates = WorkflowStateSet.from(transition.override() ? transition.fromStates() : transitionShared
 				.fromStates());
 		toStates = WorkflowStateSet.from(transition.override() ? transition.toStates() : transitionShared.toStates());
+
 		conditions = TransitionConditionSet.from(transition.override() ? transition.conditions() : transitionShared
 				.conditions());
+
 		if (method.getReturnType() == WorkflowStateSet.class) {
 			dynamic = true;
 		}
@@ -53,6 +61,7 @@ public class WorkflowTransition {
 					"Transition method return type cannot be other types other than [{}]",
 					WorkflowStateSet.class.getName());
 		}
+
 		auto = transition.override() ? transition.auto() : transitionShared.auto();
 		hidden = transition.override() ? transition.hidden() : transitionShared.hidden();
 		multiEntry = transition.override() ? transition.multiEntry() : transitionShared.multiEntry();

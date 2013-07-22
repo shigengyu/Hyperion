@@ -73,6 +73,8 @@ public class SimpleScenarioTests {
 		Assert.assertNotNull(workflowDefinition);
 
 		Assert.assertEquals(2, WorkflowTransitionCache.getInstance().get(workflowDefinition).size());
+		Assert.assertEquals(1, WorkflowTransitionCache.getInstance().get(workflowDefinition, "start").size());
+		Assert.assertEquals(0, WorkflowTransitionCache.getInstance().get(workflowDefinition, "doesNotExist").size());
 	}
 
 	@Test

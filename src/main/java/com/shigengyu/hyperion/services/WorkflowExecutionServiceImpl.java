@@ -16,6 +16,8 @@
 
 package com.shigengyu.hyperion.services;
 
+import java.util.Set;
+
 import org.springframework.stereotype.Service;
 
 import com.shigengyu.hyperion.core.TransitionExecutionResult;
@@ -27,10 +29,16 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 
 	@Override
 	public TransitionExecutionResult execute(final WorkflowInstance workflowInstance,
-			final WorkflowTransition transition) {
+			final Set<WorkflowTransition> transitions) {
 
 		final TransitionExecutionResult executionResult = new TransitionExecutionResult();
 
 		return executionResult;
+	}
+
+	@Override
+	public TransitionExecutionResult execute(WorkflowInstance workflowInstance, String transitionName) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
