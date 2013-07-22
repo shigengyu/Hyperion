@@ -38,7 +38,7 @@ public class HyperionRuntimeEnvironmentController {
 	public String getWorkflowDefinitions() {
 		return StringUtils.join(
 				Lists.transform(
-						WorkflowDefinitionCache.getInstance().loadPackages("com.shigengyu.hyperion.scenarios.simple")
+						WorkflowDefinitionCache.getInstance().scanPackages("com.shigengyu.hyperion.scenarios.simple")
 								.getAll(), new Function<WorkflowDefinition, String>() {
 
 							@Override

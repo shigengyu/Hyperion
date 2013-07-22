@@ -16,6 +16,7 @@
 
 package com.shigengyu.hyperion.cache;
 
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import javax.annotation.PostConstruct;
@@ -26,8 +27,11 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableSet;
+import com.shigengyu.hyperion.core.State;
 import com.shigengyu.hyperion.core.WorkflowState;
 import com.shigengyu.hyperion.core.WorkflowStateException;
+import com.shigengyu.hyperion.utils.ReflectionsHelper;
 
 @Service
 @Lazy(false)
@@ -56,10 +60,28 @@ public class WorkflowStateCache {
 		}
 	}
 
+	public ImmutableSet<WorkflowState> getAll() {
+		return ImmutableSet.copyOf(cache.asMap().values());
+	}
+
 	@PostConstruct
 	private void initialize() {
 		cache = CacheBuilder.newBuilder().build(workflowStateCacheLoader);
-
 		instance = this;
+	}
+
+	public void scanPackages(final String... packageNames) {
+		Set<Class<?>> stateTypes = ReflectionsHelper.createReflections(packageNames).getTypesAnnotatedWith(State.class);
+		for (Class<?> clazz : stateTypes) {
+			if (WorkflowState.class.isAssignableFrom(clazz)) {
+				@SuppressWarnings("unchecked")
+				Class<? extends WorkflowState> workflowStateClass = (Class<? extends WorkflowState>) clazz;
+				WorkflowStateCache.getInstance().get(workflowStateClass);
+			}
+			else {
+				throw new WorkflowStateException("Workflow state [{}] does not inherit [{}]", clazz.getName(),
+						WorkflowState.class.getName());
+			}
+		}
 	}
 }

@@ -24,12 +24,16 @@ import org.reflections.vfs.Vfs;
 import org.reflections.vfs.Vfs.Dir;
 import org.reflections.vfs.Vfs.UrlType;
 import org.reflections.vfs.ZipDir;
-import org.springframework.stereotype.Service;
 
-@Service
-public class ReflectionsHelper {
+public final class ReflectionsHelper {
 
 	public static class CustomUrlType implements UrlType {
+
+		private final String jarExtension;
+
+		private CustomUrlType(String jarExtension) {
+			this.jarExtension = jarExtension;
+		}
 
 		@Override
 		public Dir createDir(final URL url) throws Exception {
@@ -38,14 +42,16 @@ public class ReflectionsHelper {
 
 		@Override
 		public boolean matches(final URL url) throws Exception {
-			// some jar files may not end with .jar
-			return url.toExternalForm().contains(".jar");
+			return url.toExternalForm().endsWith(jarExtension);
 		}
-
 	}
 
 	static {
-		Vfs.addDefaultURLTypes(new CustomUrlType());
+		addDefaultURLType(".jar");
+	}
+
+	public static void addDefaultURLType(String jarExtension) {
+		Vfs.addDefaultURLTypes(new CustomUrlType(jarExtension));
 	}
 
 	public static Reflections createReflections(final String... packageNames) {

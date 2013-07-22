@@ -42,8 +42,4 @@ public class WorkflowDefinitionCacheLoader extends CacheLoader<Class<? extends W
 
 		return workflowDefinition;
 	}
-
-	private void loadStates() {
-
-	}
 }

@@ -70,7 +70,7 @@ public class WorkflowDefinitionCache {
 		instance = this;
 	}
 
-	public WorkflowDefinitionCache loadPackages(final String... packageNames) {
+	public WorkflowDefinitionCache scanPackages(final String... packageNames) {
 		final Reflections reflections = ReflectionsHelper.createReflections(packageNames);
 		for (final Class<?> clazz : reflections.getTypesAnnotatedWith(Workflow.class)) {
 			if (!WorkflowDefinition.class.isAssignableFrom(clazz)) {

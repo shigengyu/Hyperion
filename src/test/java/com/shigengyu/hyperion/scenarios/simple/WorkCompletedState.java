@@ -17,8 +17,9 @@
 package com.shigengyu.hyperion.scenarios.simple;
 
 import com.shigengyu.hyperion.core.State;
+import com.shigengyu.hyperion.core.WorkflowState;
 
 @State(id = "220dc5bb-5669-4c21-a7c8-7e6b32e5f522", name = "Completed")
-public class WorkCompletedState {
+public class WorkCompletedState extends WorkflowState {
 
 }
