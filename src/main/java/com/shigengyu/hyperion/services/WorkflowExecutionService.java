@@ -16,7 +16,7 @@
 
 package com.shigengyu.hyperion.services;
 
-import java.util.Set;
+import java.util.List;
 
 import com.shigengyu.hyperion.core.TransitionExecutionResult;
 import com.shigengyu.hyperion.core.WorkflowInstance;
@@ -24,7 +24,7 @@ import com.shigengyu.hyperion.core.WorkflowTransition;
 
 public interface WorkflowExecutionService {
 
-	TransitionExecutionResult execute(WorkflowInstance workflowInstance, Set<WorkflowTransition> transitions);
+	TransitionExecutionResult execute(WorkflowInstance workflowInstance, List<WorkflowTransition> transitions);
 
 	TransitionExecutionResult execute(WorkflowInstance workflowInstance, String transitionName);
 }

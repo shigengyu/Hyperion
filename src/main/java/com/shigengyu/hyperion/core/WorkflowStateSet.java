@@ -104,4 +104,9 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 
 		return this;
 	}
+
+	public WorkflowStateSet remove(Class<? extends WorkflowState> workflowState) {
+		workflowStates.remove(WorkflowState.of(workflowState));
+		return this;
+	}
 }

@@ -59,6 +59,15 @@ public abstract class WorkflowState {
 		return false;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof WorkflowState)) {
+			return false;
+		}
+
+		return workflowStateId.equals(((WorkflowState) obj).workflowStateId);
+	}
+
 	public String getDisplayName() {
 		return displayName;
 	}
@@ -69,6 +78,11 @@ public abstract class WorkflowState {
 
 	public String getWorkflowStateId() {
 		return workflowStateId;
+	}
+
+	@Override
+	public int hashCode() {
+		return workflowStateId.hashCode();
 	}
 
 	public <T extends WorkflowState> boolean is(final Class<T> workflowClass) {
