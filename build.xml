@@ -24,6 +24,7 @@
 	<!-- download Ivy from web site so that it can be used even without any special installation -->
 	<target name="download-ivy" unless="skip.download">
 		<echo message="installing ivy..." />
+		<mkdir dir="${ivy.jar.dir}" />
 		<get src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" dest="${ivy.jar.file}" usetimestamp="true" />
 	</target>
 
