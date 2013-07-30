@@ -16,6 +16,7 @@
 
 package com.shigengyu.hyperion.entities;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -32,7 +33,9 @@ import org.hibernate.annotations.IndexColumn;
 
 @Entity
 @Table(name = "WORKFLOW_INSTANCE")
-public class WorkflowInstanceEntity {
+public class WorkflowInstanceEntity implements Serializable {
+
+	private static final long serialVersionUID = 3680613315489463538L;
 
 	@ManyToOne
 	@ForeignKey(name = "WORKFLOW_DEFINITION_ID")

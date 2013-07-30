@@ -16,6 +16,8 @@
 
 package com.shigengyu.hyperion.entities;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -23,7 +25,9 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "WORKFLOW_DEFINITION")
-public class WorkflowDefinitionEntity {
+public class WorkflowDefinitionEntity implements Serializable {
+
+	private static final long serialVersionUID = 6736572663635946908L;
 
 	@Column(name = "NAME", unique = true)
 	private String name;

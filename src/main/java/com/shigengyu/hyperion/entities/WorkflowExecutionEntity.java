@@ -16,6 +16,8 @@
 
 package com.shigengyu.hyperion.entities;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -29,7 +31,9 @@ import org.hibernate.annotations.ForeignKey;
 
 @Entity
 @Table(name = "WORKFLOW_EXECUTION")
-public class WorkflowExecutionEntity {
+public class WorkflowExecutionEntity implements Serializable {
+
+	private static final long serialVersionUID = 4331223828367831346L;
 
 	@Column(name = "TRANSITION_NAME", nullable = false)
 	private String transitionName;

@@ -17,20 +17,20 @@
 package com.shigengyu.hyperion.environment;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class TestEnvironment {
 
 	public static final String APPLICATION_CONTEXT_CONFIG = "classpath:com/shigengyu/hyperion/config/application-context-test.xml";
 
-	@Value("hyperion.context.definition.scan")
+	@Value("${hyperion.workflow.context.scan}")
 	private String workflowContextScanPackage;
 
-	@Value("hyperion.workflow.definition.scan")
+	@Value("${hyperion.workflow.definition.scan}")
 	private String workflowDefinitionScanPackage;
 
-	@Value("hyperion.state.definition.scan")
+	@Value("${hyperion.workflow.state.scan}")
 	private String workflowStateScanPackage;
 
 	public String getWorkflowContextScanPackage() {

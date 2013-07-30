@@ -88,11 +88,11 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 				return WorkflowStateCache.getInstance().get((Class<? extends WorkflowState>) input);
 			}
 
-		}).toArray(new WorkflowState[0]));
+		}));
 	}
 
-	public WorkflowStateSet merge(final WorkflowState... workflowStates) {
-		if (workflowStates == null || workflowStates.length == 0) {
+	public WorkflowStateSet merge(final Iterable<WorkflowState> workflowStates) {
+		if (workflowStates == null || workflowStates.iterator().hasNext()) {
 			return this;
 		}
 
@@ -105,8 +105,25 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 		return this;
 	}
 
+	public WorkflowStateSet merge(WorkflowStateSet workflowStateSet) {
+		merge(workflowStateSet.workflowStates);
+		return this;
+	}
+
 	public WorkflowStateSet remove(Class<? extends WorkflowState> workflowState) {
 		workflowStates.remove(WorkflowState.of(workflowState));
+		return this;
+	}
+
+	public WorkflowStateSet remove(Iterable<WorkflowState> workflowStates) {
+		for (WorkflowState workflowState : workflowStates) {
+			remove(workflowState);
+		}
+		return this;
+	}
+
+	public WorkflowStateSet remove(WorkflowState workflowState) {
+		workflowStates.remove(workflowState);
 		return this;
 	}
 }

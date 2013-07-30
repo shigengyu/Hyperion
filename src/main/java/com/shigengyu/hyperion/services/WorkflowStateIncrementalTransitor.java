@@ -10,6 +10,6 @@ public class WorkflowStateIncrementalTransitor implements WorkflowStateTransitor
 
 	@Override
 	public void transit(WorkflowInstance workflowInstance, WorkflowStateSet fromStates, WorkflowStateSet toStates) {
-		workflowInstance.setWorkflowStateSet(workflowInstance.getWorkflowStateSet());
+		workflowInstance.setWorkflowStateSet(workflowInstance.getWorkflowStateSet().remove(fromStates).merge(toStates));
 	}
 }

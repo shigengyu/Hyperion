@@ -16,6 +16,8 @@
 
 package com.shigengyu.hyperion.entities;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -25,7 +27,9 @@ import org.hibernate.annotations.IndexColumn;
 
 @Entity
 @Table(name = "WORKFLOW_STATE")
-public class WorkflowStateEntity {
+public class WorkflowStateEntity implements Serializable {
+
+	private static final long serialVersionUID = -5403575859038215742L;
 
 	@Column(name = "DISPLAY_NAME", unique = true)
 	private String displayName;

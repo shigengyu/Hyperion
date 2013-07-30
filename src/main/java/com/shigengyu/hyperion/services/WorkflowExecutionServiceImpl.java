@@ -16,8 +16,6 @@
 
 package com.shigengyu.hyperion.services;
 
-import java.util.List;
-
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -27,6 +25,7 @@ import com.shigengyu.hyperion.cache.WorkflowTransitionCache;
 import com.shigengyu.hyperion.core.StateTransitionStyle;
 import com.shigengyu.hyperion.core.TransitionExecutionResult;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
+import com.shigengyu.hyperion.core.WorkflowExecutionException;
 import com.shigengyu.hyperion.core.WorkflowInstance;
 import com.shigengyu.hyperion.core.WorkflowStateSet;
 import com.shigengyu.hyperion.core.WorkflowTransition;
@@ -41,45 +40,53 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 	private WorkflowStateTransitor replaceStateTransitor;
 
 	@Override
+	public TransitionExecutionResult execute(WorkflowInstance workflowInstance, String transitionName) {
+		WorkflowDefinition workflowDefinition = workflowInstance.getWorkflowDefinition();
+		ImmutableList<WorkflowTransition> transitions = WorkflowTransitionCache.getInstance().get(workflowDefinition,
+				transitionName);
+
+		if (transitions.isEmpty()) {
+			throw new WorkflowExecutionException("Transition [{}] not found in workflow definition [{}]",
+					transitionName, workflowInstance.getWorkflowDefinition().getName());
+		}
+		else if (transitions.size() > 0) {
+			throw new WorkflowExecutionException(
+					"Multiple transitions with name [{}] found in workflow definition [{}]", transitionName,
+					workflowInstance.getWorkflowDefinition().getName());
+		}
+
+		return execute(workflowInstance, transitions.get(0));
+	}
+
+	@Override
 	public TransitionExecutionResult execute(final WorkflowInstance workflowInstance,
-			final List<WorkflowTransition> transitions) {
+			final WorkflowTransition transition) {
 
 		final TransitionExecutionResult executionResult = new TransitionExecutionResult();
 
 		WorkflowInstance backupWorkflowInstance = workflowInstance.clone();
 		try {
-			WorkflowStateSet workflowStateSet = workflowInstance.getWorkflowStateSet();
-			for (WorkflowTransition transition : transitions) {
-				WorkflowStateSet fromStates = workflowInstance.getWorkflowStateSet();
-				WorkflowStateSet toStates = null;
-				if (transition.isDynamic()) {
-					toStates = transition.invoke(backupWorkflowInstance);
-				}
-				else {
-					transition.invoke(backupWorkflowInstance);
-					toStates = transition.getToStates();
-				}
+			WorkflowStateSet fromStates = workflowInstance.getWorkflowStateSet();
+			WorkflowStateSet toStates = null;
+			if (transition.isDynamic()) {
+				toStates = transition.invoke(backupWorkflowInstance);
+			}
+			else {
+				transition.invoke(backupWorkflowInstance);
+				toStates = transition.getToStates();
+			}
 
-				if (transition.getStateTransitionStyle() == StateTransitionStyle.INCREMENTAL) {
-					incrementalStateTransitor.transit(workflowInstance, fromStates, toStates);
-				}
-				else {
-					replaceStateTransitor.transit(workflowInstance, fromStates, toStates);
-				}
+			if (transition.getStateTransitionStyle() == StateTransitionStyle.INCREMENTAL) {
+				incrementalStateTransitor.transit(workflowInstance, fromStates, toStates);
+			}
+			else {
+				replaceStateTransitor.transit(workflowInstance, fromStates, toStates);
 			}
 		}
 		catch (Exception e) {
-			workflowInstance.fill(backupWorkflowInstance);
+			workflowInstance.updateWith(backupWorkflowInstance);
 		}
 
 		return executionResult;
-	}
-
-	@Override
-	public TransitionExecutionResult execute(WorkflowInstance workflowInstance, String transitionName) {
-		WorkflowDefinition workflowDefinition = workflowInstance.getWorkflowDefinition();
-		ImmutableList<WorkflowTransition> transitions = WorkflowTransitionCache.getInstance().get(workflowDefinition,
-				transitionName);
-		return execute(workflowInstance, transitions);
 	}
 }
