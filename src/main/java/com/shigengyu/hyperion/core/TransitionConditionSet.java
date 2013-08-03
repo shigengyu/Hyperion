@@ -18,8 +18,6 @@ package com.shigengyu.hyperion.core;
 
 import java.util.Iterator;
 
-import javax.annotation.Nullable;
-
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
@@ -46,7 +44,7 @@ public class TransitionConditionSet implements Iterable<TransitionCondition> {
 				new Function<Class<? extends TransitionCondition>, TransitionCondition>() {
 
 					@Override
-					public TransitionCondition apply(@Nullable Class<? extends TransitionCondition> input) {
+					public TransitionCondition apply(Class<? extends TransitionCondition> input) {
 						return TransitionConditionCache.getInstance().get(input);
 					}
 				}));

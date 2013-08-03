@@ -1,13 +1,15 @@
 package com.shigengyu.hyperion.common;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.google.common.base.Function;
 
-public class ListHashMap<K, V> {
+public class ListHashMap<K, V> implements Iterable<Entry<K, List<V>>> {
 
 	private final Map<K, List<V>> map = new ConcurrentHashMap<>();
 
@@ -35,6 +37,11 @@ public class ListHashMap<K, V> {
 
 	public List<V> get(K key) {
 		return map.get(key);
+	}
+
+	@Override
+	public Iterator<Entry<K, List<V>>> iterator() {
+		return map.entrySet().iterator();
 	}
 
 	public List<V> remove(String key) {

@@ -16,7 +16,6 @@
 
 package com.shigengyu.hyperion.server.controllers;
 
-import javax.annotation.Nullable;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -42,7 +41,7 @@ public class HyperionRuntimeEnvironmentController {
 								.getAll(), new Function<WorkflowDefinition, String>() {
 
 							@Override
-							public String apply(@Nullable final WorkflowDefinition input) {
+							public String apply(final WorkflowDefinition input) {
 								return input.getName();
 							}
 						}), "<br />");

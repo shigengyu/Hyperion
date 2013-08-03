@@ -20,8 +20,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.shigengyu.hyperion.cache.WorkflowStateCache;
@@ -42,7 +40,7 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 				new Function<Class<? extends WorkflowState>, WorkflowState>() {
 
 					@Override
-					public WorkflowState apply(@Nullable Class<? extends WorkflowState> input) {
+					public WorkflowState apply(Class<? extends WorkflowState> input) {
 						return WorkflowStateCache.getInstance().get(input);
 					}
 				}));
@@ -80,7 +78,7 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 
 			@Override
 			@SuppressWarnings("unchecked")
-			public WorkflowState apply(@Nullable final Class<?> input) {
+			public WorkflowState apply(final Class<?> input) {
 				if (!input.isAssignableFrom(WorkflowState.class)) {
 					return null;
 				}

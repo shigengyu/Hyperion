@@ -64,12 +64,10 @@
 		<dependency org="org.apache.cxf" name="apache-cxf" rev="2.6.8" conf="runtime" />
 
 		<dependency org="junit" name="junit" rev="4.11" conf="runtime">
-			<artifact name="junit" conf="runtime" />
+			<artifact name="junit" ext="jar" conf="runtime" />
 		</dependency>
-
-		<dependency org="redis.clients" name="jedis" rev="2.1.0" conf="runtime">
-			<artifact name="jedis" conf="runtime" />
-		</dependency>
+		
+		<dependency org="org.hectorclient" name="hector-object-mapper" rev="3.1-09" conf="runtime" />
 
 		<exclude org="org.codehaus.woodstox" artifact="wstx-asl" />
 		<exclude org="org.slf4j" artifact="slf4j-jdk14" />
