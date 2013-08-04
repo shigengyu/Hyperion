@@ -16,6 +16,7 @@
 		base-package="com.shigengyu.hyperion.services,
 		              com.shigengyu.hyperion.dao,
 		              com.shigengyu.hyperion.cache,
-		              com.shigengyu.hyperion.logging" />
+		              com.shigengyu.hyperion.logging
+		              com.shigengyu.hyperion.core.validation" />
 
 </beans>

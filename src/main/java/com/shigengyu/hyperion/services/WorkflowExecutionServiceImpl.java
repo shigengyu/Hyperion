@@ -40,6 +40,11 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 	private WorkflowStateTransitor replaceStateTransitor;
 
 	@Override
+	public TransitionExecutionResult autoTransit(WorkflowInstance workflowInstance) {
+		return TransitionExecutionResult.success();
+	}
+
+	@Override
 	public TransitionExecutionResult execute(WorkflowInstance workflowInstance, String transitionName) {
 		WorkflowDefinition workflowDefinition = workflowInstance.getWorkflowDefinition();
 		ImmutableList<WorkflowTransition> transitions = WorkflowTransitionCache.getInstance().get(workflowDefinition,
@@ -85,6 +90,7 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 		}
 		catch (Exception e) {
 			workflowInstance.updateWith(backupWorkflowInstance);
+			throw new WorkflowExecutionException(e);
 		}
 
 		return executionResult;

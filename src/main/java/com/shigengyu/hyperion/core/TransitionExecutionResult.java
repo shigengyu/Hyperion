@@ -18,4 +18,33 @@ package com.shigengyu.hyperion.core;
 
 public class TransitionExecutionResult {
 
+	public static enum TransitionExecutionResultStatus {
+
+		ERROR,
+
+		SUCCESS,
+
+		WARNING
+	}
+
+	public static TransitionExecutionResult success() {
+		return new TransitionExecutionResult(TransitionExecutionResultStatus.SUCCESS);
+	}
+
+	private TransitionExecutionResultStatus status;
+
+	public TransitionExecutionResult() {
+	}
+
+	public TransitionExecutionResult(TransitionExecutionResultStatus status) {
+		this.status = status;
+	}
+
+	public final TransitionExecutionResultStatus getStatus() {
+		return status;
+	}
+
+	public final void setStatus(TransitionExecutionResultStatus status) {
+		this.status = status;
+	}
 }
