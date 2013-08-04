@@ -20,13 +20,11 @@ import java.io.Serializable;
 
 public interface HyperionDao<TEntity, TIdentity extends Serializable> {
 
+	void delete(TEntity entity);
+
 	TEntity get(TIdentity id);
 
 	Class<?> getEntityClass();
 
-	TIdentity save(TEntity entity);
-
 	void saveOrUpdate(TEntity entity);
-
-	void update(TEntity entity);
 }

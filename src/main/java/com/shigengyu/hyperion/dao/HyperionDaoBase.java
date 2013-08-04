@@ -18,39 +18,30 @@ package com.shigengyu.hyperion.dao;
 
 import java.io.Serializable;
 
-import javax.annotation.Resource;
-
-import org.hibernate.SessionFactory;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 public abstract class HyperionDaoBase<TEntity, TIdentity extends Serializable> implements
 		HyperionDao<TEntity, TIdentity> {
 
-	@Resource
-	protected SessionFactory sessionFactory;
+	@PersistenceContext
+	protected EntityManager entityManager;
+
+	@Override
+	public void delete(TEntity entity) {
+		entityManager.detach(entity);
+		entityManager.flush();
+	}
 
 	@Override
 	public TEntity get(final TIdentity id) {
-		final TEntity entity = (TEntity) sessionFactory.getCurrentSession().get(getEntityClass(), id);
-		sessionFactory.getCurrentSession().flush();
+		final TEntity entity = (TEntity) entityManager.find(getEntityClass(), id);
 		return entity;
 	}
 
 	@Override
-	public TIdentity save(final TEntity entity) {
-		final TIdentity id = (TIdentity) sessionFactory.getCurrentSession().save(entity);
-		sessionFactory.getCurrentSession().flush();
-		return id;
-	}
-
-	@Override
 	public void saveOrUpdate(final TEntity entity) {
-		sessionFactory.getCurrentSession().saveOrUpdate(entity);
-		sessionFactory.getCurrentSession().flush();
-	}
-
-	@Override
-	public void update(final TEntity entity) {
-		sessionFactory.getCurrentSession().update(entity);
-		sessionFactory.getCurrentSession().flush();
+		entityManager.merge(entity);
+		entityManager.flush();
 	}
 }
