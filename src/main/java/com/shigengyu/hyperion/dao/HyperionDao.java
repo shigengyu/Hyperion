@@ -22,6 +22,8 @@ public interface HyperionDao<TEntity, TIdentity extends Serializable> {
 
 	void delete(TEntity entity);
 
+	void delete(TIdentity id);
+
 	TEntity get(TIdentity id);
 
 	Class<?> getEntityClass();

@@ -34,6 +34,12 @@ public abstract class HyperionDaoBase<TEntity, TIdentity extends Serializable> i
 	}
 
 	@Override
+	public void delete(TIdentity id) {
+		TEntity entity = get(id);
+		entityManager.detach(entity);
+	}
+
+	@Override
 	public TEntity get(final TIdentity id) {
 		final TEntity entity = (TEntity) entityManager.find(getEntityClass(), id);
 		return entity;
