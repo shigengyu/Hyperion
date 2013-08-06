@@ -20,6 +20,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
+
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.shigengyu.hyperion.cache.WorkflowStateCache;
@@ -66,6 +68,24 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 
 	private WorkflowStateSet(final WorkflowState... workflowStates) {
 		this.workflowStates = Lists.newArrayList(workflowStates);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof WorkflowStateSet)) {
+			return false;
+		}
+
+		return CollectionUtils.isEqualCollection(workflowStates, ((WorkflowStateSet) obj).workflowStates);
+	}
+
+	@Override
+	public int hashCode() {
+		int hashCode = 0;
+		for (WorkflowState workflowState : workflowStates) {
+			hashCode ^= workflowState.hashCode();
+		}
+		return hashCode;
 	}
 
 	@Override

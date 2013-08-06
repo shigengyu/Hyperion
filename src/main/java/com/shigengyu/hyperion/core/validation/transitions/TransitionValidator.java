@@ -28,31 +28,27 @@ import com.shigengyu.hyperion.core.WorkflowStateSet;
 import com.shigengyu.hyperion.core.WorkflowTransition;
 
 @Service
-public class TransitionViolationDetector {
+public class TransitionValidator {
 
 	@Component
-	public static class TransitionViolationBeanSet extends SpringBeanSet<TransitionViolation> {
+	public static class TransitionValidationPolicies extends SpringBeanSet<TransitionValidationPolicy> {
 
-		protected TransitionViolationBeanSet() {
-			super(TransitionViolation.class);
+		protected TransitionValidationPolicies() {
+			super(TransitionValidationPolicy.class);
 		}
 	}
 
 	@Resource
-	private TransitionViolationBeanSet transitionViolationBeanSet;
+	private TransitionValidationPolicies transitionViolationBeanSet;
 
-	public List<TransitionViolation> getValidators() {
+	public List<TransitionValidationPolicy> getValidators() {
 		return transitionViolationBeanSet.getBeans();
 	}
 
-	public boolean isValid(WorkflowStateSet currentWorkflowStates, List<WorkflowTransition> workflowTransitions) {
+	public void validate(WorkflowStateSet currentWorkflowStates, List<WorkflowTransition> workflowTransitions) {
 
-		for (TransitionViolation violation : transitionViolationBeanSet.getBeans()) {
-			if (violation.violatesWith(currentWorkflowStates, workflowTransitions)) {
-				return false;
-			}
+		for (TransitionValidationPolicy violation : transitionViolationBeanSet.getBeans()) {
+			violation.validate(currentWorkflowStates, workflowTransitions);
 		}
-
-		return true;
 	}
 }

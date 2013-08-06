@@ -32,8 +32,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.shigengyu.hyperion.common.ListHashMap;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
+import com.shigengyu.hyperion.core.WorkflowStateSet;
 import com.shigengyu.hyperion.core.WorkflowTransition;
 import com.shigengyu.hyperion.core.WorkflowTransitionException;
+import com.shigengyu.hyperion.core.WorkflowTransitionSet;
 
 @Service
 public class WorkflowTransitionCache {
@@ -46,32 +48,48 @@ public class WorkflowTransitionCache {
 
 	private LoadingCache<WorkflowDefinition, ImmutableList<WorkflowTransition>> cache;
 
-	private final Map<WorkflowDefinition, ListHashMap<String, WorkflowTransition>> map = Maps.newHashMap();
+	private final Map<WorkflowDefinition, ListHashMap<String, WorkflowTransition>> transitionsByName = Maps
+			.newHashMap();
+
+	private final Map<WorkflowDefinition, ListHashMap<WorkflowStateSet, WorkflowTransition>> transitionsByStates = Maps
+			.newHashMap();
 
 	@Resource
 	private WorkflowTransitionCacheLoader workflowTransitionCacheLoader;
 
-	public ImmutableList<WorkflowTransition> get(final WorkflowDefinition workflowDefinition) {
+	public WorkflowTransitionSet get(final WorkflowDefinition workflowDefinition) {
 		try {
 			ImmutableList<WorkflowTransition> transitions = cache.getIfPresent(workflowDefinition);
 			if (transitions != null) {
-				return transitions;
+				return WorkflowTransitionSet.with(transitions);
 			}
 
 			transitions = cache.get(workflowDefinition);
 
 			// Cache transitions by workflow definition and transition name
-			ListHashMap<String, WorkflowTransition> listHashMap = new ListHashMap<String, WorkflowTransition>();
-			listHashMap.addAll(transitions, new Function<WorkflowTransition, String>() {
+			transitionsByName.put(
+					workflowDefinition,
+					ListHashMap.<String, WorkflowTransition> newListHashMap().addAll(transitions,
+							new Function<WorkflowTransition, String>() {
 
-				@Override
-				public String apply(WorkflowTransition input) {
-					return input.getName();
-				}
-			});
-			map.put(workflowDefinition, listHashMap);
+								@Override
+								public String apply(WorkflowTransition input) {
+									return input.getName();
+								}
+							}));
 
-			return transitions;
+			transitionsByStates.put(
+					workflowDefinition,
+					ListHashMap.<WorkflowStateSet, WorkflowTransition> newListHashMap().addAll(transitions,
+							new Function<WorkflowTransition, WorkflowStateSet>() {
+
+								@Override
+								public WorkflowStateSet apply(WorkflowTransition input) {
+									return input.getFromStates();
+								}
+							}));
+
+			return WorkflowTransitionSet.with(transitions);
 		}
 		catch (final ExecutionException e) {
 			throw new WorkflowTransitionException("Failed to get workflow transitions by definition [{}]",
@@ -79,13 +97,24 @@ public class WorkflowTransitionCache {
 		}
 	}
 
-	public ImmutableList<WorkflowTransition> get(final WorkflowDefinition workflowDefinition, String transitionName) {
-		List<WorkflowTransition> list = map.get(workflowDefinition).get(transitionName);
+	public WorkflowTransitionSet get(final WorkflowDefinition workflowDefinition, String transitionName) {
+		List<WorkflowTransition> list = transitionsByName.get(workflowDefinition).get(transitionName);
 		if (list != null) {
-			return ImmutableList.copyOf(list);
+			return WorkflowTransitionSet.with(list);
 		}
 		else {
-			return ImmutableList.of();
+			return WorkflowTransitionSet.empty();
+		}
+	}
+
+	public WorkflowTransitionSet get(final WorkflowDefinition workflowDefinition,
+			final WorkflowStateSet workflowStateSet) {
+		List<WorkflowTransition> list = transitionsByStates.get(workflowDefinition).get(workflowStateSet);
+		if (list != null) {
+			return WorkflowTransitionSet.with(list);
+		}
+		else {
+			return WorkflowTransitionSet.empty();
 		}
 	}
 

@@ -20,23 +20,23 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.shigengyu.hyperion.core.TransitionDefinitionException;
 import com.shigengyu.hyperion.core.WorkflowStateSet;
 import com.shigengyu.hyperion.core.WorkflowTransition;
 
 @Component
-public class MultipleTransitionsWithDynamicViolation implements TransitionViolation {
+public class MultipleTransitionsWithDynamicViolation implements TransitionValidationPolicy {
 
 	@Override
-	public boolean violatesWith(WorkflowStateSet currentWorkflowStates, List<WorkflowTransition> workflowTransitions) {
+	public void validate(WorkflowStateSet currentWorkflowStates, List<WorkflowTransition> workflowTransitions) {
 
 		if (workflowTransitions.size() > 1) {
 			for (WorkflowTransition workflowTransition : workflowTransitions) {
 				if (workflowTransition.isDynamic()) {
-					return true;
+					throw new TransitionDefinitionException(
+							"Dynamic transition cannot be invoked together with other transitions");
 				}
 			}
 		}
-
-		return false;
 	}
 }

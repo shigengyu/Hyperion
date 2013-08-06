@@ -27,20 +27,26 @@ import com.google.common.base.Function;
 
 public class ListHashMap<K, V> implements Iterable<Entry<K, List<V>>> {
 
+	public static <K, V> ListHashMap<K, V> newListHashMap() {
+		return new ListHashMap<K, V>();
+	}
+
 	private final Map<K, List<V>> map = new ConcurrentHashMap<>();
 
-	public void addAll(Iterable<V> values, Function<V, K> keySelector) {
+	public ListHashMap<K, V> addAll(Iterable<V> values, Function<V, K> keySelector) {
 		for (V value : values) {
 			K key = keySelector.apply(value);
 			addItem(key, value);
 		}
+		return this;
 	}
 
-	public void addItem(K key, V value) {
+	public ListHashMap<K, V> addItem(K key, V value) {
 		if (!map.containsKey(key)) {
 			map.put(key, new ArrayList<V>());
 		}
 		map.get(key).add(value);
+		return this;
 	}
 
 	public boolean containsItems(String key, V item) {

@@ -24,7 +24,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.shigengyu.hyperion.core.validation.transitions.TransitionViolationDetector;
+import com.shigengyu.hyperion.core.validation.transitions.TransitionValidator;
 import com.shigengyu.hyperion.environment.TestEnvironment;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -32,7 +32,7 @@ import com.shigengyu.hyperion.environment.TestEnvironment;
 public class SpringBeanSetTest {
 
 	@Resource
-	private TransitionViolationDetector transitionViolationDetector;
+	private TransitionValidator transitionViolationDetector;
 
 	@Test
 	public void testSpringBeanSet() {

@@ -20,7 +20,6 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.google.common.collect.ImmutableList;
 import com.shigengyu.hyperion.cache.WorkflowTransitionCache;
 import com.shigengyu.hyperion.core.StateTransitionStyle;
 import com.shigengyu.hyperion.core.TransitionExecutionResult;
@@ -29,6 +28,7 @@ import com.shigengyu.hyperion.core.WorkflowExecutionException;
 import com.shigengyu.hyperion.core.WorkflowInstance;
 import com.shigengyu.hyperion.core.WorkflowStateSet;
 import com.shigengyu.hyperion.core.WorkflowTransition;
+import com.shigengyu.hyperion.core.WorkflowTransitionSet;
 
 @Service
 public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
@@ -47,7 +47,7 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 	@Override
 	public TransitionExecutionResult execute(WorkflowInstance workflowInstance, String transitionName) {
 		WorkflowDefinition workflowDefinition = workflowInstance.getWorkflowDefinition();
-		ImmutableList<WorkflowTransition> transitions = WorkflowTransitionCache.getInstance().get(workflowDefinition,
+		WorkflowTransitionSet transitions = WorkflowTransitionCache.getInstance().get(workflowDefinition,
 				transitionName);
 
 		if (transitions.isEmpty()) {
@@ -60,7 +60,7 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 					workflowInstance.getWorkflowDefinition().getName());
 		}
 
-		return execute(workflowInstance, transitions.get(0));
+		return execute(workflowInstance, transitions.first());
 	}
 
 	@Override
@@ -94,5 +94,10 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 		}
 
 		return executionResult;
+	}
+
+	private void stablize(final WorkflowInstance workflowInstance) {
+		WorkflowTransitionSet workflowTransitions = WorkflowTransitionCache.getInstance().get(
+				workflowInstance.getWorkflowDefinition(), workflowInstance.getWorkflowStateSet());
 	}
 }

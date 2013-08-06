@@ -21,7 +21,7 @@ import java.util.List;
 import com.shigengyu.hyperion.core.WorkflowStateSet;
 import com.shigengyu.hyperion.core.WorkflowTransition;
 
-public interface TransitionViolation {
+public interface TransitionValidationPolicy {
 
-	boolean violatesWith(WorkflowStateSet currentWorkflowStates, List<WorkflowTransition> workflowTransitions);
+	void validate(WorkflowStateSet currentWorkflowStates, List<WorkflowTransition> workflowTransitions);
 }
