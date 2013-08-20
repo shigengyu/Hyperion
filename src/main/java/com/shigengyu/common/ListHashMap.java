@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.shigengyu.hyperion.common;
+package com.shigengyu.common;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -24,6 +24,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
 
 public class ListHashMap<K, V> implements Iterable<Entry<K, List<V>>> {
 
@@ -58,6 +59,14 @@ public class ListHashMap<K, V> implements Iterable<Entry<K, List<V>>> {
 	}
 
 	public List<V> get(K key) {
+		List<V> mutable = getMutable(key);
+		if (mutable == null) {
+			return null;
+		}
+		return ImmutableList.copyOf(mutable);
+	}
+
+	public List<V> getMutable(K key) {
 		return map.get(key);
 	}
 

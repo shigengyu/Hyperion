@@ -31,17 +31,18 @@ public class WorkflowTransition {
 	private final int maxEntry;
 	private final Method method;
 	private final boolean multiEntry;
-	private String name;
+	private final String name;
 	private final StateTransitionStyle stateTransitionStyle;
 
 	private final WorkflowStateSet toStates;
 
 	public WorkflowTransition(Method method, Transition transition, TransitionShared transitionShared) {
 		this.method = method;
-		name = transition.override() ? transition.name() : transitionShared.name();
-		if (StringUtils.isEmpty(name)) {
-			name = method.getName();
+		String transitionName = transition.override() ? transition.name() : transitionShared.name();
+		if (StringUtils.isEmpty(transitionName)) {
+			transitionName = method.getName();
 		}
+		name = transitionName;
 
 		fromStates = WorkflowStateSet.from(transition.override() ? transition.fromStates() : transitionShared
 				.fromStates());

@@ -16,7 +16,7 @@
 
 package com.shigengyu.hyperion;
 
-import com.shigengyu.hyperion.common.StringMessage;
+import com.shigengyu.common.StringMessage;
 
 public class HyperionException extends RuntimeException {
 

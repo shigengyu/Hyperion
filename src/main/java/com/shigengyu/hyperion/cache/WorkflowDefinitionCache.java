@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
-import com.shigengyu.hyperion.common.StringMessage;
+import com.shigengyu.common.StringMessage;
 import com.shigengyu.hyperion.core.Workflow;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
 import com.shigengyu.hyperion.core.WorkflowDefinitionException;

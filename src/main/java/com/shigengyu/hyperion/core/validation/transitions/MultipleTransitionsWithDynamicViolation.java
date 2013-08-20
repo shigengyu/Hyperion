@@ -16,7 +16,7 @@
 
 package com.shigengyu.hyperion.core.validation.transitions;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.springframework.stereotype.Component;
 
@@ -28,7 +28,7 @@ import com.shigengyu.hyperion.core.WorkflowTransition;
 public class MultipleTransitionsWithDynamicViolation implements TransitionValidationPolicy {
 
 	@Override
-	public void validate(WorkflowStateSet currentWorkflowStates, List<WorkflowTransition> workflowTransitions) {
+	public void validate(WorkflowStateSet currentWorkflowStates, Collection<WorkflowTransition> workflowTransitions) {
 
 		if (workflowTransitions.size() > 1) {
 			for (WorkflowTransition workflowTransition : workflowTransitions) {

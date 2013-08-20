@@ -18,7 +18,7 @@ package com.shigengyu.hyperion.core;
 
 import org.springframework.util.StringUtils;
 
-import com.shigengyu.hyperion.common.StringMessage;
+import com.shigengyu.common.StringMessage;
 import com.shigengyu.hyperion.entities.WorkflowDefinitionEntity;
 
 public abstract class WorkflowDefinition {

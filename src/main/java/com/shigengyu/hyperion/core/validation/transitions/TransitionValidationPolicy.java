@@ -16,12 +16,12 @@
 
 package com.shigengyu.hyperion.core.validation.transitions;
 
-import java.util.List;
+import java.util.Collection;
 
 import com.shigengyu.hyperion.core.WorkflowStateSet;
 import com.shigengyu.hyperion.core.WorkflowTransition;
 
 public interface TransitionValidationPolicy {
 
-	void validate(WorkflowStateSet currentWorkflowStates, List<WorkflowTransition> workflowTransitions);
+	void validate(WorkflowStateSet currentWorkflowStates, Collection<WorkflowTransition> workflowTransitions);
 }
