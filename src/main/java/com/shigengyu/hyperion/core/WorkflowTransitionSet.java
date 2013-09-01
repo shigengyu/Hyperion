@@ -42,6 +42,16 @@ public class WorkflowTransitionSet implements Iterable<WorkflowTransition> {
 		transitions = ImmutableList.copyOf(elements);
 	}
 
+	public WorkflowTransitionSet filter(Predicate<WorkflowTransition> predicate) {
+		List<WorkflowTransition> transitions = Lists.newArrayList();
+		for (WorkflowTransition transition : transitions) {
+			if (predicate.apply(transition)) {
+				transitions.add(transition);
+			}
+		}
+		return new WorkflowTransitionSet(transitions);
+	}
+
 	public WorkflowTransition first() {
 		if (transitions.isEmpty()) {
 			return null;
@@ -49,6 +59,16 @@ public class WorkflowTransitionSet implements Iterable<WorkflowTransition> {
 		else {
 			return transitions.get(0);
 		}
+	}
+
+	public WorkflowTransitionSet getAutoTransitions() {
+		return filter(new Predicate<WorkflowTransition>() {
+
+			@Override
+			public boolean apply(WorkflowTransition input) {
+				return input.isAuto();
+			}
+		});
 	}
 
 	public boolean isEmpty() {
@@ -62,15 +82,5 @@ public class WorkflowTransitionSet implements Iterable<WorkflowTransition> {
 
 	public int size() {
 		return transitions.size();
-	}
-
-	public WorkflowTransitionSet where(Predicate<WorkflowTransition> predicate) {
-		List<WorkflowTransition> transitions = Lists.newArrayList();
-		for (WorkflowTransition transition : transitions) {
-			if (predicate.apply(transition)) {
-				transitions.add(transition);
-			}
-		}
-		return new WorkflowTransitionSet(transitions);
 	}
 }

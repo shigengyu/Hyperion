@@ -74,10 +74,10 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 			WorkflowStateSet fromStates = workflowInstance.getWorkflowStateSet();
 			WorkflowStateSet toStates = null;
 			if (transition.isDynamic()) {
-				toStates = transition.invoke(backupWorkflowInstance);
+				toStates = transition.invoke(workflowInstance);
 			}
 			else {
-				transition.invoke(backupWorkflowInstance);
+				transition.invoke(workflowInstance);
 				toStates = transition.getToStates();
 			}
 
@@ -89,7 +89,7 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 			}
 		}
 		catch (Exception e) {
-			workflowInstance.updateWith(backupWorkflowInstance);
+			workflowInstance.restoreFrom(backupWorkflowInstance);
 			throw new WorkflowExecutionException(e);
 		}
 
@@ -97,7 +97,14 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 	}
 
 	private void stablize(final WorkflowInstance workflowInstance) {
-		WorkflowTransitionSet workflowTransitions = WorkflowTransitionCache.getInstance().get(
-				workflowInstance.getWorkflowDefinition(), workflowInstance.getWorkflowStateSet());
+		WorkflowTransitionSet autoWorkflowTransitions = WorkflowTransitionCache.getInstance()
+				.get(workflowInstance.getWorkflowDefinition(), workflowInstance.getWorkflowStateSet())
+				.getAutoTransitions();
+
+		if (autoWorkflowTransitions.size() > 1) {
+		}
+		for (WorkflowTransition transition : autoWorkflowTransitions) {
+			execute(workflowInstance, transition);
+		}
 	}
 }

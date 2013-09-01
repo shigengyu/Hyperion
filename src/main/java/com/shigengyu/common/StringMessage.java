@@ -16,19 +16,13 @@
 
 package com.shigengyu.common;
 
+import org.slf4j.helpers.FormattingTuple;
+import org.slf4j.helpers.MessageFormatter;
+
 public class StringMessage {
 
 	public static String with(String value, final Object... args) {
-		int count = 0;
-		try {
-			while (value.contains("{}")) {
-				value = value.replaceFirst("{}", "%" + ++count + "$s");
-			}
-		}
-		catch (final Exception e) {
-			throw new RuntimeException(e);
-		}
-
-		return String.format(value, args);
+		FormattingTuple formattingTuple = MessageFormatter.arrayFormat(value, args);
+		return formattingTuple.getMessage();
 	}
 }

@@ -46,7 +46,7 @@ public class WorkflowInstance {
 		return workflowInstance;
 	}
 
-	public void updateWith(WorkflowInstance workflowInstance) {
+	public void restoreFrom(WorkflowInstance workflowInstance) {
 		workflowInstanceId = workflowInstance.workflowInstanceId;
 		workflowDefinition = workflowInstance.workflowDefinition;
 		workflowStateSet = workflowInstance.workflowStateSet;

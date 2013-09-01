@@ -14,9 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.shigengyu.hyperion.common;
-
-import javax.annotation.Resource;
+package com.shigengyu.common;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -24,20 +22,15 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.shigengyu.hyperion.core.validation.transitions.TransitionValidator;
 import com.shigengyu.hyperion.environment.TestEnvironment;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(TestEnvironment.APPLICATION_CONTEXT_CONFIG)
-public class SpringBeanSetTest {
-
-	@Resource
-	private TransitionValidator transitionViolationDetector;
+public class StringMessageTest {
 
 	@Test
-	public void testSpringBeanSet() {
-		Assert.assertNotNull(transitionViolationDetector);
-		Assert.assertNotNull(transitionViolationDetector.getValidators());
-		Assert.assertTrue(transitionViolationDetector.getValidators().size() > 0);
+	public void testFormat() {
+		String message = StringMessage.with("{} + {} = {}", 1, 2, 3);
+		Assert.assertEquals("1 + 2 = 3", message);
 	}
 }
