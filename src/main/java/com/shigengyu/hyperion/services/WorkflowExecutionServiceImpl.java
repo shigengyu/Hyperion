@@ -102,9 +102,12 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 				.getAutoTransitions();
 
 		if (autoWorkflowTransitions.size() > 1) {
+			throw new WorkflowExecutionException(
+					"Multiple auto transitions found. Workflow definition = [{}], States = [{}], Auto transitions = [{}]",
+					workflowInstance.getWorkflowDefinition(), workflowInstance.getWorkflowStateSet(),
+					autoWorkflowTransitions);
 		}
-		for (WorkflowTransition transition : autoWorkflowTransitions) {
-			execute(workflowInstance, transition);
-		}
+
+		execute(workflowInstance, autoWorkflowTransitions.first());
 	}
 }

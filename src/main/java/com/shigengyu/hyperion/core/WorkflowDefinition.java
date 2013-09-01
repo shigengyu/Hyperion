@@ -90,4 +90,9 @@ public abstract class WorkflowDefinition {
 		entity.setName(name);
 		return entity;
 	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
 }

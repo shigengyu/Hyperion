@@ -130,4 +130,9 @@ public class WorkflowTransition {
 	public boolean isMultiEntry() {
 		return multiEntry;
 	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
 }

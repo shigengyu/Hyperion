@@ -19,6 +19,8 @@ package com.shigengyu.hyperion.core;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -82,5 +84,10 @@ public class WorkflowTransitionSet implements Iterable<WorkflowTransition> {
 
 	public int size() {
 		return transitions.size();
+	}
+
+	@Override
+	public String toString() {
+		return StringUtils.join(transitions, ",");
 	}
 }

@@ -96,4 +96,9 @@ public abstract class WorkflowState {
 		entity.setDisplayName(displayName);
 		return entity;
 	}
+
+	@Override
+	public String toString() {
+		return !StringUtils.isEmpty(displayName) ? displayName : name;
+	}
 }
