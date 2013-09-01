@@ -27,6 +27,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.shigengyu.hyperion.cache.WorkflowDefinitionCache;
 import com.shigengyu.hyperion.cache.WorkflowStateCache;
 import com.shigengyu.hyperion.cache.WorkflowTransitionCache;
+import com.shigengyu.hyperion.config.HyperionProperties;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
 import com.shigengyu.hyperion.core.WorkflowState;
 import com.shigengyu.hyperion.environment.TestEnvironment;
@@ -41,7 +42,7 @@ public class SimpleScenarioTests {
 	private WorkflowContextBinarySerializer binarySerializer;
 
 	@Resource
-	private TestEnvironment testEnvironment;
+	private HyperionProperties hyperionProperties;
 
 	@Resource
 	private WorkflowContextXmlSerializer xmlSerializer;

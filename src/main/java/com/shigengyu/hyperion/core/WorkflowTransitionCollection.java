@@ -19,11 +19,16 @@ package com.shigengyu.hyperion.core;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 public class WorkflowTransitionCollection {
 
 	public static WorkflowTransitionCollection copyOf(List<WorkflowTransition> transitions) {
 		return new WorkflowTransitionCollection(ImmutableList.copyOf(transitions));
+	}
+
+	public static WorkflowTransitionCollection empty() {
+		return new WorkflowTransitionCollection(ImmutableList.<WorkflowTransition> of());
 	}
 
 	private final ImmutableList<WorkflowTransition> transitions;
@@ -33,11 +38,22 @@ public class WorkflowTransitionCollection {
 	}
 
 	public final WorkflowTransitionCollection filter(String transitionName) {
-		return new WorkflowTransitionCollection(transitions);
+		List<WorkflowTransition> list = Lists.newArrayList();
+		for (WorkflowTransition transition : transitions) {
+			if (transition.getName().equals(transitionName)) {
+				list.add(transition);
+			}
+		}
+		return new WorkflowTransitionCollection(ImmutableList.copyOf(list));
 	}
 
 	public final WorkflowTransitionCollection filter(WorkflowStateSet fromStates) {
-
-		return new WorkflowTransitionCollection(transitions);
+		List<WorkflowTransition> list = Lists.newArrayList();
+		for (WorkflowTransition transition : transitions) {
+			if (transition.getFromStates().isSubSetOf(fromStates)) {
+				list.add(transition);
+			}
+		}
+		return new WorkflowTransitionCollection(ImmutableList.copyOf(list));
 	}
 }

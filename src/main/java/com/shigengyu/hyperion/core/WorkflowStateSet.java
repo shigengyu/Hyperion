@@ -88,6 +88,18 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 		return hashCode;
 	}
 
+	public boolean isSameWith(WorkflowStateSet workflowStateSet) {
+		return CollectionUtils.isEqualCollection(workflowStates, workflowStateSet.workflowStates);
+	}
+
+	public boolean isSubSetOf(WorkflowStateSet workflowStateSet) {
+		return CollectionUtils.isSubCollection(workflowStates, workflowStateSet.workflowStates);
+	}
+
+	public boolean isSuperSetOf(WorkflowStateSet workflowStateSet) {
+		return CollectionUtils.isSubCollection(workflowStateSet.workflowStates, workflowStates);
+	}
+
 	@Override
 	public Iterator<WorkflowState> iterator() {
 		return workflowStates.iterator();
