@@ -22,6 +22,8 @@ import java.util.concurrent.ExecutionException;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +40,8 @@ import com.shigengyu.hyperion.utils.ReflectionsHelper;
 public class WorkflowStateCache {
 
 	private static WorkflowStateCache instance;
+
+	private static Logger LOGGER = LoggerFactory.getLogger(WorkflowStateCache.class);
 
 	public static WorkflowStateCache getInstance() {
 		return instance;
@@ -76,7 +80,9 @@ public class WorkflowStateCache {
 			if (WorkflowState.class.isAssignableFrom(clazz)) {
 				@SuppressWarnings("unchecked")
 				Class<? extends WorkflowState> workflowStateClass = (Class<? extends WorkflowState>) clazz;
-				WorkflowStateCache.getInstance().get(workflowStateClass);
+				WorkflowState state = WorkflowStateCache.getInstance().get(workflowStateClass);
+
+				LOGGER.info("Workflow state [{}] loaded into cache", state);
 			}
 			else {
 				throw new WorkflowStateException("Workflow state [{}] does not inherit [{}]", clazz.getName(),

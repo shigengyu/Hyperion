@@ -147,7 +147,7 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 	}
 
 	public WorkflowStateSet remove(Iterable<WorkflowState> workflowStates) {
-		for (WorkflowState workflowState : workflowStates) {
+		for (WorkflowState workflowState : Lists.newArrayList(workflowStates)) {
 			remove(workflowState);
 		}
 		return this;

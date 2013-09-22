@@ -54,7 +54,7 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 			throw new WorkflowExecutionException("Transition [{}] not found in workflow definition [{}]",
 					transitionName, workflowInstance.getWorkflowDefinition().getName());
 		}
-		else if (transitions.size() > 0) {
+		else if (transitions.size() > 1) {
 			throw new WorkflowExecutionException(
 					"Multiple transitions with name [{}] found in workflow definition [{}]", transitionName,
 					workflowInstance.getWorkflowDefinition().getName());
@@ -67,6 +67,10 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 	public TransitionExecutionResult execute(final WorkflowInstance workflowInstance,
 			final WorkflowTransition transition) {
 
+		if (transition == null) {
+			throw new WorkflowExecutionException("Transition cannot be null");
+		}
+
 		final TransitionExecutionResult executionResult = new TransitionExecutionResult();
 
 		WorkflowInstance backupWorkflowInstance = workflowInstance.clone();
@@ -74,19 +78,25 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 			WorkflowStateSet fromStates = workflowInstance.getWorkflowStateSet();
 			WorkflowStateSet toStates = null;
 			if (transition.isDynamic()) {
+				// Set the to states based on return value of dynamic transition
 				toStates = transition.invoke(workflowInstance);
 			}
 			else {
 				transition.invoke(workflowInstance);
+				// Set the to states as the state defined in the static transition
 				toStates = transition.getToStates();
 			}
 
+			// Transit states based on transition style
 			if (transition.getStateTransitionStyle() == StateTransitionStyle.INCREMENTAL) {
 				incrementalStateTransitor.transit(workflowInstance, fromStates, toStates);
 			}
 			else {
 				replaceStateTransitor.transit(workflowInstance, fromStates, toStates);
 			}
+
+			// Invoke available auto transitions to stabilize the workflow instance
+			stabilize(workflowInstance);
 		}
 		catch (Exception e) {
 			workflowInstance.restoreFrom(backupWorkflowInstance);
@@ -96,7 +106,7 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 		return executionResult;
 	}
 
-	private void stablize(final WorkflowInstance workflowInstance) {
+	private void stabilize(final WorkflowInstance workflowInstance) {
 		WorkflowTransitionSet autoWorkflowTransitions = WorkflowTransitionCache.getInstance()
 				.get(workflowInstance.getWorkflowDefinition(), workflowInstance.getWorkflowStateSet())
 				.getAutoTransitions();
@@ -106,6 +116,10 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 					"Multiple auto transitions found. Workflow definition = [{}], States = [{}], Auto transitions = [{}]",
 					workflowInstance.getWorkflowDefinition(), workflowInstance.getWorkflowStateSet(),
 					autoWorkflowTransitions);
+		}
+
+		if (autoWorkflowTransitions.size() == 0) {
+			return;
 		}
 
 		execute(workflowInstance, autoWorkflowTransitions.first());

@@ -21,20 +21,20 @@ import com.shigengyu.hyperion.core.Workflow;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
 import com.shigengyu.hyperion.core.WorkflowInstance;
 
-@Workflow(id = "bfc0c860-e52e-421e-95b6-1fbd5b9d710e", initialState = InitializedState.class)
+@Workflow(id = "bfc0c860-e52e-421e-95b6-1fbd5b9d710e", initialState = States.Initialized.class)
 public class SimpleWorkflow extends WorkflowDefinition {
 
 	/**
 	 * @param workflowInstance
 	 */
-	@Transition
+	@Transition(fromStates = States.WorkInProgress.class, toStates = States.WorkCompleted.class)
 	public void complete(final WorkflowInstance workflowInstance) {
 	}
 
 	/**
 	 * @param workflowInstance
 	 */
-	@Transition
+	@Transition(fromStates = States.Initialized.class, toStates = States.WorkInProgress.class)
 	public void start(final WorkflowInstance workflowInstance) {
 	}
 }

@@ -22,6 +22,8 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +42,8 @@ import com.shigengyu.hyperion.utils.ReflectionsHelper;
 public class WorkflowDefinitionCache {
 
 	private static WorkflowDefinitionCache instance;
+
+	private static Logger LOGGER = LoggerFactory.getLogger(WorkflowDefinitionCache.class);
 
 	public static WorkflowDefinitionCache getInstance() {
 		return instance;
@@ -84,7 +88,9 @@ public class WorkflowDefinitionCache {
 			final Class<WorkflowDefinition> workflowDefinitionClass = (Class<WorkflowDefinition>) clazz;
 
 			// Touch the workflow definition to cache it
-			this.get(workflowDefinitionClass);
+			WorkflowDefinition definition = this.get(workflowDefinitionClass);
+
+			LOGGER.info("Workflow definition [{}] loaded into cache", definition);
 		}
 
 		return this;

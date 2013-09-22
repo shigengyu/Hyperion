@@ -24,12 +24,17 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import sun.reflect.Reflection;
+
+import com.shigengyu.hyperion.HyperionRuntime;
 import com.shigengyu.hyperion.cache.WorkflowDefinitionCache;
 import com.shigengyu.hyperion.cache.WorkflowStateCache;
 import com.shigengyu.hyperion.cache.WorkflowTransitionCache;
 import com.shigengyu.hyperion.config.HyperionProperties;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
+import com.shigengyu.hyperion.core.WorkflowInstance;
 import com.shigengyu.hyperion.core.WorkflowState;
+import com.shigengyu.hyperion.core.WorkflowStateSet;
 import com.shigengyu.hyperion.environment.TestEnvironment;
 import com.shigengyu.hyperion.services.WorkflowContextBinarySerializer;
 import com.shigengyu.hyperion.services.WorkflowContextXmlSerializer;
@@ -43,6 +48,9 @@ public class SimpleScenarioTests {
 
 	@Resource
 	private HyperionProperties hyperionProperties;
+
+	@Resource
+	private HyperionRuntime hyperionRuntime;
 
 	@Resource
 	private WorkflowContextXmlSerializer xmlSerializer;
@@ -68,7 +76,7 @@ public class SimpleScenarioTests {
 	public void loadStates() {
 		WorkflowStateCache.getInstance().scanPackages("com.shigengyu.hyperion.scenarios.simple");
 		Assert.assertTrue(WorkflowStateCache.getInstance().getAll().size() > 0);
-		Assert.assertNotNull(WorkflowState.of(InitializedState.class));
+		Assert.assertNotNull(WorkflowState.of(States.Initialized.class));
 	}
 
 	@Test
@@ -79,6 +87,20 @@ public class SimpleScenarioTests {
 		Assert.assertEquals(2, WorkflowTransitionCache.getInstance().get(workflowDefinition).size());
 		Assert.assertEquals(1, WorkflowTransitionCache.getInstance().get(workflowDefinition, "start").size());
 		Assert.assertEquals(0, WorkflowTransitionCache.getInstance().get(workflowDefinition, "doesNotExist").size());
+	}
+
+	@Test
+	public void testTransition() {
+		hyperionRuntime.scanPackages(Reflection.getCallerClass().getPackage().getName());
+		WorkflowInstance workflowInstance = hyperionRuntime.newWorkflowInstance(SimpleWorkflow.class);
+		Assert.assertNotNull(workflowInstance);
+		workflowInstance.getWorkflowStateSet().isSameWith(WorkflowStateSet.from(States.Initialized.class));
+
+		hyperionRuntime.executeTransition(workflowInstance, "start");
+		workflowInstance.getWorkflowStateSet().isSameWith(WorkflowStateSet.from(States.WorkInProgress.class));
+
+		hyperionRuntime.executeTransition(workflowInstance, "complete");
+		workflowInstance.getWorkflowStateSet().isSameWith(WorkflowStateSet.from(States.WorkCompleted.class));
 	}
 
 	@Test

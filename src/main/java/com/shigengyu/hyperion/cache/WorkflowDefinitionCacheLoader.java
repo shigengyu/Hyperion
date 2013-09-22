@@ -38,6 +38,7 @@ public class WorkflowDefinitionCacheLoader extends CacheLoader<Class<? extends W
 		final WorkflowDefinition workflowDefinition = key.getConstructor().newInstance();
 		workflowDefinitionDao.saveOrUpdate(workflowDefinition.toEntity());
 
+		// Load all transitions in this definition to cache.
 		WorkflowTransitionCache.getInstance().get(workflowDefinition);
 
 		return workflowDefinition;

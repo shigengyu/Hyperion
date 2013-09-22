@@ -21,6 +21,12 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.shigengyu.hyperion.cache.WorkflowDefinitionCache;
+import com.shigengyu.hyperion.cache.WorkflowStateCache;
+import com.shigengyu.hyperion.core.TransitionExecutionResult;
+import com.shigengyu.hyperion.core.WorkflowDefinition;
+import com.shigengyu.hyperion.core.WorkflowInstance;
+import com.shigengyu.hyperion.services.WorkflowExecutionService;
+import com.shigengyu.hyperion.services.WorkflowPersistenceService;
 
 @Service
 public class HyperionRuntime {
@@ -28,10 +34,29 @@ public class HyperionRuntime {
 	@Resource
 	private WorkflowDefinitionCache workflowDefinitionCache;
 
+	@Resource
+	private WorkflowExecutionService workflowExecutionService;
+
+	@Resource
+	private WorkflowPersistenceService workflowPersistenceService;
+
+	@Resource
+	private WorkflowStateCache workflowStateCache;
+
+	public TransitionExecutionResult executeTransition(WorkflowInstance workflowInstance, String transitionName) {
+		return workflowExecutionService.execute(workflowInstance, transitionName);
+	}
+
+	public WorkflowInstance newWorkflowInstance(Class<? extends WorkflowDefinition> workflowDefinitionClass) {
+		WorkflowDefinition workflowDefinition = workflowDefinitionCache.get(workflowDefinitionClass);
+		return workflowPersistenceService.createWorkflowInstance(workflowDefinition);
+	}
+
 	/**
 	 * @param packageNames
 	 */
-	public void loadPackages(final String... packageNames) {
-
+	public void scanPackages(final String... packageNames) {
+		workflowDefinitionCache.scanPackages(packageNames);
+		workflowStateCache.scanPackages(packageNames);
 	}
 }

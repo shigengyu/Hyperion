@@ -23,6 +23,8 @@ import java.util.concurrent.ExecutionException;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.google.common.base.Function;
@@ -41,6 +43,8 @@ import com.shigengyu.hyperion.core.WorkflowTransitionSet;
 public class WorkflowTransitionCache {
 
 	private static WorkflowTransitionCache instance;
+
+	private static Logger LOGGER = LoggerFactory.getLogger(WorkflowTransitionCache.class);
 
 	public static WorkflowTransitionCache getInstance() {
 		return instance;
@@ -65,6 +69,10 @@ public class WorkflowTransitionCache {
 			}
 
 			transitions = cache.get(workflowDefinition);
+
+			for (WorkflowTransition transition : transitions) {
+				LOGGER.info("Workflow transition [{}] loaded into cache", transition);
+			}
 
 			// Cache transitions by workflow definition and transition name
 			transitionsByName.put(
