@@ -24,8 +24,6 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import sun.reflect.Reflection;
-
 import com.shigengyu.hyperion.HyperionRuntime;
 import com.shigengyu.hyperion.cache.WorkflowDefinitionCache;
 import com.shigengyu.hyperion.cache.WorkflowStateCache;
@@ -91,7 +89,7 @@ public class SimpleScenarioTests {
 
 	@Test
 	public void testTransition() {
-		hyperionRuntime.scanPackages(Reflection.getCallerClass().getPackage().getName());
+		hyperionRuntime.scanPackages(this.getClass().getPackage().getName());
 		WorkflowInstance workflowInstance = hyperionRuntime.newWorkflowInstance(SimpleWorkflow.class);
 		Assert.assertNotNull(workflowInstance);
 		workflowInstance.getWorkflowStateSet().isSameWith(WorkflowStateSet.from(States.Initialized.class));

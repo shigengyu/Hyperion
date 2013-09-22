@@ -32,7 +32,7 @@ public class ListHashMap<K, V> implements Iterable<Entry<K, List<V>>> {
 		return new ListHashMap<K, V>();
 	}
 
-	private final Map<K, List<V>> map = new ConcurrentHashMap<>();
+	private final Map<K, List<V>> map = new ConcurrentHashMap<K, List<V>>();
 
 	public ListHashMap<K, V> addAll(Iterable<V> values, Function<V, K> keySelector) {
 		for (V value : values) {

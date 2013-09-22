@@ -10,13 +10,13 @@
 
 	<appender name="FILE"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${hyperion.log.dir}/hyperion.log</file>
+		<file>${hyperion.log.dir:-logs/unknown}/hyperion.log</file>
 		<layout class="ch.qos.logback.classic.PatternLayout">
 			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
 		</layout>
 
 		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-			<FileNamePattern>${hyperion.log.dir}/hyperion.%i.log.zip</FileNamePattern>
+			<FileNamePattern>${hyperion.log.dir:-logs/unknown}/hyperion.%i.log.zip</FileNamePattern>
 			<MinIndex>1</MinIndex>
 			<MaxIndex>10</MaxIndex>
 		</rollingPolicy>
@@ -29,13 +29,13 @@
 	
 	<appender name="HIBERNATE"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${hyperion.log.dir}/hyperion.hibernate.log</file>
+		<file>${hyperion.log.dir:-logs/unknown}/hyperion.hibernate.log</file>
 		<layout class="ch.qos.logback.classic.PatternLayout">
 			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
 		</layout>
 
 		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-			<FileNamePattern>${hyperion.log.dir}/hyperion.hibernate.%i.log.zip</FileNamePattern>
+			<FileNamePattern>${hyperion.log.dir:-logs/unknown}/hyperion.hibernate.%i.log.zip</FileNamePattern>
 			<MinIndex>1</MinIndex>
 			<MaxIndex>10</MaxIndex>
 		</rollingPolicy>
@@ -48,13 +48,13 @@
 	
 	<appender name="HIBERNATE-SCHEMA"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${hyperion.log.dir}/hyperion.hibernate.schema.log</file>
+		<file>${hyperion.log.dir:-logs/unknown}/hyperion.hibernate.schema.log</file>
 		<layout class="ch.qos.logback.classic.PatternLayout">
 			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
 		</layout>
 
 		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-			<FileNamePattern>${hyperion.log.dir}/hyperion.hibernate.schema.%i.log.zip</FileNamePattern>
+			<FileNamePattern>${hyperion.log.dir:-logs/unknown}/hyperion.hibernate.schema.%i.log.zip</FileNamePattern>
 			<MinIndex>1</MinIndex>
 			<MaxIndex>10</MaxIndex>
 		</rollingPolicy>
@@ -67,13 +67,13 @@
 	
 	<appender name="HIBERNATE-SQL"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${hyperion.log.dir}/hyperion.hibernate.sql.log</file>
+		<file>${hyperion.log.dir:-logs/unknown}/hyperion.hibernate.sql.log</file>
 		<layout class="ch.qos.logback.classic.PatternLayout">
 			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
 		</layout>
 
 		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-			<FileNamePattern>${hyperion.log.dir}/hyperion.hibernate.sql.%i.log.zip</FileNamePattern>
+			<FileNamePattern>${hyperion.log.dir:-logs/unknown}/hyperion.hibernate.sql.%i.log.zip</FileNamePattern>
 			<MinIndex>1</MinIndex>
 			<MaxIndex>10</MaxIndex>
 		</rollingPolicy>
@@ -86,13 +86,13 @@
 	
 	<appender name="SPRING"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${hyperion.log.dir}/hyperion.spring.log</file>
+		<file>${hyperion.log.dir:-logs/unknown}/hyperion.spring.log</file>
 		<layout class="ch.qos.logback.classic.PatternLayout">
 			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
 		</layout>
 
 		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-			<FileNamePattern>${hyperion.log.dir}/hyperion.spring.%i.log.zip</FileNamePattern>
+			<FileNamePattern>${hyperion.log.dir:-logs/unknown}/hyperion.spring.%i.log.zip</FileNamePattern>
 			<MinIndex>1</MinIndex>
 			<MaxIndex>10</MaxIndex>
 		</rollingPolicy>
