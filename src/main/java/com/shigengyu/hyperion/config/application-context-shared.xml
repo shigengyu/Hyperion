@@ -18,8 +18,7 @@
 		              com.shigengyu.hyperion.dao,
 		              com.shigengyu.hyperion.cache,
 		              com.shigengyu.hyperion.logging
-		              com.shigengyu.hyperion.core.validation
-		              com.shigengyu.hyperion.server.controllers" />
+		              com.shigengyu.hyperion.core.validation" />
 
 	<bean id="hyperionRuntime" class="com.shigengyu.hyperion.HyperionRuntime" />
 

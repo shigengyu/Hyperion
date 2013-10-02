@@ -9,6 +9,9 @@
 
 	<import resource="application-context-shared.xml" />
 
+	<context:component-scan
+		base-package="com.shigengyu.hyperion.server.controllers" />
+
 	<bean id="restServer" class="com.shigengyu.hyperion.server.RestServer">
 	</bean>
 </beans>
