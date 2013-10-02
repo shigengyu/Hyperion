@@ -19,6 +19,7 @@ package com.shigengyu.hyperion.scenarios.simple;
 import javax.annotation.Resource;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -40,6 +41,8 @@ import com.shigengyu.hyperion.services.WorkflowContextXmlSerializer;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(TestEnvironment.APPLICATION_CONTEXT_CONFIG)
 public class SimpleScenarioTests {
+
+	private static final String PACKAGE_NAME = SimpleScenarioTests.class.getPackage().getName();
 
 	@Resource
 	private WorkflowContextBinarySerializer binarySerializer;
@@ -66,13 +69,27 @@ public class SimpleScenarioTests {
 	}
 
 	@Test
-	public void loadDefinitions() {
-		WorkflowDefinitionCache.getInstance().scanPackages("com.shigengyu.hyperion.scenarios.simple");
+	public void getSetParameters() {
+		WorkflowInstance workflowInstance = hyperionRuntime.newWorkflowInstance(SimpleWorkflow.class);
+		Assert.assertNotNull(workflowInstance);
+
+		workflowInstance.setParameter("Name", "Hyperion");
+		workflowInstance.setParameter("Number", 42);
+
+		String name = workflowInstance.getParameter("Name");
+		Integer number = workflowInstance.getParameter("Number");
+
+		Assert.assertEquals("Hyperion", name);
+		Assert.assertEquals(new Integer(42), number);
+	}
+
+	@Before
+	public void initialize() {
+		WorkflowDefinitionCache.getInstance().scanPackages(PACKAGE_NAME);
 	}
 
 	@Test
 	public void loadStates() {
-		WorkflowStateCache.getInstance().scanPackages("com.shigengyu.hyperion.scenarios.simple");
 		Assert.assertTrue(WorkflowStateCache.getInstance().getAll().size() > 0);
 		Assert.assertNotNull(WorkflowState.of(States.Initialized.class));
 	}
@@ -89,7 +106,6 @@ public class SimpleScenarioTests {
 
 	@Test
 	public void testTransition() {
-		hyperionRuntime.scanPackages(this.getClass().getPackage().getName());
 		WorkflowInstance workflowInstance = hyperionRuntime.newWorkflowInstance(SimpleWorkflow.class);
 		Assert.assertNotNull(workflowInstance);
 		workflowInstance.getWorkflowStateSet().isSameWith(WorkflowStateSet.from(States.Initialized.class));

@@ -18,6 +18,8 @@ package com.shigengyu.hyperion.core;
 
 public class WorkflowInstance {
 
+	private final WorkflowParameterSet parameters = WorkflowParameterSet.create();
+
 	private WorkflowDefinition workflowDefinition;
 
 	private int workflowInstanceId;
@@ -46,10 +48,8 @@ public class WorkflowInstance {
 		return workflowInstance;
 	}
 
-	public void restoreFrom(WorkflowInstance workflowInstance) {
-		workflowInstanceId = workflowInstance.workflowInstanceId;
-		workflowDefinition = workflowInstance.workflowDefinition;
-		workflowStateSet = workflowInstance.workflowStateSet;
+	public <T> T getParameter(String name) {
+		return parameters.get(name);
 	}
 
 	public WorkflowDefinition getWorkflowDefinition() {
@@ -64,6 +64,17 @@ public class WorkflowInstance {
 		return workflowStateSet;
 	}
 
+	public void restoreFrom(WorkflowInstance workflowInstance) {
+		workflowInstanceId = workflowInstance.workflowInstanceId;
+		workflowDefinition = workflowInstance.workflowDefinition;
+		workflowStateSet = workflowInstance.workflowStateSet;
+	}
+
+	public <T> WorkflowInstance setParameter(String name, T value) {
+		parameters.set(name, value);
+		return this;
+	}
+
 	public void setWorkflowDefinition(WorkflowDefinition workflowDefinition) {
 		this.workflowDefinition = workflowDefinition;
 	}
@@ -74,5 +85,10 @@ public class WorkflowInstance {
 
 	public void setWorkflowStateSet(WorkflowStateSet workflowStateSet) {
 		this.workflowStateSet = workflowStateSet;
+	}
+
+	@Override
+	public String toString() {
+		return workflowInstanceId + " <" + workflowDefinition.getName() + ">";
 	}
 }

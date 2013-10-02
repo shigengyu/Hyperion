@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.shigengyu.hyperion.core.TransitionExecutionResult;
+import com.shigengyu.hyperion.core.WorkflowInstance;
 
 @Component
 @Aspect
@@ -35,11 +36,14 @@ public class WorkflowExecutionServiceLoggingAspect {
 	public TransitionExecutionResult aroundExecute(ProceedingJoinPoint joinPoint) {
 
 		try {
-			LOGGER.debug("Before execute");
+			WorkflowInstance workflowInstance = (WorkflowInstance) joinPoint.getArgs()[0];
+			Object transition = joinPoint.getArgs()[1];
+
+			LOGGER.debug("Before executing transition [{}] on workflow instance [{}]", transition, workflowInstance);
 
 			TransitionExecutionResult result = (TransitionExecutionResult) joinPoint.proceed();
 
-			LOGGER.debug("After execute");
+			LOGGER.debug("After executing transition [{}] on workflow instance [{}]", transition, workflowInstance);
 			return result;
 		}
 		catch (Throwable e) {
