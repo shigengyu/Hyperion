@@ -16,34 +16,45 @@
 
 package com.shigengyu.hyperion.server.controllers;
 
+import java.util.List;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Component;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.shigengyu.hyperion.cache.WorkflowDefinitionCache;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
+import com.shigengyu.hyperion.server.HyperionController;
 
+@Component
+@HyperionController
 @Path("/runtime/")
-@Produces(MediaType.TEXT_PLAIN)
+@Produces(MediaType.TEXT_HTML)
 public class HyperionRuntimeEnvironmentController {
 
 	@GET
 	@Path("/workflow/list/")
 	public String getWorkflowDefinitions() {
-		return StringUtils.join(
-				Lists.transform(
-						WorkflowDefinitionCache.getInstance().scanPackages("com.shigengyu.hyperion.scenarios.simple")
-								.getAll(), new Function<WorkflowDefinition, String>() {
+		List<String> workflowDefinitionNames = Lists.transform(
+				WorkflowDefinitionCache.getInstance().scanPackages("com.shigengyu.hyperion").getAll(),
+				new Function<WorkflowDefinition, String>() {
 
-							@Override
-							public String apply(final WorkflowDefinition input) {
-								return input.getName();
-							}
-						}), "<br />");
+					@Override
+					public String apply(final WorkflowDefinition input) {
+						return input.getName();
+					}
+				});
+
+		if (workflowDefinitionNames.size() == 0) {
+			return "No workflow definition found";
+		}
+
+		return StringUtils.join(workflowDefinitionNames, "<br />");
 	}
 }
