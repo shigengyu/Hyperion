@@ -19,9 +19,9 @@ package com.shigengyu.common;
 import org.slf4j.helpers.FormattingTuple;
 import org.slf4j.helpers.MessageFormatter;
 
-public class StringMessage {
+public final class StringMessage {
 
-	public static String with(String value, final Object... args) {
+	public final static String with(String value, final Object... args) {
 		FormattingTuple formattingTuple = MessageFormatter.arrayFormat(value, args);
 		return formattingTuple.getMessage();
 	}
