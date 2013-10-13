@@ -58,6 +58,7 @@ public class SimpleScenarioTests {
 	private WorkflowContextXmlSerializer xmlSerializer;
 
 	@Test
+	@Transactional
 	public void binarySerialization() {
 		SimpleWorkflowContext workflowContext = new SimpleWorkflowContext();
 		workflowContext.setName("shigengyu");
@@ -70,6 +71,7 @@ public class SimpleScenarioTests {
 	}
 
 	@Test
+	@Transactional
 	public void getSetParameters() {
 		WorkflowInstance workflowInstance = hyperionRuntime.newWorkflowInstance(SimpleWorkflow.class);
 		Assert.assertNotNull(workflowInstance);
@@ -86,16 +88,18 @@ public class SimpleScenarioTests {
 
 	@Before
 	public void initialize() {
-		WorkflowDefinitionCache.getInstance().scanPackages(PACKAGE_NAME);
+		hyperionRuntime.scanPackages(PACKAGE_NAME);
 	}
 
 	@Test
+	@Transactional
 	public void loadStates() {
 		Assert.assertTrue(WorkflowStateCache.getInstance().getAll().size() > 0);
 		Assert.assertNotNull(WorkflowState.of(States.Initialized.class));
 	}
 
 	@Test
+	@Transactional
 	public void loadTransitions() {
 		WorkflowDefinition workflowDefinition = WorkflowDefinitionCache.getInstance().get(SimpleWorkflow.class);
 		Assert.assertNotNull(workflowDefinition);
@@ -132,6 +136,7 @@ public class SimpleScenarioTests {
 	}
 
 	@Test
+	@Transactional
 	public void xmlSerialization() {
 		SimpleWorkflowContext workflowContext = new SimpleWorkflowContext();
 		workflowContext.setName("shigengyu");

@@ -33,6 +33,7 @@ import com.google.common.collect.ImmutableSet;
 import com.shigengyu.hyperion.core.State;
 import com.shigengyu.hyperion.core.WorkflowState;
 import com.shigengyu.hyperion.core.WorkflowStateException;
+import com.shigengyu.hyperion.dao.WorkflowStateDao;
 import com.shigengyu.hyperion.utils.ReflectionsHelper;
 
 @Service
@@ -51,6 +52,9 @@ public class WorkflowStateCache {
 
 	@Resource
 	private WorkflowStateCacheLoader workflowStateCacheLoader;
+
+	@Resource
+	private WorkflowStateDao workflowStateDao;
 
 	private WorkflowStateCache() {
 	}
@@ -80,7 +84,12 @@ public class WorkflowStateCache {
 			if (WorkflowState.class.isAssignableFrom(clazz)) {
 				@SuppressWarnings("unchecked")
 				Class<? extends WorkflowState> workflowStateClass = (Class<? extends WorkflowState>) clazz;
+
+				// Get the workflow state to allow it to be cached
 				WorkflowState state = WorkflowStateCache.getInstance().get(workflowStateClass);
+
+				// Save or update the workflow state in database
+				workflowStateDao.saveOrUpdate(state.toEntity());
 
 				LOGGER.info("Workflow state [{}] loaded into cache", state);
 			}

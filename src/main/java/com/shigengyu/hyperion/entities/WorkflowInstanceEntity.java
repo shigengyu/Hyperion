@@ -19,6 +19,7 @@ package com.shigengyu.hyperion.entities;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -37,7 +38,7 @@ public class WorkflowInstanceEntity implements Serializable {
 
 	private static final long serialVersionUID = 3680613315489463538L;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@ForeignKey(name = "WORKFLOW_DEFINITION_ID")
 	private WorkflowDefinitionEntity workflowDefinitionEntity;
 

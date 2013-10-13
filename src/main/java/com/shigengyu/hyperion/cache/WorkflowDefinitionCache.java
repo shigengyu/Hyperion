@@ -35,6 +35,7 @@ import com.shigengyu.hyperion.core.Workflow;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
 import com.shigengyu.hyperion.core.WorkflowDefinitionException;
 import com.shigengyu.hyperion.core.WorkflowStateException;
+import com.shigengyu.hyperion.dao.WorkflowDefinitionDao;
 import com.shigengyu.hyperion.utils.ReflectionsHelper;
 
 @Service
@@ -53,6 +54,9 @@ public class WorkflowDefinitionCache {
 
 	@Resource
 	private WorkflowDefinitionCacheLoader workflowDefinitionCacheLoader;
+
+	@Resource
+	private WorkflowDefinitionDao workflowDefinitionDao;
 
 	public synchronized <T extends WorkflowDefinition> WorkflowDefinition get(final Class<T> workflowDefinitionClass) {
 		try {
@@ -89,6 +93,9 @@ public class WorkflowDefinitionCache {
 
 			// Touch the workflow definition to cache it
 			WorkflowDefinition definition = this.get(workflowDefinitionClass);
+
+			// Save or update the workflow definition in database
+			workflowDefinitionDao.saveOrUpdate(definition.toEntity());
 
 			LOGGER.info("Workflow definition [{}] loaded into cache", definition);
 		}

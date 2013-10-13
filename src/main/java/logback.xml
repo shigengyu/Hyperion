@@ -135,8 +135,8 @@
 		<appender-ref ref="FILE" />
 	</logger>
 
-	<root level="WARN">
-		<appender-ref ref="STDOUT" />
+	<root level="DEBUG">
+		<appender-ref ref="WARN" />
 	</root>
 
 </configuration>
