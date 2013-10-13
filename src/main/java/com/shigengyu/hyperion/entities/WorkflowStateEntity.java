@@ -65,4 +65,12 @@ public class WorkflowStateEntity implements Serializable {
 	public void setWorkflowStateId(String workflowStateId) {
 		this.workflowStateId = workflowStateId;
 	}
+
+	public WorkflowStateEntity toEntity() {
+		WorkflowStateEntity entity = new WorkflowStateEntity();
+		entity.setWorkflowStateId(workflowStateId);
+		entity.setName(name);
+		entity.setDisplayName(displayName);
+		return entity;
+	}
 }

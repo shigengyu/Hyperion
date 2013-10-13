@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.shigengyu.hyperion.core.TransitionExecutionResult;
+import com.shigengyu.hyperion.core.WorkflowExecutionException;
 import com.shigengyu.hyperion.core.WorkflowInstance;
 
 @Component
@@ -46,9 +47,13 @@ public class WorkflowExecutionServiceLoggingAspect {
 			LOGGER.debug("After executing transition [{}] on workflow instance [{}]", transition, workflowInstance);
 			return result;
 		}
+		catch (WorkflowExecutionException e) {
+			e.printStackTrace();
+			throw e;
+		}
 		catch (Throwable e) {
 			e.printStackTrace();
-			return null;
+			throw new RuntimeException("Unexcepted exception type caught when executing workflow transition.", e);
 		}
 	}
 }

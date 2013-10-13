@@ -17,6 +17,7 @@
 package com.shigengyu.hyperion.dao;
 
 import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -43,6 +44,11 @@ public abstract class HyperionDaoBase<TEntity, TIdentity extends Serializable> i
 	public TEntity get(final TIdentity id) {
 		final TEntity entity = (TEntity) entityManager.find(getEntityClass(), id);
 		return entity;
+	}
+
+	@Override
+	public final Class<?> getEntityClass() {
+		return (Class<?>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 	}
 
 	@Override

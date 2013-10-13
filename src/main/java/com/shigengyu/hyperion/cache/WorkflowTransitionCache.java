@@ -117,7 +117,9 @@ public class WorkflowTransitionCache {
 
 	public WorkflowTransitionSet get(final WorkflowDefinition workflowDefinition,
 			final WorkflowStateSet workflowStateSet) {
-		List<WorkflowTransition> list = transitionsByStates.get(workflowDefinition).get(workflowStateSet);
+		ListHashMap<WorkflowStateSet, WorkflowTransition> map = transitionsByStates.get(workflowDefinition);
+		List<WorkflowTransition> list = map.get(workflowStateSet);
+
 		if (list != null) {
 			return WorkflowTransitionSet.with(list);
 		}

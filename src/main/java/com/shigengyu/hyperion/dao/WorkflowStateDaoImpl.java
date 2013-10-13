@@ -22,9 +22,4 @@ import com.shigengyu.hyperion.entities.WorkflowStateEntity;
 
 @Service("workflowStateDao")
 public class WorkflowStateDaoImpl extends HyperionDaoBase<WorkflowStateEntity, String> implements WorkflowStateDao {
-
-	@Override
-	public Class<?> getEntityClass() {
-		return WorkflowStateEntity.class;
-	}
 }

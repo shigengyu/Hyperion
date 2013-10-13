@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.shigengyu.hyperion.HyperionRuntime;
 import com.shigengyu.hyperion.cache.WorkflowDefinitionCache;
@@ -105,16 +106,29 @@ public class SimpleScenarioTests {
 	}
 
 	@Test
+	@Transactional
+	public void testAutoTransitions() {
+		WorkflowInstance workflowInstance = hyperionRuntime.newWorkflowInstance(AutoTransitionWorkflow.class);
+		Assert.assertNotNull(workflowInstance);
+		Assert.assertTrue(workflowInstance.getWorkflowStateSet().isSameWith(
+				WorkflowStateSet.from(States.WorkCompleted.class)));
+	}
+
+	@Test
+	@Transactional
 	public void testTransition() {
 		WorkflowInstance workflowInstance = hyperionRuntime.newWorkflowInstance(SimpleWorkflow.class);
 		Assert.assertNotNull(workflowInstance);
-		workflowInstance.getWorkflowStateSet().isSameWith(WorkflowStateSet.from(States.Initialized.class));
+		Assert.assertTrue(workflowInstance.getWorkflowStateSet().isSameWith(
+				WorkflowStateSet.from(States.Initialized.class)));
 
 		hyperionRuntime.executeTransition(workflowInstance, "start");
-		workflowInstance.getWorkflowStateSet().isSameWith(WorkflowStateSet.from(States.WorkInProgress.class));
+		Assert.assertTrue(workflowInstance.getWorkflowStateSet().isSameWith(
+				WorkflowStateSet.from(States.WorkInProgress.class)));
 
 		hyperionRuntime.executeTransition(workflowInstance, "complete");
-		workflowInstance.getWorkflowStateSet().isSameWith(WorkflowStateSet.from(States.WorkCompleted.class));
+		Assert.assertTrue(workflowInstance.getWorkflowStateSet().isSameWith(
+				WorkflowStateSet.from(States.WorkCompleted.class)));
 	}
 
 	@Test

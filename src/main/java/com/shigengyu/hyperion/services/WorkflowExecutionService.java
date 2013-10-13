@@ -22,9 +22,9 @@ import com.shigengyu.hyperion.core.WorkflowTransition;
 
 public interface WorkflowExecutionService {
 
-	TransitionExecutionResult autoTransit(WorkflowInstance workflowInstance);
-
 	TransitionExecutionResult execute(WorkflowInstance workflowInstance, String transitionName);
 
 	TransitionExecutionResult execute(WorkflowInstance workflowInstance, WorkflowTransition transition);
+
+	TransitionExecutionResult stabilize(final WorkflowInstance workflowInstance);
 }

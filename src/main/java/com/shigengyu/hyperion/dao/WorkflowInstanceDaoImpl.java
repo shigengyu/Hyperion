@@ -18,15 +18,9 @@ package com.shigengyu.hyperion.dao;
 
 import org.springframework.stereotype.Service;
 
-import com.shigengyu.hyperion.core.WorkflowInstance;
 import com.shigengyu.hyperion.entities.WorkflowInstanceEntity;
 
-@Service
+@Service("workflowInstanceDao")
 public class WorkflowInstanceDaoImpl extends HyperionDaoBase<WorkflowInstanceEntity, Integer> implements
 		WorkflowInstanceDao {
-
-	@Override
-	public Class<?> getEntityClass() {
-		return WorkflowInstance.class;
-	}
 }

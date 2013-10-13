@@ -26,6 +26,7 @@ import org.apache.commons.lang.StringUtils;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.shigengyu.hyperion.cache.WorkflowStateCache;
+import com.shigengyu.hyperion.entities.WorkflowStateEntity;
 
 public class WorkflowStateSet implements Iterable<WorkflowState> {
 
@@ -77,7 +78,7 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 			return false;
 		}
 
-		return CollectionUtils.isEqualCollection(workflowStates, ((WorkflowStateSet) obj).workflowStates);
+		return workflowStates.hashCode() == ((WorkflowStateSet) obj).workflowStates.hashCode();
 	}
 
 	@Override
@@ -123,7 +124,7 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 	}
 
 	public WorkflowStateSet merge(final Iterable<WorkflowState> workflowStates) {
-		if (workflowStates == null || workflowStates.iterator().hasNext()) {
+		if (workflowStates == null || !workflowStates.iterator().hasNext()) {
 			return this;
 		}
 
@@ -156,6 +157,16 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 	public WorkflowStateSet remove(WorkflowState workflowState) {
 		workflowStates.remove(workflowState);
 		return this;
+	}
+
+	public List<WorkflowStateEntity> toEntityList() {
+		return Lists.transform(workflowStates, new Function<WorkflowState, WorkflowStateEntity>() {
+
+			@Override
+			public WorkflowStateEntity apply(WorkflowState workflowState) {
+				return workflowState.toEntity();
+			}
+		});
 	}
 
 	@Override

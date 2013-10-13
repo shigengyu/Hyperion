@@ -16,6 +16,10 @@
 
 package com.shigengyu.hyperion.core;
 
+import org.apache.commons.io.IOUtils;
+
+import com.shigengyu.hyperion.entities.WorkflowInstanceEntity;
+
 public class WorkflowInstance {
 
 	private final WorkflowParameterSet parameters = WorkflowParameterSet.create();
@@ -87,8 +91,17 @@ public class WorkflowInstance {
 		this.workflowStateSet = workflowStateSet;
 	}
 
+	public WorkflowInstanceEntity toEntity() {
+		WorkflowInstanceEntity entity = new WorkflowInstanceEntity();
+		entity.setWorkflowDefinitionEntity(workflowDefinition.toEntity());
+		entity.setWorkflowInstanceId(workflowInstanceId);
+		entity.setWorkflowStateEntities(workflowStateSet.toEntityList());
+		return entity;
+	}
+
 	@Override
 	public String toString() {
-		return workflowInstanceId + " <" + workflowDefinition.getName() + ">";
+		return "Workflow Instance <" + workflowDefinition.getName() + ">" + IOUtils.LINE_SEPARATOR + "ID = "
+				+ workflowInstanceId + IOUtils.LINE_SEPARATOR + "State = " + workflowStateSet;
 	}
 }

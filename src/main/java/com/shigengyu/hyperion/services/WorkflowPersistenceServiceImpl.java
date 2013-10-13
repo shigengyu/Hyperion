@@ -35,6 +35,7 @@ public class WorkflowPersistenceServiceImpl implements WorkflowPersistenceServic
 	@Transactional
 	public WorkflowInstance createWorkflowInstance(WorkflowDefinition workflowDefinition) {
 		WorkflowInstance workflowInstance = new WorkflowInstance(workflowDefinition);
+		workflowInstanceDao.saveOrUpdate(workflowInstance.toEntity());
 		return workflowInstance;
 	}
 }

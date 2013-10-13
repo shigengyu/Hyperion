@@ -49,7 +49,9 @@ public class HyperionRuntime {
 
 	public WorkflowInstance newWorkflowInstance(Class<? extends WorkflowDefinition> workflowDefinitionClass) {
 		WorkflowDefinition workflowDefinition = workflowDefinitionCache.get(workflowDefinitionClass);
-		return workflowPersistenceService.createWorkflowInstance(workflowDefinition);
+		WorkflowInstance workflowInstance = workflowPersistenceService.createWorkflowInstance(workflowDefinition);
+		workflowExecutionService.stabilize(workflowInstance);
+		return workflowInstance;
 	}
 
 	/**

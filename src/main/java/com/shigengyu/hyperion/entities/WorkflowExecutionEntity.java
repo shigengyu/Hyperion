@@ -17,17 +17,21 @@
 package com.shigengyu.hyperion.entities;
 
 import java.io.Serializable;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.ForeignKey;
+import org.hibernate.annotations.IndexColumn;
 
 @Entity
 @Table(name = "WORKFLOW_EXECUTION")
@@ -43,7 +47,44 @@ public class WorkflowExecutionEntity implements Serializable {
 	@Column(name = "WORKFLOW_EXECUTION_ID")
 	private int workflowExecutionId;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST })
 	@ForeignKey(name = "WORKFLOW_INSTANCE_ID")
 	private WorkflowInstanceEntity workflowInstanceEntity;
+
+	@ManyToMany(targetEntity = WorkflowStateEntity.class)
+	@ForeignKey(name = "WORKFLOW_STATE_ID")
+	@IndexColumn(name = "WORKFLOW_STATE_ID")
+	private List<WorkflowStateEntity> workflowStateEntities;
+
+	public final String getTransitionName() {
+		return transitionName;
+	}
+
+	public final int getWorkflowExecutionId() {
+		return workflowExecutionId;
+	}
+
+	public final WorkflowInstanceEntity getWorkflowInstanceEntity() {
+		return workflowInstanceEntity;
+	}
+
+	public final List<WorkflowStateEntity> getWorkflowStateEntities() {
+		return workflowStateEntities;
+	}
+
+	public final void setTransitionName(String transitionName) {
+		this.transitionName = transitionName;
+	}
+
+	public final void setWorkflowExecutionId(int workflowExecutionId) {
+		this.workflowExecutionId = workflowExecutionId;
+	}
+
+	public final void setWorkflowInstanceEntity(WorkflowInstanceEntity workflowInstanceEntity) {
+		this.workflowInstanceEntity = workflowInstanceEntity;
+	}
+
+	public final void setWorkflowStateEntities(List<WorkflowStateEntity> workflowStateEntities) {
+		this.workflowStateEntities = workflowStateEntities;
+	}
 }

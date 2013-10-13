@@ -23,6 +23,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.io.IOUtils;
+
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 
@@ -88,5 +90,22 @@ public class ListHashMap<K, V> implements Iterable<Entry<K, List<V>>> {
 
 	public int size() {
 		return map.size();
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		int count = 0;
+		for (Entry<K, List<V>> entry : map.entrySet()) {
+			sb.append(entry.getKey() + " (" + entry.getKey().hashCode() + ") = " + entry.getValue()
+					+ IOUtils.LINE_SEPARATOR);
+			++count;
+
+			if (count == 10) {
+				sb.append("...");
+				return sb.toString();
+			}
+		}
+		return sb.toString();
 	}
 }

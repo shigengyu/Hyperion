@@ -19,16 +19,21 @@ package com.shigengyu.hyperion.services;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.shigengyu.hyperion.cache.WorkflowTransitionCache;
 import com.shigengyu.hyperion.core.StateTransitionStyle;
 import com.shigengyu.hyperion.core.TransitionExecutionResult;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
+import com.shigengyu.hyperion.core.WorkflowExecution;
 import com.shigengyu.hyperion.core.WorkflowExecutionException;
 import com.shigengyu.hyperion.core.WorkflowInstance;
 import com.shigengyu.hyperion.core.WorkflowStateSet;
 import com.shigengyu.hyperion.core.WorkflowTransition;
 import com.shigengyu.hyperion.core.WorkflowTransitionSet;
+import com.shigengyu.hyperion.dao.WorkflowExecutionDao;
+import com.shigengyu.hyperion.dao.WorkflowInstanceDao;
 
 @Service
 public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
@@ -39,10 +44,11 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 	@Resource(name = "replaceStateTransitor")
 	private WorkflowStateTransitor replaceStateTransitor;
 
-	@Override
-	public TransitionExecutionResult autoTransit(WorkflowInstance workflowInstance) {
-		return TransitionExecutionResult.success();
-	}
+	@Resource
+	private WorkflowExecutionDao workflowExecutionDao;
+
+	@Resource
+	private WorkflowInstanceDao workflowInstanceDao;
 
 	@Override
 	public TransitionExecutionResult execute(WorkflowInstance workflowInstance, String transitionName) {
@@ -64,14 +70,20 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
 	public TransitionExecutionResult execute(final WorkflowInstance workflowInstance,
 			final WorkflowTransition transition) {
+
+		final TransitionExecutionResult executionResult = new TransitionExecutionResult();
+		return execute(workflowInstance, transition, executionResult);
+	}
+
+	private TransitionExecutionResult execute(final WorkflowInstance workflowInstance,
+			final WorkflowTransition transition, final TransitionExecutionResult transitionExecutionResult) {
 
 		if (transition == null) {
 			throw new WorkflowExecutionException("Transition cannot be null");
 		}
-
-		final TransitionExecutionResult executionResult = new TransitionExecutionResult();
 
 		WorkflowInstance backupWorkflowInstance = workflowInstance.clone();
 		try {
@@ -95,18 +107,36 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 				replaceStateTransitor.transit(workflowInstance, fromStates, toStates);
 			}
 
+			// Save workflow execution into database
+			WorkflowExecution workflowExecution = new WorkflowExecution(workflowInstance, transition.getName());
+			workflowExecutionDao.saveOrUpdate(workflowExecution.toEntity());
+
 			// Invoke available auto transitions to stabilize the workflow instance
-			stabilize(workflowInstance);
+			stabilize(workflowInstance, transitionExecutionResult);
+
+			// Save the workflow instance in database
+			workflowInstanceDao.saveOrUpdate(workflowInstance.toEntity());
 		}
 		catch (Exception e) {
 			workflowInstance.restoreFrom(backupWorkflowInstance);
+
+			// Throwing this exception will trigger database transaction rollback
 			throw new WorkflowExecutionException(e);
 		}
 
-		return executionResult;
+		return transitionExecutionResult;
 	}
 
-	private void stabilize(final WorkflowInstance workflowInstance) {
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
+	public TransitionExecutionResult stabilize(final WorkflowInstance workflowInstance) {
+		final TransitionExecutionResult transitionExecutionResult = new TransitionExecutionResult();
+		stabilize(workflowInstance, transitionExecutionResult);
+		return transitionExecutionResult;
+	}
+
+	private void stabilize(final WorkflowInstance workflowInstance,
+			final TransitionExecutionResult transitionExecutionResult) {
 		WorkflowTransitionSet autoWorkflowTransitions = WorkflowTransitionCache.getInstance()
 				.get(workflowInstance.getWorkflowDefinition(), workflowInstance.getWorkflowStateSet())
 				.getAutoTransitions();
@@ -118,10 +148,9 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 					autoWorkflowTransitions);
 		}
 
-		if (autoWorkflowTransitions.size() == 0) {
-			return;
+		if (autoWorkflowTransitions.size() == 1) {
+			execute(workflowInstance, autoWorkflowTransitions.first(), transitionExecutionResult);
+			stabilize(workflowInstance, transitionExecutionResult);
 		}
-
-		execute(workflowInstance, autoWorkflowTransitions.first());
 	}
 }

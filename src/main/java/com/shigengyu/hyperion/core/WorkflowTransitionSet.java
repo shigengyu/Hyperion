@@ -45,13 +45,13 @@ public class WorkflowTransitionSet implements Iterable<WorkflowTransition> {
 	}
 
 	public WorkflowTransitionSet filter(Predicate<WorkflowTransition> predicate) {
-		List<WorkflowTransition> transitions = Lists.newArrayList();
+		List<WorkflowTransition> filtered = Lists.newArrayList();
 		for (WorkflowTransition transition : transitions) {
 			if (predicate.apply(transition)) {
-				transitions.add(transition);
+				filtered.add(transition);
 			}
 		}
-		return new WorkflowTransitionSet(transitions);
+		return new WorkflowTransitionSet(filtered);
 	}
 
 	public WorkflowTransition first() {
