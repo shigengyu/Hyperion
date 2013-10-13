@@ -52,6 +52,11 @@ public class WorkflowInstance {
 		return workflowInstance;
 	}
 
+	public String debugString() {
+		return "Workflow Instance <" + workflowDefinition.getName() + ">" + IOUtils.LINE_SEPARATOR + "ID = "
+				+ workflowInstanceId + IOUtils.LINE_SEPARATOR + "State = " + workflowStateSet;
+	}
+
 	public <T> T getParameter(String name) {
 		return parameters.get(name);
 	}
@@ -101,7 +106,6 @@ public class WorkflowInstance {
 
 	@Override
 	public String toString() {
-		return "Workflow Instance <" + workflowDefinition.getName() + ">" + IOUtils.LINE_SEPARATOR + "ID = "
-				+ workflowInstanceId + IOUtils.LINE_SEPARATOR + "State = " + workflowStateSet;
+		return "<" + workflowDefinition.getName() + "> (" + workflowInstanceId + ")";
 	}
 }

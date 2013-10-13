@@ -159,6 +159,10 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 		return this;
 	}
 
+	public int size() {
+		return workflowStates.size();
+	}
+
 	public List<WorkflowStateEntity> toEntityList() {
 		return Lists.transform(workflowStates, new Function<WorkflowState, WorkflowStateEntity>() {
 

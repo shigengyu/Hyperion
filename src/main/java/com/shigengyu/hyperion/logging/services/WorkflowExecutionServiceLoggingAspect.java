@@ -16,6 +16,7 @@
 
 package com.shigengyu.hyperion.logging.services;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -48,11 +49,11 @@ public class WorkflowExecutionServiceLoggingAspect {
 			return result;
 		}
 		catch (WorkflowExecutionException e) {
-			e.printStackTrace();
+			LOGGER.error(ExceptionUtils.getFullStackTrace(e));
 			throw e;
 		}
 		catch (Throwable e) {
-			e.printStackTrace();
+			LOGGER.error(ExceptionUtils.getFullStackTrace(e));
 			throw new RuntimeException("Unexcepted exception type caught when executing workflow transition.", e);
 		}
 	}

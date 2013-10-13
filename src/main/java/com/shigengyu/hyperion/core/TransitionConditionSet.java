@@ -18,6 +18,8 @@ package com.shigengyu.hyperion.core;
 
 import java.util.Iterator;
 
+import org.apache.commons.collections.CollectionUtils;
+
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
@@ -48,6 +50,38 @@ public class TransitionConditionSet implements Iterable<TransitionCondition> {
 						return TransitionConditionCache.getInstance().get(input);
 					}
 				}));
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		TransitionConditionSet other = (TransitionConditionSet) obj;
+		if (conditions == null) {
+			if (other.conditions != null) {
+				return false;
+			}
+		}
+		else if (!CollectionUtils.isEqualCollection(conditions, other.conditions)) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = 0;
+		for (TransitionCondition condition : conditions) {
+			result ^= condition.hashCode();
+		}
+		return result;
 	}
 
 	@Override

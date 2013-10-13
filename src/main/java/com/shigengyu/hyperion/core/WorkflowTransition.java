@@ -44,9 +44,18 @@ public class WorkflowTransition {
 		}
 		name = transitionName;
 
+		auto = transition.override() ? transition.auto() : transitionShared.auto();
+		hidden = transition.override() ? transition.hidden() : transitionShared.hidden();
+		multiEntry = transition.override() ? transition.multiEntry() : transitionShared.multiEntry();
+		maxEntry = transition.override() ? transition.maxEntry() : transitionShared.maxEntry();
+		stateTransitionStyle = transition.override() ? transition.stateTransitionStyle() : transitionShared
+				.stateTransitionStyle();
+
 		fromStates = WorkflowStateSet.from(transition.override() ? transition.fromStates() : transitionShared
 				.fromStates());
-		toStates = WorkflowStateSet.from(transition.override() ? transition.toStates() : transitionShared.toStates());
+		WorkflowStateSet specifiedToStates = WorkflowStateSet.from(transition.override() ? transition.toStates()
+				: transitionShared.toStates());
+		toStates = specifiedToStates.size() > 0 ? specifiedToStates : fromStates;
 
 		conditions = TransitionConditionSet.from(transition.override() ? transition.conditions() : transitionShared
 				.conditions());
@@ -62,13 +71,79 @@ public class WorkflowTransition {
 					"Transition method return type cannot be other types other than [{}]",
 					WorkflowStateSet.class.getName());
 		}
+	}
 
-		auto = transition.override() ? transition.auto() : transitionShared.auto();
-		hidden = transition.override() ? transition.hidden() : transitionShared.hidden();
-		multiEntry = transition.override() ? transition.multiEntry() : transitionShared.multiEntry();
-		maxEntry = transition.override() ? transition.maxEntry() : transitionShared.maxEntry();
-		stateTransitionStyle = transition.override() ? transition.stateTransitionStyle() : transitionShared
-				.stateTransitionStyle();
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		WorkflowTransition other = (WorkflowTransition) obj;
+		if (auto != other.auto) {
+			return false;
+		}
+		if (conditions == null) {
+			if (other.conditions != null) {
+				return false;
+			}
+		}
+		else if (!conditions.equals(other.conditions)) {
+			return false;
+		}
+		if (dynamic != other.dynamic) {
+			return false;
+		}
+		if (fromStates == null) {
+			if (other.fromStates != null) {
+				return false;
+			}
+		}
+		else if (!fromStates.equals(other.fromStates)) {
+			return false;
+		}
+		if (hidden != other.hidden) {
+			return false;
+		}
+		if (maxEntry != other.maxEntry) {
+			return false;
+		}
+		if (method == null) {
+			if (other.method != null) {
+				return false;
+			}
+		}
+		else if (!method.equals(other.method)) {
+			return false;
+		}
+		if (multiEntry != other.multiEntry) {
+			return false;
+		}
+		if (name == null) {
+			if (other.name != null) {
+				return false;
+			}
+		}
+		else if (!name.equals(other.name)) {
+			return false;
+		}
+		if (stateTransitionStyle != other.stateTransitionStyle) {
+			return false;
+		}
+		if (toStates == null) {
+			if (other.toStates != null) {
+				return false;
+			}
+		}
+		else if (!toStates.equals(other.toStates)) {
+			return false;
+		}
+		return true;
 	}
 
 	public TransitionConditionSet getConditions() {
@@ -93,6 +168,24 @@ public class WorkflowTransition {
 
 	public WorkflowStateSet getToStates() {
 		return toStates;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (auto ? 1231 : 1237);
+		result = prime * result + (conditions == null ? 0 : conditions.hashCode());
+		result = prime * result + (dynamic ? 1231 : 1237);
+		result = prime * result + (fromStates == null ? 0 : fromStates.hashCode());
+		result = prime * result + (hidden ? 1231 : 1237);
+		result = prime * result + maxEntry;
+		result = prime * result + (method == null ? 0 : method.hashCode());
+		result = prime * result + (multiEntry ? 1231 : 1237);
+		result = prime * result + (name == null ? 0 : name.hashCode());
+		result = prime * result + (stateTransitionStyle == null ? 0 : stateTransitionStyle.hashCode());
+		result = prime * result + (toStates == null ? 0 : toStates.hashCode());
+		return result;
 	}
 
 	public WorkflowStateSet invoke(WorkflowInstance workflowInstance) {

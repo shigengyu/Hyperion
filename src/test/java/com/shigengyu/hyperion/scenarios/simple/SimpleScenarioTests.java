@@ -31,6 +31,7 @@ import com.shigengyu.hyperion.cache.WorkflowDefinitionCache;
 import com.shigengyu.hyperion.cache.WorkflowStateCache;
 import com.shigengyu.hyperion.cache.WorkflowTransitionCache;
 import com.shigengyu.hyperion.config.HyperionProperties;
+import com.shigengyu.hyperion.core.AutoTransitionRecursionLimitExceededException;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
 import com.shigengyu.hyperion.core.WorkflowInstance;
 import com.shigengyu.hyperion.core.WorkflowState;
@@ -116,6 +117,41 @@ public class SimpleScenarioTests {
 		Assert.assertNotNull(workflowInstance);
 		Assert.assertTrue(workflowInstance.getWorkflowStateSet().isSameWith(
 				WorkflowStateSet.from(States.WorkCompleted.class)));
+	}
+
+	@Test
+	@Transactional
+	public void testRecursion() {
+		WorkflowInstance workflowInstance = hyperionRuntime.newWorkflowInstance(RecursiveTransitionWorkflow.class);
+		Assert.assertNotNull(workflowInstance);
+		Assert.assertTrue(workflowInstance.getWorkflowStateSet().isSameWith(
+				WorkflowStateSet.from(States.Initialized.class)));
+
+		hyperionRuntime.executeTransition(workflowInstance, "start");
+		Assert.assertTrue(workflowInstance.getWorkflowStateSet().isSameWith(
+				WorkflowStateSet.from(States.WorkCompleted.class)));
+	}
+
+	@Test(expected = AutoTransitionRecursionLimitExceededException.class)
+	@Transactional
+	public void testRecursionEndless() {
+		WorkflowInstance workflowInstance = hyperionRuntime.newWorkflowInstance(RecursiveTransitionWorkflow.class);
+		Assert.assertNotNull(workflowInstance);
+		Assert.assertTrue(workflowInstance.getWorkflowStateSet().isSameWith(
+				WorkflowStateSet.from(States.Initialized.class)));
+
+		hyperionRuntime.executeTransition(workflowInstance, "startEndless");
+	}
+
+	@Test(expected = AutoTransitionRecursionLimitExceededException.class)
+	@Transactional
+	public void testRecursionExceedLimit() {
+		WorkflowInstance workflowInstance = hyperionRuntime.newWorkflowInstance(RecursiveTransitionWorkflow.class);
+		Assert.assertNotNull(workflowInstance);
+		Assert.assertTrue(workflowInstance.getWorkflowStateSet().isSameWith(
+				WorkflowStateSet.from(States.Initialized.class)));
+
+		hyperionRuntime.executeTransition(workflowInstance, "startExceedLimit");
 	}
 
 	@Test

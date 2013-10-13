@@ -21,6 +21,11 @@ import com.shigengyu.hyperion.core.WorkflowState;
 
 public class States {
 
+	@State(id = "71e185d4-e4d6-451b-a98f-af4d41b4e943", name = "Endless")
+	public static class Endless extends WorkflowState {
+
+	}
+
 	@State(id = "87456550-3c7d-4292-a054-14f423839716", name = "Initialized")
 	public static class Initialized extends WorkflowState {
 
