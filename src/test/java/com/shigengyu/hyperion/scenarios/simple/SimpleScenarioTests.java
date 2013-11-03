@@ -121,6 +121,13 @@ public class SimpleScenarioTests {
 
 	@Test
 	@Transactional
+	public void testGetExistingWorkflowInstance() {
+		WorkflowInstance workflowInstance = hyperionRuntime.newWorkflowInstance(SimpleWorkflow.class);
+		hyperionRuntime.getExistingWorkflowInstance(workflowInstance.getWorkflowInstanceId());
+	}
+
+	@Test
+	@Transactional
 	public void testRecursion() {
 		WorkflowInstance workflowInstance = hyperionRuntime.newWorkflowInstance(RecursiveTransitionWorkflow.class);
 		Assert.assertNotNull(workflowInstance);

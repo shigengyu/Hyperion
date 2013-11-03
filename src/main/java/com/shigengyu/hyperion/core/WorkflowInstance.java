@@ -18,7 +18,10 @@ package com.shigengyu.hyperion.core;
 
 import org.apache.commons.io.IOUtils;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import com.shigengyu.hyperion.entities.WorkflowInstanceEntity;
+import com.shigengyu.hyperion.entities.WorkflowStateEntity;
 
 public class WorkflowInstance {
 
@@ -38,6 +41,25 @@ public class WorkflowInstance {
 	public WorkflowInstance(WorkflowDefinition workflowDefinition) {
 		this.workflowDefinition = workflowDefinition;
 		workflowStateSet = WorkflowStateSet.from(workflowDefinition.getInitialState());
+	}
+
+	/**
+	 * Create a {@link WorkflowInstance} object from an existing workflow instance
+	 * 
+	 * @param workflowDefinition
+	 * @param entity
+	 */
+	public WorkflowInstance(WorkflowDefinition workflowDefinition, WorkflowInstanceEntity entity) {
+		this(workflowDefinition);
+
+		workflowStateSet = WorkflowStateSet.from(Lists.transform(entity.getWorkflowStateEntities(),
+				new Function<WorkflowStateEntity, String>() {
+
+					@Override
+					public String apply(WorkflowStateEntity input) {
+						return input.getWorkflowStateId();
+					}
+				}));
 	}
 
 	private WorkflowInstance(WorkflowInstance workflowInstance) {

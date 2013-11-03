@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
 import com.shigengyu.hyperion.core.WorkflowInstance;
 import com.shigengyu.hyperion.dao.WorkflowInstanceDao;
+import com.shigengyu.hyperion.entities.WorkflowInstanceEntity;
 
 @Service
 public class WorkflowPersistenceServiceImpl implements WorkflowPersistenceService {
@@ -35,7 +36,8 @@ public class WorkflowPersistenceServiceImpl implements WorkflowPersistenceServic
 	@Transactional
 	public WorkflowInstance createWorkflowInstance(WorkflowDefinition workflowDefinition) {
 		WorkflowInstance workflowInstance = new WorkflowInstance(workflowDefinition);
-		workflowInstanceDao.saveOrUpdate(workflowInstance.toEntity());
+		WorkflowInstanceEntity entity = workflowInstanceDao.saveOrUpdate(workflowInstance.toEntity());
+		workflowInstance.setWorkflowInstanceId(entity.getWorkflowInstanceId());
 		return workflowInstance;
 	}
 }

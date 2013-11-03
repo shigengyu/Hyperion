@@ -68,6 +68,15 @@ public class WorkflowDefinitionCache {
 		}
 	}
 
+	public synchronized <T extends WorkflowDefinition> WorkflowDefinition get(final String workflowDefinitionId) {
+		for (WorkflowDefinition workflowDefinition : getAll()) {
+			if (workflowDefinition.getWorkflowDefinitionId().equals(workflowDefinitionId)) {
+				return workflowDefinition;
+			}
+		}
+		return null;
+	}
+
 	public ImmutableList<WorkflowDefinition> getAll() {
 		return ImmutableList.copyOf(cache.asMap().values());
 	}

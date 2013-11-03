@@ -20,9 +20,8 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import com.google.common.cache.CacheLoader;
+import com.shigengyu.hyperion.core.WorkflowDefinition;
 import com.shigengyu.hyperion.core.WorkflowInstance;
 import com.shigengyu.hyperion.dao.WorkflowInstanceDao;
 import com.shigengyu.hyperion.entities.WorkflowInstanceEntity;
@@ -36,6 +35,10 @@ public class WorkflowInstanceCacheLoader extends CacheLoader<Integer, WorkflowIn
 	@Override
 	public WorkflowInstance load(final Integer key) throws Exception {
 		final WorkflowInstanceEntity entity = workflowInstanceDao.get(key);
-		throw new NotImplementedException();
+
+		WorkflowDefinition workflowDefinition = WorkflowDefinitionCache.getInstance().get(
+				entity.getWorkflowDefinitionEntity().getWorkflowDefinitionId());
+
+		return new WorkflowInstance(workflowDefinition, entity);
 	}
 }

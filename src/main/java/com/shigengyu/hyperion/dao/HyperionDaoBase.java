@@ -52,8 +52,9 @@ public abstract class HyperionDaoBase<TEntity, TIdentity extends Serializable> i
 	}
 
 	@Override
-	public void saveOrUpdate(final TEntity entity) {
-		entityManager.merge(entity);
+	public TEntity saveOrUpdate(final TEntity entity) {
+		TEntity savedOrUpdatedEntity = entityManager.merge(entity);
 		entityManager.flush();
+		return savedOrUpdatedEntity;
 	}
 }

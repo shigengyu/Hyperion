@@ -190,9 +190,16 @@ public class WorkflowTransition {
 
 	public WorkflowStateSet invoke(WorkflowInstance workflowInstance) {
 		try {
-			WorkflowStateSet workflowStateSet = (WorkflowStateSet) method.invoke(
-					workflowInstance.getWorkflowDefinition(), workflowInstance);
-			return workflowStateSet;
+			if (method.getParameterTypes().length == 0) {
+				return (WorkflowStateSet) method.invoke(workflowInstance.getWorkflowDefinition());
+			}
+			else if (method.getParameterTypes().length == 1 && method.getParameterTypes()[0] == WorkflowInstance.class) {
+				return (WorkflowStateSet) method.invoke(workflowInstance.getWorkflowDefinition(), workflowInstance);
+			}
+			else {
+				throw new WorkflowExecutionException(
+						"Workflow transition must take one parameter of type WorkflowInstance or no parameters");
+			}
 		}
 		catch (InvocationTargetException e) {
 			Throwable t = e;

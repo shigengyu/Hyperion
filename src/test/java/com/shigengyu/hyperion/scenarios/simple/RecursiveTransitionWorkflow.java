@@ -39,7 +39,7 @@ public class RecursiveTransitionWorkflow extends WorkflowDefinition {
 	}
 
 	@Transition(fromStates = States.Endless.class, auto = true)
-	public void recursiveSingleEntry(final WorkflowInstance workflowInstance) {
+	public void recursiveSingleEntry() {
 	}
 
 	@Transition(fromStates = States.Initialized.class, toStates = States.WorkInProgress.class)
@@ -48,7 +48,7 @@ public class RecursiveTransitionWorkflow extends WorkflowDefinition {
 	}
 
 	@Transition(fromStates = States.Initialized.class, toStates = States.Endless.class)
-	public void startEndless(final WorkflowInstance workflowInstance) {
+	public void startEndless() {
 	}
 
 	@Transition(name = "startExceedLimit",

@@ -17,6 +17,7 @@
 package com.shigengyu.hyperion.core;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -48,6 +49,19 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 						return WorkflowStateCache.getInstance().get(input);
 					}
 				}));
+	}
+
+	public static WorkflowStateSet from(Collection<String> workflowStateIds) {
+
+		WorkflowStateSet workflowStateSet = new WorkflowStateSet();
+
+		for (WorkflowState workflowState : WorkflowStateCache.getInstance().getAll()) {
+			if (workflowStateIds.contains(workflowState.getWorkflowStateId())) {
+				workflowStateSet.workflowStates.add(workflowState);
+			}
+		}
+
+		return WorkflowStateSet.from(workflowStateSet);
 	}
 
 	public static WorkflowStateSet from(Iterable<WorkflowState> workflowStates) {
