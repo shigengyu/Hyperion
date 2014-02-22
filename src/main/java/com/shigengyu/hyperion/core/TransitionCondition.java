@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2013 Gengyu Shi
+ * Copyright 2013-2014 Gengyu Shi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-
 package com.shigengyu.hyperion.core;
+
+import java.util.Collection;
+
+import com.google.common.collect.Lists;
 
 public interface TransitionCondition {
 
+	public static class DefaultTransitionCondition implements TransitionCondition {
+
+		@Override
+		public boolean canPerform(WorkflowTransition workflowTransition, WorkflowInstance workflowInstance) {
+			return true;
+		}
+
+		@Override
+		public Collection<String> reasons() {
+			return Lists.newArrayList();
+		}
+	}
+
 	boolean canPerform(WorkflowTransition workflowTransition, WorkflowInstance workflowInstance);
+
+	Collection<String> reasons();
 }

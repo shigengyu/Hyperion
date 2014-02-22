@@ -13,10 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.shigengyu.hyperion.dao;
+package com.shigengyu.hyperion.core;
 
-import com.shigengyu.hyperion.entities.WorkflowStateEntity;
+import com.shigengyu.hyperion.HyperionException;
 
-public interface WorkflowStateDao extends HyperionDao<WorkflowStateEntity, String> {
+public class HyperionDefinitionException extends HyperionException {
 
+	private static final long serialVersionUID = 1L;
+
+	public HyperionDefinitionException(String message) {
+		super(message);
+	}
+
+	public HyperionDefinitionException(String message, Object... args) {
+		super(message, args);
+	}
+
+	public HyperionDefinitionException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public HyperionDefinitionException(String message, Throwable cause, Object... args) {
+		super(message, cause, args);
+	}
+
+	public HyperionDefinitionException(Throwable cause) {
+		super(cause);
+	}
 }

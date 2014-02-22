@@ -15,17 +15,29 @@
  ******************************************************************************/
 package com.shigengyu.hyperion.cache;
 
-import org.springframework.stereotype.Service;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 
 import com.google.common.cache.CacheLoader;
 import com.shigengyu.hyperion.core.TransitionCondition;
+import com.shigengyu.hyperion.core.TransitionDefinitionException;
 
-@Service
-public class TransitionConditionClassLoader extends
+public class WorkflowTransitionConditionCacheLoader extends
 		CacheLoader<Class<? extends TransitionCondition>, TransitionCondition> {
 
 	@Override
-	public TransitionCondition load(Class<? extends TransitionCondition> key) throws Exception {
-		return key.newInstance();
+	public TransitionCondition load(Class<? extends TransitionCondition> transitionClass) throws Exception {
+		if (transitionClass.isInterface() || Modifier.isAbstract(transitionClass.getModifiers())) {
+			throw new TransitionDefinitionException("Transition cannot be interface or abstract class");
+		}
+
+		Constructor<? extends TransitionCondition> constructor = transitionClass.getConstructor();
+		if (constructor == null) {
+			throw new TransitionDefinitionException(
+					"Cannot get no argument constructor for transition condition class [" + transitionClass.getName()
+							+ "]");
+		}
+
+		return constructor.newInstance();
 	}
 }

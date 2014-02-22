@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.shigengyu.hyperion.dao;
+package com.shigengyu.hyperion.cache;
 
-import com.shigengyu.hyperion.entities.WorkflowStateEntity;
 
-public interface WorkflowStateDao extends HyperionDao<WorkflowStateEntity, String> {
+public class WorkflowTransitionConditionCache {
 
 }
