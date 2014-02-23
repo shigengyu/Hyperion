@@ -18,10 +18,13 @@ package com.shigengyu.hyperion.cache;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 
+import org.springframework.stereotype.Service;
+
 import com.google.common.cache.CacheLoader;
 import com.shigengyu.hyperion.core.TransitionCondition;
 import com.shigengyu.hyperion.core.TransitionDefinitionException;
 
+@Service
 public class WorkflowTransitionConditionCacheLoader extends
 		CacheLoader<Class<? extends TransitionCondition>, TransitionCondition> {
 

@@ -15,7 +15,26 @@
  ******************************************************************************/
 package com.shigengyu.hyperion.cache;
 
+import java.util.Map;
 
+import javax.annotation.Resource;
+
+import org.apache.commons.lang.NotImplementedException;
+import org.springframework.stereotype.Service;
+
+import com.google.common.collect.Maps;
+import com.shigengyu.hyperion.core.TransitionCondition;
+
+@Service
 public class WorkflowTransitionConditionCache {
 
+	private final Map<Class<? extends TransitionCondition>, TransitionCondition> transitionConditions = Maps
+			.newHashMap();
+
+	@Resource
+	private WorkflowTransitionConditionCacheLoader workflowTransitionConditionCacheLoader;
+
+	public TransitionCondition get(Class<? extends TransitionCondition> transitionConditionClass) {
+		throw new NotImplementedException();
+	}
 }
