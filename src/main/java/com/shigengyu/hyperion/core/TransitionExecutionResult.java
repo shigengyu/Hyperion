@@ -17,33 +17,35 @@ package com.shigengyu.hyperion.core;
 
 public class TransitionExecutionResult {
 
-	public static enum TransitionExecutionResultStatus {
+	public static enum Status {
 
-		ERROR,
+		NOT_EXCUTED,
 
 		SUCCESS,
 
-		WARNING
+		WARNING,
+
+		ERROR
 	}
 
 	public static TransitionExecutionResult success() {
-		return new TransitionExecutionResult(TransitionExecutionResultStatus.SUCCESS);
+		return new TransitionExecutionResult(Status.SUCCESS);
 	}
 
-	private TransitionExecutionResultStatus status;
+	private Status status;
 
 	public TransitionExecutionResult() {
 	}
 
-	public TransitionExecutionResult(TransitionExecutionResultStatus status) {
+	public TransitionExecutionResult(Status status) {
 		this.status = status;
 	}
 
-	public final TransitionExecutionResultStatus getStatus() {
+	public final Status getStatus() {
 		return status;
 	}
 
-	public final void setStatus(TransitionExecutionResultStatus status) {
+	public final void setStatus(Status status) {
 		this.status = status;
 	}
 }

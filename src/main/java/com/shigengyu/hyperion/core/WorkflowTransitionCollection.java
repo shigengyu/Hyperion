@@ -17,12 +17,13 @@ package com.shigengyu.hyperion.core;
 
 import java.util.List;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 public class WorkflowTransitionCollection {
 
-	public static WorkflowTransitionCollection copyOf(List<WorkflowTransition> transitions) {
+	public static WorkflowTransitionCollection copyOf(Iterable<WorkflowTransition> transitions) {
 		return new WorkflowTransitionCollection(ImmutableList.copyOf(transitions));
 	}
 
@@ -34,6 +35,16 @@ public class WorkflowTransitionCollection {
 
 	private WorkflowTransitionCollection(ImmutableList<WorkflowTransition> transitions) {
 		this.transitions = transitions;
+	}
+
+	public final WorkflowTransitionCollection filter(Predicate<WorkflowTransition> predicate) {
+		List<WorkflowTransition> filtered = Lists.newArrayList();
+		for (WorkflowTransition transition : transitions) {
+			if (predicate.apply(transition)) {
+				filtered.add(transition);
+			}
+		}
+		return WorkflowTransitionCollection.copyOf(filtered);
 	}
 
 	public final WorkflowTransitionCollection filter(String transitionName) {
@@ -54,5 +65,27 @@ public class WorkflowTransitionCollection {
 			}
 		}
 		return new WorkflowTransitionCollection(ImmutableList.copyOf(list));
+	}
+
+	public final WorkflowTransition get(int index) {
+		return transitions.get(0);
+	}
+
+	public final WorkflowTransitionCollection getAutoTransitions() {
+		return filter(new Predicate<WorkflowTransition>() {
+
+			@Override
+			public boolean apply(WorkflowTransition input) {
+				return input.isAuto();
+			}
+		});
+	}
+
+	public final boolean isEmpty() {
+		return transitions.isEmpty();
+	}
+
+	public final int size() {
+		return transitions.size();
 	}
 }
