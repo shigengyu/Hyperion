@@ -34,7 +34,7 @@ import com.shigengyu.hyperion.core.WorkflowExecutionException;
 import com.shigengyu.hyperion.core.WorkflowInstance;
 import com.shigengyu.hyperion.core.WorkflowStateSet;
 import com.shigengyu.hyperion.core.WorkflowTransition;
-import com.shigengyu.hyperion.core.WorkflowTransitionCollection;
+import com.shigengyu.hyperion.core.WorkflowTransitionSet;
 import com.shigengyu.hyperion.dao.WorkflowExecutionDao;
 import com.shigengyu.hyperion.dao.WorkflowInstanceDao;
 
@@ -80,7 +80,7 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 	@Override
 	public TransitionExecutionResult execute(WorkflowInstance workflowInstance, String transitionName) {
 		WorkflowDefinition workflowDefinition = workflowInstance.getWorkflowDefinition();
-		WorkflowTransitionCollection transitions = WorkflowTransitionCache.getInstance().get(workflowDefinition,
+		WorkflowTransitionSet transitions = WorkflowTransitionCache.getInstance().get(workflowDefinition,
 				transitionName);
 
 		if (transitions.isEmpty()) {
@@ -173,7 +173,7 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 	private void stabilize(final WorkflowInstance workflowInstance,
 			final TransitionExecutionResult transitionExecutionResult,
 			AutoTransitionExecutionContext autoTransitionExecutionContext) {
-		WorkflowTransitionCollection autoWorkflowTransitions = WorkflowTransitionCache.getInstance()
+		WorkflowTransitionSet autoWorkflowTransitions = WorkflowTransitionCache.getInstance()
 				.get(workflowInstance.getWorkflowDefinition(), workflowInstance.getWorkflowStateSet())
 				.getAutoTransitions();
 

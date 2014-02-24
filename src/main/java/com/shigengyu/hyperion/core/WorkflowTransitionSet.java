@@ -21,57 +21,57 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
-public class WorkflowTransitionCollection {
+public class WorkflowTransitionSet {
 
-	public static WorkflowTransitionCollection copyOf(Iterable<WorkflowTransition> transitions) {
-		return new WorkflowTransitionCollection(ImmutableList.copyOf(transitions));
+	public static WorkflowTransitionSet copyOf(Iterable<WorkflowTransition> transitions) {
+		return new WorkflowTransitionSet(ImmutableList.copyOf(transitions));
 	}
 
-	public static WorkflowTransitionCollection empty() {
-		return new WorkflowTransitionCollection(ImmutableList.<WorkflowTransition> of());
+	public static WorkflowTransitionSet empty() {
+		return new WorkflowTransitionSet(ImmutableList.<WorkflowTransition> of());
 	}
 
 	private final ImmutableList<WorkflowTransition> transitions;
 
-	private WorkflowTransitionCollection(ImmutableList<WorkflowTransition> transitions) {
+	private WorkflowTransitionSet(ImmutableList<WorkflowTransition> transitions) {
 		this.transitions = transitions;
 	}
 
-	public final WorkflowTransitionCollection filter(Predicate<WorkflowTransition> predicate) {
+	public final WorkflowTransitionSet filter(Predicate<WorkflowTransition> predicate) {
 		List<WorkflowTransition> filtered = Lists.newArrayList();
 		for (WorkflowTransition transition : transitions) {
 			if (predicate.apply(transition)) {
 				filtered.add(transition);
 			}
 		}
-		return WorkflowTransitionCollection.copyOf(filtered);
+		return WorkflowTransitionSet.copyOf(filtered);
 	}
 
-	public final WorkflowTransitionCollection filter(String transitionName) {
+	public final WorkflowTransitionSet filter(String transitionName) {
 		List<WorkflowTransition> list = Lists.newArrayList();
 		for (WorkflowTransition transition : transitions) {
 			if (transition.getName().equals(transitionName)) {
 				list.add(transition);
 			}
 		}
-		return new WorkflowTransitionCollection(ImmutableList.copyOf(list));
+		return new WorkflowTransitionSet(ImmutableList.copyOf(list));
 	}
 
-	public final WorkflowTransitionCollection filter(WorkflowStateSet fromStates) {
+	public final WorkflowTransitionSet filter(WorkflowStateSet fromStates) {
 		List<WorkflowTransition> list = Lists.newArrayList();
 		for (WorkflowTransition transition : transitions) {
 			if (transition.getFromStates().isSubSetOf(fromStates)) {
 				list.add(transition);
 			}
 		}
-		return new WorkflowTransitionCollection(ImmutableList.copyOf(list));
+		return new WorkflowTransitionSet(ImmutableList.copyOf(list));
 	}
 
 	public final WorkflowTransition get(int index) {
 		return transitions.get(0);
 	}
 
-	public final WorkflowTransitionCollection getAutoTransitions() {
+	public final WorkflowTransitionSet getAutoTransitions() {
 		return filter(new Predicate<WorkflowTransition>() {
 
 			@Override

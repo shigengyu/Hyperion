@@ -35,7 +35,7 @@ import com.shigengyu.common.ListHashMap;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
 import com.shigengyu.hyperion.core.WorkflowStateSet;
 import com.shigengyu.hyperion.core.WorkflowTransition;
-import com.shigengyu.hyperion.core.WorkflowTransitionCollection;
+import com.shigengyu.hyperion.core.WorkflowTransitionSet;
 import com.shigengyu.hyperion.core.WorkflowTransitionException;
 
 @Service
@@ -60,11 +60,11 @@ public class WorkflowTransitionCache {
 	@Resource
 	private WorkflowTransitionCacheLoader workflowTransitionCacheLoader;
 
-	public WorkflowTransitionCollection get(final WorkflowDefinition workflowDefinition) {
+	public WorkflowTransitionSet get(final WorkflowDefinition workflowDefinition) {
 		try {
 			ImmutableList<WorkflowTransition> transitions = cache.getIfPresent(workflowDefinition);
 			if (transitions != null) {
-				return WorkflowTransitionCollection.copyOf(transitions);
+				return WorkflowTransitionSet.copyOf(transitions);
 			}
 
 			transitions = cache.get(workflowDefinition);
@@ -96,7 +96,7 @@ public class WorkflowTransitionCache {
 								}
 							}));
 
-			return WorkflowTransitionCollection.copyOf(transitions);
+			return WorkflowTransitionSet.copyOf(transitions);
 		}
 		catch (final ExecutionException e) {
 			throw new WorkflowTransitionException("Failed to get workflow transitions by definition [{}]",
@@ -104,26 +104,26 @@ public class WorkflowTransitionCache {
 		}
 	}
 
-	public WorkflowTransitionCollection get(final WorkflowDefinition workflowDefinition, String transitionName) {
+	public WorkflowTransitionSet get(final WorkflowDefinition workflowDefinition, String transitionName) {
 		List<WorkflowTransition> list = transitionsByName.get(workflowDefinition).get(transitionName);
 		if (list != null) {
-			return WorkflowTransitionCollection.copyOf(list);
+			return WorkflowTransitionSet.copyOf(list);
 		}
 		else {
-			return WorkflowTransitionCollection.empty();
+			return WorkflowTransitionSet.empty();
 		}
 	}
 
-	public WorkflowTransitionCollection get(final WorkflowDefinition workflowDefinition,
+	public WorkflowTransitionSet get(final WorkflowDefinition workflowDefinition,
 			final WorkflowStateSet workflowStateSet) {
 		ListHashMap<WorkflowStateSet, WorkflowTransition> map = transitionsByStates.get(workflowDefinition);
 		List<WorkflowTransition> list = map.get(workflowStateSet);
 
 		if (list != null) {
-			return WorkflowTransitionCollection.copyOf(list);
+			return WorkflowTransitionSet.copyOf(list);
 		}
 		else {
-			return WorkflowTransitionCollection.empty();
+			return WorkflowTransitionSet.empty();
 		}
 	}
 
