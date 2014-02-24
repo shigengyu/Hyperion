@@ -68,7 +68,7 @@ public class WorkflowTransitionSet {
 	}
 
 	public final WorkflowTransition get(int index) {
-		return transitions.get(0);
+		return transitions.get(index);
 	}
 
 	public final WorkflowTransitionSet getAutoTransitions() {
