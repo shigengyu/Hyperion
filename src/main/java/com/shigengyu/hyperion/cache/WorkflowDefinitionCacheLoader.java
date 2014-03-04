@@ -17,6 +17,9 @@ package com.shigengyu.hyperion.cache;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,10 +29,13 @@ import com.shigengyu.hyperion.core.WorkflowDefinition;
 import com.shigengyu.hyperion.dao.WorkflowDefinitionDao;
 
 @Service
-public class WorkflowDefinitionCacheLoader extends CacheLoader<Class<? extends WorkflowDefinition>, WorkflowDefinition> {
+public class WorkflowDefinitionCacheLoader extends CacheLoader<Class<? extends WorkflowDefinition>, WorkflowDefinition>
+		implements ApplicationContextAware {
 
 	@Resource
 	private WorkflowDefinitionDao workflowDefinitionDao;
+
+	private ApplicationContext applicationContext;
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
@@ -37,9 +43,17 @@ public class WorkflowDefinitionCacheLoader extends CacheLoader<Class<? extends W
 		final WorkflowDefinition workflowDefinition = key.getConstructor().newInstance();
 		workflowDefinitionDao.saveOrUpdate(workflowDefinition.toEntity());
 
+		// Autowire workflow definition instance
+		applicationContext.getAutowireCapableBeanFactory().autowireBean(workflowDefinition);
+
 		// Load all transitions in this definition to cache.
 		WorkflowTransitionCache.getInstance().get(workflowDefinition);
 
 		return workflowDefinition;
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
 	}
 }
