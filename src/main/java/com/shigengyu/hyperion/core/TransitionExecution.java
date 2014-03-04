@@ -17,16 +17,16 @@ package com.shigengyu.hyperion.core;
 
 import com.shigengyu.hyperion.entities.WorkflowExecutionEntity;
 
-public class WorkflowExecution {
+public class TransitionExecution {
 
 	private String transitionName;
 
 	private WorkflowInstance workflowInstance;
 
-	public WorkflowExecution() {
+	public TransitionExecution() {
 	}
 
-	public WorkflowExecution(WorkflowInstance workflowInstance, String transitionName) {
+	public TransitionExecution(WorkflowInstance workflowInstance, String transitionName) {
 		this.workflowInstance = workflowInstance;
 		this.transitionName = transitionName;
 	}

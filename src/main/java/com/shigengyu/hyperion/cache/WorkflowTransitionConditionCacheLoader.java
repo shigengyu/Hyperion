@@ -18,6 +18,9 @@ package com.shigengyu.hyperion.cache;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 
 import com.google.common.cache.CacheLoader;
@@ -26,7 +29,9 @@ import com.shigengyu.hyperion.core.TransitionDefinitionException;
 
 @Service
 public class WorkflowTransitionConditionCacheLoader extends
-		CacheLoader<Class<? extends TransitionCondition>, TransitionCondition> {
+		CacheLoader<Class<? extends TransitionCondition>, TransitionCondition> implements ApplicationContextAware {
+
+	private ApplicationContext applicationContext;
 
 	@Override
 	public TransitionCondition load(Class<? extends TransitionCondition> transitionClass) throws Exception {
@@ -41,6 +46,15 @@ public class WorkflowTransitionConditionCacheLoader extends
 							+ "]");
 		}
 
-		return constructor.newInstance();
+		TransitionCondition transitionCondition = constructor.newInstance();
+
+		applicationContext.getAutowireCapableBeanFactory().autowireBean(transitionCondition);
+
+		return transitionCondition;
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
 	}
 }

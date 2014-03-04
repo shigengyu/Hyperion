@@ -15,6 +15,14 @@
  ******************************************************************************/
 package com.shigengyu.hyperion.core;
 
+import java.util.Collection;
+import java.util.List;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
+import com.shigengyu.hyperion.core.TransitionExecutionLog.Type;
+
 public class TransitionExecutionResult {
 
 	public static enum Status {
@@ -23,14 +31,18 @@ public class TransitionExecutionResult {
 
 		SUCCESS,
 
-		WARNING,
+		FAILED
+	}
 
-		ERROR
+	public static TransitionExecutionResult notExecuted() {
+		return new TransitionExecutionResult(Status.NOT_EXCUTED);
 	}
 
 	public static TransitionExecutionResult success() {
 		return new TransitionExecutionResult(Status.SUCCESS);
 	}
+
+	private final List<TransitionExecutionLog> logs = Lists.newArrayList();
 
 	private Status status;
 
@@ -41,8 +53,42 @@ public class TransitionExecutionResult {
 		this.status = status;
 	}
 
+	public final Collection<TransitionExecutionLog> getErrors() {
+		return Collections2.filter(logs, new Predicate<TransitionExecutionLog>() {
+
+			@Override
+			public boolean apply(TransitionExecutionLog item) {
+				return item.getType() == Type.ERROR;
+			}
+		});
+	}
+
+	public final Collection<TransitionExecutionLog> getInfo() {
+		return Collections2.filter(logs, new Predicate<TransitionExecutionLog>() {
+
+			@Override
+			public boolean apply(TransitionExecutionLog item) {
+				return item.getType() == Type.INFO;
+			}
+		});
+	}
+
+	public final Collection<TransitionExecutionLog> getLogs() {
+		return logs;
+	}
+
 	public final Status getStatus() {
 		return status;
+	}
+
+	public final Collection<TransitionExecutionLog> getWarnings() {
+		return Collections2.filter(logs, new Predicate<TransitionExecutionLog>() {
+
+			@Override
+			public boolean apply(TransitionExecutionLog item) {
+				return item.getType() == Type.WARNING;
+			}
+		});
 	}
 
 	public final void setStatus(Status status) {

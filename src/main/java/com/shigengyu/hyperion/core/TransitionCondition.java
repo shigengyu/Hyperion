@@ -15,26 +15,17 @@
  ******************************************************************************/
 package com.shigengyu.hyperion.core;
 
-import java.util.Collection;
-
-import com.google.common.collect.Lists;
 
 public interface TransitionCondition {
 
 	public static class DefaultTransitionCondition implements TransitionCondition {
 
 		@Override
-		public boolean canPerform(WorkflowTransition workflowTransition, WorkflowInstance workflowInstance) {
-			return true;
-		}
-
-		@Override
-		public Collection<String> reasons() {
-			return Lists.newArrayList();
+		public TransitionConditionValidationResult apply(WorkflowTransition workflowTransition,
+				WorkflowInstance workflowInstance) {
+			return TransitionConditionValidationResult.passed();
 		}
 	}
 
-	boolean canPerform(WorkflowTransition workflowTransition, WorkflowInstance workflowInstance);
-
-	Collection<String> reasons();
+	TransitionConditionValidationResult apply(WorkflowTransition workflowTransition, WorkflowInstance workflowInstance);
 }

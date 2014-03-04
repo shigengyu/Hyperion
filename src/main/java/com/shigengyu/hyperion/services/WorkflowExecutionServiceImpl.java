@@ -27,9 +27,10 @@ import com.google.common.collect.Maps;
 import com.shigengyu.hyperion.cache.WorkflowTransitionCache;
 import com.shigengyu.hyperion.core.AutoTransitionRecursionLimitExceededException;
 import com.shigengyu.hyperion.core.StateTransitionStyle;
+import com.shigengyu.hyperion.core.TransitionCondition;
+import com.shigengyu.hyperion.core.TransitionExecution;
 import com.shigengyu.hyperion.core.TransitionExecutionResult;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
-import com.shigengyu.hyperion.core.WorkflowExecution;
 import com.shigengyu.hyperion.core.WorkflowExecutionException;
 import com.shigengyu.hyperion.core.WorkflowInstance;
 import com.shigengyu.hyperion.core.WorkflowStateSet;
@@ -112,6 +113,10 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 			throw new WorkflowExecutionException("Transition cannot be null");
 		}
 
+		for (TransitionCondition transitionCondition : transition.getConditions()) {
+			// TODO:
+		}
+
 		WorkflowInstance backupWorkflowInstance = workflowInstance.clone();
 		try {
 			WorkflowStateSet fromStates = workflowInstance.getWorkflowStateSet();
@@ -135,7 +140,7 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 			}
 
 			// Save workflow execution into database
-			WorkflowExecution workflowExecution = new WorkflowExecution(workflowInstance, transition.getName());
+			TransitionExecution workflowExecution = new TransitionExecution(workflowInstance, transition.getName());
 			workflowExecutionDao.saveOrUpdate(workflowExecution.toEntity());
 
 			if (!transition.isAuto()) {
