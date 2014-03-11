@@ -53,6 +53,11 @@ public class TransitionExecutionResult {
 		this.status = status;
 	}
 
+	public final TransitionExecutionResult addLog(TransitionExecutionLog log) {
+		logs.add(log);
+		return this;
+	}
+
 	public final Collection<TransitionExecutionLog> getErrors() {
 		return Collections2.filter(logs, new Predicate<TransitionExecutionLog>() {
 

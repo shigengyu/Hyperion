@@ -28,7 +28,9 @@ import com.shigengyu.hyperion.cache.WorkflowTransitionCache;
 import com.shigengyu.hyperion.core.AutoTransitionRecursionLimitExceededException;
 import com.shigengyu.hyperion.core.StateTransitionStyle;
 import com.shigengyu.hyperion.core.TransitionCondition;
+import com.shigengyu.hyperion.core.TransitionConditionValidationResult;
 import com.shigengyu.hyperion.core.TransitionExecution;
+import com.shigengyu.hyperion.core.TransitionExecutionLog;
 import com.shigengyu.hyperion.core.TransitionExecutionResult;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
 import com.shigengyu.hyperion.core.WorkflowExecutionException;
@@ -113,8 +115,17 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 			throw new WorkflowExecutionException("Transition cannot be null");
 		}
 
+		// Apply transition condition validation
+		TransitionConditionValidationResult transitionConditionValidationResult = TransitionConditionValidationResult
+				.create();
 		for (TransitionCondition transitionCondition : transition.getConditions()) {
-			// TODO:
+			transitionConditionValidationResult.merge(transitionCondition.apply(transition, workflowInstance));
+			if (!transitionConditionValidationResult.isPassed()) {
+				for (String reason : transitionConditionValidationResult.getReasons()) {
+					transitionExecutionResult.addLog(TransitionExecutionLog.info(reason));
+				}
+				return TransitionExecutionResult.notExecuted();
+			}
 		}
 
 		WorkflowInstance backupWorkflowInstance = workflowInstance.clone();

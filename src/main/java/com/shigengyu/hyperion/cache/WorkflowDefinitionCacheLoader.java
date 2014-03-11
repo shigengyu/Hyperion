@@ -21,8 +21,6 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.cache.CacheLoader;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
@@ -38,7 +36,6 @@ public class WorkflowDefinitionCacheLoader extends CacheLoader<Class<? extends W
 	private ApplicationContext applicationContext;
 
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED)
 	public WorkflowDefinition load(final Class<? extends WorkflowDefinition> key) throws Exception {
 		final WorkflowDefinition workflowDefinition = key.getConstructor().newInstance();
 		workflowDefinitionDao.saveOrUpdate(workflowDefinition.toEntity());

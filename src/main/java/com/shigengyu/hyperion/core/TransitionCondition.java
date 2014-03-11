@@ -15,7 +15,6 @@
  ******************************************************************************/
 package com.shigengyu.hyperion.core;
 
-
 public interface TransitionCondition {
 
 	public static class DefaultTransitionCondition implements TransitionCondition {
