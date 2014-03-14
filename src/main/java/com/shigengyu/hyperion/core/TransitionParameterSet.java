@@ -21,20 +21,20 @@ import org.apache.commons.lang.ObjectUtils;
 
 import com.google.common.collect.Maps;
 
-public class WorkflowParameterSet {
+public class TransitionParameterSet {
 
-	public static final WorkflowParameterSet EMPTY = new WorkflowParameterSet();
+	public static final TransitionParameterSet EMPTY = new TransitionParameterSet();
 
-	public static final WorkflowParameterSet create() {
-		return new WorkflowParameterSet();
+	public static final TransitionParameterSet create() {
+		return new TransitionParameterSet();
 	}
 
-	private final Map<String, WorkflowParameter> parameters = Maps.newHashMap();
+	private final Map<String, TransitionParameter> parameters = Maps.newHashMap();
 
-	private WorkflowParameterSet() {
+	private TransitionParameterSet() {
 	}
 
-	public WorkflowParameterSet clear() {
+	public TransitionParameterSet clear() {
 		parameters.clear();
 		return this;
 	}
@@ -48,9 +48,9 @@ public class WorkflowParameterSet {
 		}
 	}
 
-	public <T> WorkflowParameterSet set(String name, T value) {
+	public <T> TransitionParameterSet set(String name, T value) {
 		if (!parameters.containsKey(name) || !ObjectUtils.equals(parameters.get(name).getValue(), value)) {
-			parameters.put(name, new WorkflowParameter(name, value));
+			parameters.put(name, new TransitionParameter(name, value));
 		}
 		return this;
 	}

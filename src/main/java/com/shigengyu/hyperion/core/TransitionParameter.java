@@ -13,8 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.shigengyu.hyperion.core.parameters;
+package com.shigengyu.hyperion.core;
 
-public class TransitionParameterValue {
+public class TransitionParameter {
 
+	private final String name;
+
+	private final Object value;
+
+	TransitionParameter(String name, Object value) {
+		this.name = name;
+		this.value = value;
+	}
+
+	public final String getName() {
+		return name;
+	}
+
+	public final Object getValue() {
+		return value;
+	}
 }

@@ -24,7 +24,7 @@ import com.shigengyu.hyperion.entities.WorkflowStateEntity;
 
 public class WorkflowInstance {
 
-	private final WorkflowParameterSet parameters = WorkflowParameterSet.create();
+	private final TransitionParameterSet parameters = TransitionParameterSet.create();
 
 	private WorkflowDefinition workflowDefinition;
 
