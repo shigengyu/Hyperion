@@ -18,6 +18,8 @@ package com.shigengyu.hyperion.config;
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +27,8 @@ import com.google.common.collect.ImmutableList;
 
 @Component
 public class HyperionProperties {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(HyperionProperties.class);
 
 	public static final String APPLICATION_CONTEXT_CONFIG = "classpath:com/shigengyu/hyperion/config/application-context-test.xml";
 
@@ -45,16 +49,16 @@ public class HyperionProperties {
 	@Value("${hyperion.workflow.state.scan}")
 	private String workflowStateScanPackageValue;
 
-	public final ImmutableList<String> getWorkflowContextScanPackages() {
-		return workflowContextScanPackages;
+	public final String[] getWorkflowContextScanPackages() {
+		return workflowContextScanPackages.toArray(new String[0]);
 	}
 
-	public final ImmutableList<String> getWorkflowDefinitionScanPackages() {
-		return workflowDefinitionScanPackages;
+	public final String[] getWorkflowDefinitionScanPackages() {
+		return workflowDefinitionScanPackages.toArray(new String[0]);
 	}
 
-	public final ImmutableList<String> getWorkflowStateScanPackages() {
-		return workflowStateScanPackages;
+	public final String[] getWorkflowStateScanPackages() {
+		return workflowStateScanPackages.toArray(new String[0]);
 	}
 
 	@PostConstruct
@@ -65,5 +69,13 @@ public class HyperionProperties {
 				SEPARATOR_CHARACTER));
 		workflowStateScanPackages = ImmutableList.copyOf(StringUtils.split(workflowStateScanPackageValue,
 				SEPARATOR_CHARACTER));
+
+		printProperties();
+	}
+
+	private void printProperties() {
+		LOGGER.info("Workflow context scan packages = [{}]", workflowContextScanPackageValue);
+		LOGGER.info("Workflow definition scan packages = [{}]", workflowDefinitionScanPackageValue);
+		LOGGER.info("Workflow state scan packages = [{}]", workflowStateScanPackageValue);
 	}
 }

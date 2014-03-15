@@ -43,8 +43,6 @@ import com.shigengyu.hyperion.services.WorkflowContextXmlSerializer;
 @ContextConfiguration(TestEnvironment.APPLICATION_CONTEXT_CONFIG)
 public class SimpleScenarioTests {
 
-	private static final String PACKAGE_NAME = SimpleScenarioTests.class.getPackage().getName();
-
 	@Resource
 	private WorkflowContextBinarySerializer binarySerializer;
 
@@ -88,7 +86,7 @@ public class SimpleScenarioTests {
 
 	@Before
 	public void initialize() {
-		hyperionRuntime.scanPackages(PACKAGE_NAME);
+		hyperionRuntime.start();
 	}
 
 	@Test
