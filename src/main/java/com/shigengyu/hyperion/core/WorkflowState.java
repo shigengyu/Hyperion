@@ -18,6 +18,7 @@ package com.shigengyu.hyperion.core;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
+import org.hibernate.annotations.Immutable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -25,6 +26,7 @@ import com.shigengyu.common.StringMessage;
 import com.shigengyu.hyperion.cache.WorkflowStateCache;
 import com.shigengyu.hyperion.entities.WorkflowStateEntity;
 
+@Immutable
 public abstract class WorkflowState {
 
 	@Service

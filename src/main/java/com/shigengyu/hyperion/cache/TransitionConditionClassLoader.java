@@ -15,6 +15,9 @@
  ******************************************************************************/
 package com.shigengyu.hyperion.cache;
 
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 
 import com.google.common.cache.CacheLoader;
@@ -22,10 +25,19 @@ import com.shigengyu.hyperion.core.TransitionCondition;
 
 @Service
 public class TransitionConditionClassLoader extends
-		CacheLoader<Class<? extends TransitionCondition>, TransitionCondition> {
+		CacheLoader<Class<? extends TransitionCondition>, TransitionCondition> implements ApplicationContextAware {
+
+	private ApplicationContext applicationContext;
 
 	@Override
 	public TransitionCondition load(Class<? extends TransitionCondition> key) throws Exception {
-		return key.newInstance();
+		TransitionCondition transitionCondition = key.newInstance();
+		applicationContext.getAutowireCapableBeanFactory().autowireBean(transitionCondition);
+		return transitionCondition;
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
 	}
 }
