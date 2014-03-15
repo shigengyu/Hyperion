@@ -19,13 +19,14 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import com.shigengyu.hyperion.cache.WorkflowStateCache;
+import com.google.common.collect.Sets;
 import com.shigengyu.hyperion.entities.WorkflowStateEntity;
 
 public class WorkflowStateSet implements Iterable<WorkflowState> {
@@ -45,22 +46,23 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 
 					@Override
 					public WorkflowState apply(Class<? extends WorkflowState> input) {
-						return WorkflowStateCache.getInstance().get(input);
+						return WorkflowState.of(input);
 					}
 				}));
 	}
 
 	public static WorkflowStateSet from(Collection<String> workflowStateIds) {
 
-		WorkflowStateSet workflowStateSet = new WorkflowStateSet();
+		List<WorkflowState> workflowStates = Lists.transform(Lists.newArrayList(workflowStateIds),
+				new Function<String, WorkflowState>() {
 
-		for (WorkflowState workflowState : WorkflowStateCache.getInstance().getAll()) {
-			if (workflowStateIds.contains(workflowState.getWorkflowStateId())) {
-				workflowStateSet.workflowStates.add(workflowState);
-			}
-		}
+					@Override
+					public WorkflowState apply(String input) {
+						return WorkflowState.byId(input);
+					}
+				});
 
-		return WorkflowStateSet.from(workflowStateSet);
+		return WorkflowStateSet.from(workflowStates);
 	}
 
 	public static WorkflowStateSet from(Iterable<WorkflowState> workflowStates) {
@@ -71,18 +73,18 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 		return new WorkflowStateSet(workflowStates);
 	}
 
-	private final List<WorkflowState> workflowStates;
+	private final Set<WorkflowState> workflowStates;
 
 	private WorkflowStateSet() {
-		workflowStates = Lists.newArrayList();
+		workflowStates = Sets.newHashSet();
 	}
 
 	private WorkflowStateSet(final Iterable<WorkflowState> workflowStates) {
-		this.workflowStates = Lists.newArrayList(workflowStates);
+		this.workflowStates = Sets.newHashSet(workflowStates);
 	}
 
 	private WorkflowStateSet(final WorkflowState... workflowStates) {
-		this.workflowStates = Lists.newArrayList(workflowStates);
+		this.workflowStates = Sets.newHashSet(workflowStates);
 	}
 
 	@Override
@@ -120,20 +122,17 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 		return workflowStates.iterator();
 	}
 
-	public WorkflowStateSet merge(final Class<?>... workflowStateClasses) {
-		return this.merge(Lists.transform(Arrays.asList(workflowStateClasses), new Function<Class<?>, WorkflowState>() {
+	@SuppressWarnings("unchecked")
+	public WorkflowStateSet merge(final Class<? extends WorkflowState>... workflowStateClasses) {
+		return this.merge(Lists.transform(Arrays.asList(workflowStateClasses),
+				new Function<Class<? extends WorkflowState>, WorkflowState>() {
 
-			@Override
-			@SuppressWarnings("unchecked")
-			public WorkflowState apply(final Class<?> input) {
-				if (!input.isAssignableFrom(WorkflowState.class)) {
-					return null;
-				}
+					@Override
+					public WorkflowState apply(final Class<? extends WorkflowState> input) {
+						return WorkflowState.of(input);
+					}
 
-				return WorkflowStateCache.getInstance().get((Class<? extends WorkflowState>) input);
-			}
-
-		}));
+				}));
 	}
 
 	public WorkflowStateSet merge(final Iterable<WorkflowState> workflowStates) {
@@ -177,7 +176,7 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 	}
 
 	public List<WorkflowStateEntity> toEntityList() {
-		return Lists.transform(workflowStates, new Function<WorkflowState, WorkflowStateEntity>() {
+		return Lists.transform(Lists.newArrayList(workflowStates), new Function<WorkflowState, WorkflowStateEntity>() {
 
 			@Override
 			public WorkflowStateEntity apply(WorkflowState workflowState) {

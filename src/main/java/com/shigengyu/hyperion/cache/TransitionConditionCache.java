@@ -30,12 +30,6 @@ import com.shigengyu.hyperion.core.WorkflowStateException;
 @Service
 public class TransitionConditionCache {
 
-	private static TransitionConditionCache instance;
-
-	public static TransitionConditionCache getInstance() {
-		return instance;
-	}
-
 	private LoadingCache<Class<? extends TransitionCondition>, TransitionCondition> cache;
 
 	@Resource
@@ -54,6 +48,5 @@ public class TransitionConditionCache {
 	@PostConstruct
 	private void initialize() {
 		cache = CacheBuilder.newBuilder().build(transitionConditionClassLoader);
-		instance = this;
 	}
 }

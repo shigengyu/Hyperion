@@ -26,8 +26,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.shigengyu.hyperion.HyperionRuntime;
-import com.shigengyu.hyperion.cache.WorkflowDefinitionCache;
-import com.shigengyu.hyperion.cache.WorkflowStateCache;
 import com.shigengyu.hyperion.cache.WorkflowTransitionCache;
 import com.shigengyu.hyperion.config.HyperionProperties;
 import com.shigengyu.hyperion.core.AutoTransitionRecursionLimitExceededException;
@@ -92,14 +90,14 @@ public class SimpleScenarioTests {
 	@Test
 	@Transactional
 	public void loadStates() {
-		Assert.assertTrue(WorkflowStateCache.getInstance().getAll().size() > 0);
+		Assert.assertTrue(hyperionRuntime.getWorkflowStateCache().getAll().size() > 0);
 		Assert.assertNotNull(WorkflowState.of(States.Initialized.class));
 	}
 
 	@Test
 	@Transactional
 	public void loadTransitions() {
-		WorkflowDefinition workflowDefinition = WorkflowDefinitionCache.getInstance().get(SimpleWorkflow.class);
+		WorkflowDefinition workflowDefinition = hyperionRuntime.getWorkflowDefinitionCache().get(SimpleWorkflow.class);
 		Assert.assertNotNull(workflowDefinition);
 
 		Assert.assertEquals(2, WorkflowTransitionCache.getInstance().get(workflowDefinition).size());

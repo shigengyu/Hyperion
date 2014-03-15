@@ -58,6 +58,18 @@ public class HyperionRuntime {
 		return workflowInstanceCache.get(workflowInstanceId);
 	}
 
+	public final WorkflowDefinitionCache getWorkflowDefinitionCache() {
+		return workflowDefinitionCache;
+	}
+
+	public final WorkflowInstanceCache getWorkflowInstanceCache() {
+		return workflowInstanceCache;
+	}
+
+	public final WorkflowStateCache getWorkflowStateCache() {
+		return workflowStateCache;
+	}
+
 	public WorkflowInstance newWorkflowInstance(Class<? extends WorkflowDefinition> workflowDefinitionClass) {
 		WorkflowDefinition workflowDefinition = workflowDefinitionCache.get(workflowDefinitionClass);
 		WorkflowInstance workflowInstance = workflowPersistenceService.createWorkflowInstance(workflowDefinition);

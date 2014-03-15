@@ -15,13 +15,16 @@
  ******************************************************************************/
 package com.shigengyu.hyperion.core;
 
+import org.hibernate.annotations.Immutable;
+
+@Immutable
 public class TransitionParameter {
 
 	private final String name;
 
 	private final Object value;
 
-	TransitionParameter(String name, Object value) {
+	public TransitionParameter(String name, Object value) {
 		this.name = name;
 		this.value = value;
 	}

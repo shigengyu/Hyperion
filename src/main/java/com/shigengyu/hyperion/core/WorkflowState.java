@@ -15,15 +15,50 @@
  ******************************************************************************/
 package com.shigengyu.hyperion.core;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.shigengyu.common.StringMessage;
 import com.shigengyu.hyperion.cache.WorkflowStateCache;
 import com.shigengyu.hyperion.entities.WorkflowStateEntity;
 
 public abstract class WorkflowState {
 
+	@Service
+	public static class WorkflowStateFactory {
+
+		private static WorkflowStateFactory instance;
+
+		@Resource
+		private WorkflowStateCache workflowStateCache;
+
+		private final <T extends WorkflowState> T byId(final String workflowStateId) {
+			return workflowStateCache.byId(workflowStateId);
+		}
+
+		@PostConstruct
+		private void initialize() {
+			instance = this;
+		}
+
+		private final <T extends WorkflowState> T of(final Class<T> workflowStateClass) {
+			return workflowStateCache.get(workflowStateClass);
+		}
+	}
+
+	public static <T extends WorkflowState> T byId(final String workflowStateId) {
+		T state = WorkflowStateFactory.instance.byId(workflowStateId);
+		if (state == null) {
+			throw new WorkflowStateException(StringMessage.with("Workflow state not found by ID [{}]", workflowStateId));
+		}
+		return state;
+	}
+
 	public static <T extends WorkflowState> WorkflowState of(final Class<T> workflowStateClass) {
-		return WorkflowStateCache.getInstance().get(workflowStateClass);
+		return WorkflowStateFactory.instance.of(workflowStateClass);
 	}
 
 	private final String displayName;

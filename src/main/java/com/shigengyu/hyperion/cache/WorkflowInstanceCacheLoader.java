@@ -31,12 +31,15 @@ public class WorkflowInstanceCacheLoader extends CacheLoader<Integer, WorkflowIn
 	@Resource
 	private WorkflowInstanceDao workflowInstanceDao;
 
+	@Resource
+	private WorkflowDefinitionCache workflowDefinitionCache;
+
 	@Override
 	public WorkflowInstance load(final Integer key) throws Exception {
 		final WorkflowInstanceEntity entity = workflowInstanceDao.get(key);
 
-		WorkflowDefinition workflowDefinition = WorkflowDefinitionCache.getInstance().get(
-				entity.getWorkflowDefinitionEntity().getWorkflowDefinitionId());
+		WorkflowDefinition workflowDefinition = workflowDefinitionCache.get(entity.getWorkflowDefinitionEntity()
+				.getWorkflowDefinitionId());
 
 		return new WorkflowInstance(workflowDefinition, entity);
 	}

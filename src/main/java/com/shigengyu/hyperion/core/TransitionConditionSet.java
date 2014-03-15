@@ -17,7 +17,11 @@ package com.shigengyu.hyperion.core;
 
 import java.util.Iterator;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.stereotype.Service;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableSet;
@@ -26,29 +30,51 @@ import com.shigengyu.hyperion.cache.TransitionConditionCache;
 
 public class TransitionConditionSet implements Iterable<TransitionCondition> {
 
+	@Service
+	public static class TransitionConditionSetFactory {
+
+		private static TransitionConditionSetFactory instance;
+
+		@Resource
+		private TransitionConditionCache transitionConditionCache;
+
+		TransitionConditionSet create(Class<? extends TransitionCondition>[] conditionClasses) {
+
+			ImmutableSet<TransitionCondition> conditions = ImmutableSet.copyOf(Lists.transform(
+					Lists.newArrayList(conditionClasses),
+					new Function<Class<? extends TransitionCondition>, TransitionCondition>() {
+
+						@Override
+						public TransitionCondition apply(Class<? extends TransitionCondition> input) {
+							return transitionConditionCache.get(input);
+						}
+					}));
+
+			return new TransitionConditionSet(conditions);
+		}
+
+		@PostConstruct
+		private void initialize() {
+			instance = this;
+		}
+	}
+
 	public static TransitionConditionSet empty() {
 		return new TransitionConditionSet();
 	}
 
 	public static TransitionConditionSet from(Class<? extends TransitionCondition>[] conditionClasses) {
-		return new TransitionConditionSet(conditionClasses);
+		return TransitionConditionSetFactory.instance.create(conditionClasses);
 	}
 
-	private ImmutableSet<TransitionCondition> conditions;
+	private final ImmutableSet<TransitionCondition> conditions;
 
 	private TransitionConditionSet() {
 		conditions = ImmutableSet.of();
 	}
 
-	private TransitionConditionSet(Class<? extends TransitionCondition>[] conditionClasses) {
-		conditions = ImmutableSet.copyOf(Lists.transform(Lists.newArrayList(conditionClasses),
-				new Function<Class<? extends TransitionCondition>, TransitionCondition>() {
-
-					@Override
-					public TransitionCondition apply(Class<? extends TransitionCondition> input) {
-						return TransitionConditionCache.getInstance().get(input);
-					}
-				}));
+	TransitionConditionSet(ImmutableSet<TransitionCondition> transitionConditions) {
+		conditions = transitionConditions;
 	}
 
 	@Override

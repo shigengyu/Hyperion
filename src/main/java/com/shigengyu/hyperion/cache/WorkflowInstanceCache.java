@@ -32,12 +32,6 @@ import com.shigengyu.hyperion.core.WorkflowStateException;
 @Service
 public class WorkflowInstanceCache {
 
-	private static WorkflowInstanceCache instance;
-
-	public static WorkflowInstanceCache getInstance() {
-		return instance;
-	}
-
 	private LoadingCache<Integer, WorkflowInstance> cache;
 
 	@Value("${hyperion.workflow.cache.instance.timeout.duration}")
@@ -69,7 +63,5 @@ public class WorkflowInstanceCache {
 	private void initialize() {
 		cache = CacheBuilder.newBuilder().expireAfterAccess(timeoutDuration, timeoutTimeUnit)
 				.build(WorkflowInstanceCacheLoader);
-
-		instance = this;
 	}
 }

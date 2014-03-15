@@ -17,6 +17,8 @@ package com.shigengyu.hyperion.server.controllers;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -27,7 +29,7 @@ import org.springframework.stereotype.Component;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import com.shigengyu.hyperion.cache.WorkflowDefinitionCache;
+import com.shigengyu.hyperion.HyperionRuntime;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
 import com.shigengyu.hyperion.server.HyperionController;
 
@@ -37,11 +39,13 @@ import com.shigengyu.hyperion.server.HyperionController;
 @Produces(MediaType.TEXT_HTML)
 public class HyperionRuntimeEnvironmentController {
 
+	@Resource
+	private HyperionRuntime hyperionRuntime;
+
 	@GET
 	@Path("/workflow/list/")
 	public String getWorkflowDefinitions() {
-		List<String> workflowDefinitionNames = Lists.transform(
-				WorkflowDefinitionCache.getInstance().scanPackages("com.shigengyu.hyperion").getAll(),
+		List<String> workflowDefinitionNames = Lists.transform(hyperionRuntime.getWorkflowDefinitionCache().getAll(),
 				new Function<WorkflowDefinition, String>() {
 
 					@Override
@@ -55,5 +59,10 @@ public class HyperionRuntimeEnvironmentController {
 		}
 
 		return StringUtils.join(workflowDefinitionNames, "<br />");
+	}
+
+	@PostConstruct
+	private void initialize() {
+		hyperionRuntime.start();
 	}
 }

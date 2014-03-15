@@ -13,6 +13,7 @@
 
 	<context:component-scan
 		base-package="com.shigengyu.hyperion.config,
+		              com.shigengyu.hyperion.core,
 		              com.shigengyu.hyperion.services,
 		              com.shigengyu.hyperion.dao,
 		              com.shigengyu.hyperion.cache,

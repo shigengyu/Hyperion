@@ -41,13 +41,7 @@ import com.shigengyu.hyperion.utils.ReflectionsHelper;
 @Lazy(false)
 public class WorkflowDefinitionCache {
 
-	private static WorkflowDefinitionCache instance;
-
 	private static Logger LOGGER = LoggerFactory.getLogger(WorkflowDefinitionCache.class);
-
-	public static WorkflowDefinitionCache getInstance() {
-		return instance;
-	}
 
 	private LoadingCache<Class<? extends WorkflowDefinition>, WorkflowDefinition> cache;
 
@@ -83,7 +77,6 @@ public class WorkflowDefinitionCache {
 	@PostConstruct
 	private void initialize() {
 		cache = CacheBuilder.newBuilder().build(workflowDefinitionCacheLoader);
-		instance = this;
 	}
 
 	public WorkflowDefinitionCache scanPackages(final String... packageNames) {

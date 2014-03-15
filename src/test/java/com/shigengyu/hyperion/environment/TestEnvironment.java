@@ -15,7 +15,7 @@
  ******************************************************************************/
 package com.shigengyu.hyperion.environment;
 
-public class TestEnvironment {
+public final class TestEnvironment {
 
 	public static final String APPLICATION_CONTEXT_CONFIG = "classpath:com/shigengyu/hyperion/config/application-context-test.xml";
 

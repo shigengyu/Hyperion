@@ -15,6 +15,7 @@
  ******************************************************************************/
 package com.shigengyu.hyperion.cache;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Service;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Maps;
 import com.shigengyu.hyperion.core.State;
 import com.shigengyu.hyperion.core.WorkflowState;
 import com.shigengyu.hyperion.core.WorkflowStateException;
@@ -39,15 +41,11 @@ import com.shigengyu.hyperion.utils.ReflectionsHelper;
 @Lazy(false)
 public class WorkflowStateCache {
 
-	private static WorkflowStateCache instance;
-
 	private static Logger LOGGER = LoggerFactory.getLogger(WorkflowStateCache.class);
 
-	public static WorkflowStateCache getInstance() {
-		return instance;
-	}
-
 	private LoadingCache<Class<? extends WorkflowState>, WorkflowState> cache;
+
+	private final Map<String, WorkflowState> statesById = Maps.newHashMap();
 
 	@Resource
 	private WorkflowStateCacheLoader workflowStateCacheLoader;
@@ -58,9 +56,13 @@ public class WorkflowStateCache {
 	private WorkflowStateCache() {
 	}
 
-	public <T extends WorkflowState> WorkflowState get(final Class<T> workflowStateClass) {
+	public final <T extends WorkflowState> T byId(final String workflowStateId) {
+		return (T) statesById.get(workflowStateId);
+	}
+
+	public <T extends WorkflowState> T get(final Class<T> workflowStateClass) {
 		try {
-			return cache.get(workflowStateClass);
+			return (T) cache.get(workflowStateClass);
 		}
 		catch (final ExecutionException e) {
 			throw new WorkflowStateException("Failed to get workflow state by type [{}]", workflowStateClass, e);
@@ -74,7 +76,6 @@ public class WorkflowStateCache {
 	@PostConstruct
 	private void initialize() {
 		cache = CacheBuilder.newBuilder().build(workflowStateCacheLoader);
-		instance = this;
 	}
 
 	public void scanPackages(final String... packageNames) {
@@ -85,7 +86,9 @@ public class WorkflowStateCache {
 				Class<? extends WorkflowState> workflowStateClass = (Class<? extends WorkflowState>) clazz;
 
 				// Get the workflow state to allow it to be cached
-				WorkflowState state = WorkflowStateCache.getInstance().get(workflowStateClass);
+				WorkflowState state = get(workflowStateClass);
+
+				statesById.put(state.getWorkflowStateId(), state);
 
 				// Save or update the workflow state in database
 				workflowStateDao.saveOrUpdate(state.toEntity());
