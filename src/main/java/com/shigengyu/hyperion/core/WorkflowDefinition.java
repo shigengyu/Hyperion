@@ -15,11 +15,14 @@
  ******************************************************************************/
 package com.shigengyu.hyperion.core;
 
+import net.jcip.annotations.Immutable;
+
 import org.springframework.util.StringUtils;
 
 import com.shigengyu.common.StringMessage;
 import com.shigengyu.hyperion.entities.WorkflowDefinitionEntity;
 
+@Immutable
 public abstract class WorkflowDefinition {
 
 	private final WorkflowState initialState;

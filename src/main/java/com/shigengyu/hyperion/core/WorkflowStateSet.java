@@ -21,14 +21,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import net.jcip.annotations.Immutable;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
 import com.google.common.base.Function;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.shigengyu.hyperion.entities.WorkflowStateEntity;
 
+@Immutable
 public class WorkflowStateSet implements Iterable<WorkflowState> {
 
 	public static WorkflowStateSet empty() {
@@ -73,18 +77,14 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 		return new WorkflowStateSet(workflowStates);
 	}
 
-	private final Set<WorkflowState> workflowStates;
-
-	private WorkflowStateSet() {
-		workflowStates = Sets.newHashSet();
-	}
+	private final ImmutableSet<WorkflowState> workflowStates;
 
 	private WorkflowStateSet(final Iterable<WorkflowState> workflowStates) {
-		this.workflowStates = Sets.newHashSet(workflowStates);
+		this.workflowStates = ImmutableSet.copyOf(workflowStates);
 	}
 
 	private WorkflowStateSet(final WorkflowState... workflowStates) {
-		this.workflowStates = Sets.newHashSet(workflowStates);
+		this.workflowStates = ImmutableSet.copyOf(workflowStates);
 	}
 
 	@Override
@@ -124,7 +124,7 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 
 	@SuppressWarnings("unchecked")
 	public WorkflowStateSet merge(final Class<? extends WorkflowState>... workflowStateClasses) {
-		return this.merge(Lists.transform(Arrays.asList(workflowStateClasses),
+		return merge(Lists.transform(Arrays.asList(workflowStateClasses),
 				new Function<Class<? extends WorkflowState>, WorkflowState>() {
 
 					@Override
@@ -140,35 +140,35 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 			return this;
 		}
 
+		Set<WorkflowState> states = Sets.newHashSet(workflowStates);
 		for (final WorkflowState workflowState : workflowStates) {
 			if (workflowState != null) {
-				this.workflowStates.add(workflowState);
+				states.add(workflowState);
 			}
 		}
-
-		return this;
+		return new WorkflowStateSet(states);
 	}
 
 	public WorkflowStateSet merge(WorkflowStateSet workflowStateSet) {
-		merge(workflowStateSet.workflowStates);
-		return this;
+		return merge(workflowStateSet.workflowStates);
 	}
 
 	public WorkflowStateSet remove(Class<? extends WorkflowState> workflowState) {
-		workflowStates.remove(WorkflowState.of(workflowState));
-		return this;
+		return remove(WorkflowState.of(workflowState));
 	}
 
 	public WorkflowStateSet remove(Iterable<WorkflowState> workflowStates) {
+		Set<WorkflowState> states = Sets.newHashSet(this.workflowStates);
 		for (WorkflowState workflowState : Lists.newArrayList(workflowStates)) {
-			remove(workflowState);
+			states.remove(workflowState);
 		}
-		return this;
+		return new WorkflowStateSet(states);
 	}
 
 	public WorkflowStateSet remove(WorkflowState workflowState) {
-		workflowStates.remove(workflowState);
-		return this;
+		Set<WorkflowState> states = Sets.newHashSet(workflowStates);
+		states.remove(workflowState);
+		return new WorkflowStateSet(states);
 	}
 
 	public int size() {

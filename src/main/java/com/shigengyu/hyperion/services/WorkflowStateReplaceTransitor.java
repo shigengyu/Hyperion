@@ -25,5 +25,6 @@ public class WorkflowStateReplaceTransitor implements WorkflowStateTransitor {
 
 	@Override
 	public void transit(WorkflowInstance workflowInstance, WorkflowStateSet fromStates, WorkflowStateSet toStates) {
+		workflowInstance.setWorkflowStateSet(toStates);
 	}
 }
