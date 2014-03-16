@@ -21,7 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.cache.CacheLoader;
+import com.shigengyu.common.StringMessage;
 import com.shigengyu.hyperion.core.WorkflowState;
+import com.shigengyu.hyperion.core.WorkflowStateException;
 import com.shigengyu.hyperion.dao.WorkflowStateDao;
 
 @Service
@@ -32,8 +34,16 @@ public class WorkflowStateCacheLoader extends CacheLoader<Class<? extends Workfl
 
 	@Override
 	@Transactional
-	public WorkflowState load(final Class<? extends WorkflowState> key) throws Exception {
-		WorkflowState workflowState = key.getConstructor().newInstance();
+	public WorkflowState load(final Class<? extends WorkflowState> key) {
+		WorkflowState workflowState;
+		try {
+			workflowState = key.newInstance();
+		}
+		catch (InstantiationException | IllegalAccessException e) {
+			throw new WorkflowStateException(StringMessage.with(
+					"Failed to create workflow state instance of type [{}]", key.getName()), e);
+		}
+
 		workflowStateDao.saveOrUpdate(workflowState.toEntity());
 		return workflowState;
 	}

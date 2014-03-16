@@ -18,7 +18,8 @@ package com.shigengyu.hyperion.core;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
-import org.hibernate.annotations.Immutable;
+import net.jcip.annotations.Immutable;
+
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 

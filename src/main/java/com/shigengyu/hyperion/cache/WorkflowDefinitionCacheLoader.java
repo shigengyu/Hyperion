@@ -23,7 +23,9 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 
 import com.google.common.cache.CacheLoader;
+import com.shigengyu.common.StringMessage;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
+import com.shigengyu.hyperion.core.WorkflowDefinitionException;
 import com.shigengyu.hyperion.dao.WorkflowDefinitionDao;
 
 @Service
@@ -36,8 +38,17 @@ public class WorkflowDefinitionCacheLoader extends CacheLoader<Class<? extends W
 	private ApplicationContext applicationContext;
 
 	@Override
-	public WorkflowDefinition load(final Class<? extends WorkflowDefinition> key) throws Exception {
-		final WorkflowDefinition workflowDefinition = key.getConstructor().newInstance();
+	public WorkflowDefinition load(final Class<? extends WorkflowDefinition> key) {
+
+		WorkflowDefinition workflowDefinition = null;
+		try {
+			workflowDefinition = key.newInstance();
+		}
+		catch (InstantiationException | IllegalAccessException e) {
+			throw new WorkflowDefinitionException(StringMessage.with(
+					"Failed to create workflow definition instance of type [{}]", key.getName()), e);
+		}
+
 		workflowDefinitionDao.saveOrUpdate(workflowDefinition.toEntity());
 
 		// Autowire workflow definition instance

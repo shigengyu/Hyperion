@@ -15,7 +15,7 @@
  ******************************************************************************/
 package com.shigengyu.hyperion.core;
 
-import org.hibernate.annotations.Immutable;
+import net.jcip.annotations.Immutable;
 
 @Immutable
 public class TransitionParameter {

@@ -17,12 +17,12 @@ package com.shigengyu.hyperion.cache;
 
 import java.util.concurrent.ExecutionException;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -43,13 +43,15 @@ public class WorkflowDefinitionCache {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(WorkflowDefinitionCache.class);
 
-	private LoadingCache<Class<? extends WorkflowDefinition>, WorkflowDefinition> cache;
-
-	@Resource
-	private WorkflowDefinitionCacheLoader workflowDefinitionCacheLoader;
+	private final LoadingCache<Class<? extends WorkflowDefinition>, WorkflowDefinition> cache;
 
 	@Resource
 	private WorkflowDefinitionDao workflowDefinitionDao;
+
+	@Autowired
+	private WorkflowDefinitionCache(final WorkflowDefinitionCacheLoader workflowDefinitionCacheLoader) {
+		cache = CacheBuilder.newBuilder().build(workflowDefinitionCacheLoader);
+	}
 
 	public synchronized <T extends WorkflowDefinition> WorkflowDefinition get(final Class<T> workflowDefinitionClass) {
 		try {
@@ -72,11 +74,6 @@ public class WorkflowDefinitionCache {
 
 	public ImmutableList<WorkflowDefinition> getAll() {
 		return ImmutableList.copyOf(cache.asMap().values());
-	}
-
-	@PostConstruct
-	private void initialize() {
-		cache = CacheBuilder.newBuilder().build(workflowDefinitionCacheLoader);
 	}
 
 	public WorkflowDefinitionCache scanPackages(final String... packageNames) {

@@ -17,36 +17,34 @@ package com.shigengyu.hyperion.cache;
 
 import java.util.concurrent.ExecutionException;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
+import net.jcip.annotations.Immutable;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
 import com.shigengyu.hyperion.core.TransitionCondition;
-import com.shigengyu.hyperion.core.WorkflowStateException;
+import com.shigengyu.hyperion.core.WorkflowTransitionException;
 
 @Service
+@Immutable
 public class TransitionConditionCache {
 
-	private LoadingCache<Class<? extends TransitionCondition>, TransitionCondition> cache;
+	private final LoadingCache<Class<? extends TransitionCondition>, TransitionCondition> cache;
 
-	@Resource
-	private TransitionConditionClassLoader transitionConditionClassLoader;
+	@Autowired
+	private TransitionConditionCache(final TransitionConditionClassLoader transitionConditionClassLoader) {
+		cache = CacheBuilder.newBuilder().build(transitionConditionClassLoader);
+	}
 
 	public synchronized <T extends TransitionCondition> TransitionCondition get(final Class<T> transitionConditionClass) {
 		try {
 			return cache.get(transitionConditionClass);
 		}
-		catch (final ExecutionException e) {
-			throw new WorkflowStateException("Failed to get transition condition by type [{}]",
+		catch (ExecutionException e) {
+			throw new WorkflowTransitionException("Failed to get transition condition by type [{}]",
 					transitionConditionClass, e);
 		}
-	}
-
-	@PostConstruct
-	private void initialize() {
-		cache = CacheBuilder.newBuilder().build(transitionConditionClassLoader);
 	}
 }

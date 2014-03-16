@@ -21,7 +21,9 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 
 import com.google.common.cache.CacheLoader;
+import com.shigengyu.common.StringMessage;
 import com.shigengyu.hyperion.core.TransitionCondition;
+import com.shigengyu.hyperion.core.TransitionConditionException;
 
 @Service
 public class TransitionConditionClassLoader extends
@@ -30,8 +32,15 @@ public class TransitionConditionClassLoader extends
 	private ApplicationContext applicationContext;
 
 	@Override
-	public TransitionCondition load(Class<? extends TransitionCondition> key) throws Exception {
-		TransitionCondition transitionCondition = key.newInstance();
+	public TransitionCondition load(Class<? extends TransitionCondition> key) {
+		TransitionCondition transitionCondition;
+		try {
+			transitionCondition = key.newInstance();
+		}
+		catch (InstantiationException | IllegalAccessException e) {
+			throw new TransitionConditionException(StringMessage.with(
+					"Failed to create transition condition instance of type [{}]", key.getName()), e);
+		}
 		applicationContext.getAutowireCapableBeanFactory().autowireBean(transitionCondition);
 		return transitionCondition;
 	}
