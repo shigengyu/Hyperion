@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2013-2014 Gengyu Shi
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -61,7 +61,8 @@ public class SimpleScenarioTests {
 		workflowContext.setNumber(42);
 		String base64String = binarySerializer.serialize(workflowContext);
 
-		SimpleWorkflowContext deserializedWorkflowContext = binarySerializer.deserialize(base64String);
+		SimpleWorkflowContext deserializedWorkflowContext = binarySerializer.deserialize(SimpleWorkflowContext.class,
+				base64String);
 		Assert.assertEquals("shigengyu", deserializedWorkflowContext.getName());
 		Assert.assertEquals(42, deserializedWorkflowContext.getNumber());
 	}
@@ -75,8 +76,8 @@ public class SimpleScenarioTests {
 		workflowInstance.setParameter("Name", "Hyperion");
 		workflowInstance.setParameter("Number", 42);
 
-		String name = workflowInstance.getParameter("Name");
-		Integer number = workflowInstance.getParameter("Number");
+		String name = workflowInstance.getParameter(String.class, "Name");
+		Integer number = workflowInstance.getParameter(Integer.class, "Number");
 
 		Assert.assertEquals("Hyperion", name);
 		Assert.assertEquals(new Integer(42), number);
@@ -181,7 +182,7 @@ public class SimpleScenarioTests {
 		workflowContext.setNumber(42);
 		String xml = xmlSerializer.serialize(workflowContext);
 
-		SimpleWorkflowContext deserializedWorkflowContext = xmlSerializer.deserialize(xml);
+		SimpleWorkflowContext deserializedWorkflowContext = xmlSerializer.deserialize(SimpleWorkflowContext.class, xml);
 		Assert.assertEquals("shigengyu", deserializedWorkflowContext.getName());
 		Assert.assertEquals(42, deserializedWorkflowContext.getNumber());
 	}

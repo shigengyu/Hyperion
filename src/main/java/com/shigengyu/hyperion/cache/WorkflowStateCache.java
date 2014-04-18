@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2013-2014 Gengyu Shi
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -56,13 +56,13 @@ public class WorkflowStateCache {
 	private WorkflowStateCache() {
 	}
 
-	public final <T extends WorkflowState> T byId(final String workflowStateId) {
-		return (T) statesById.get(workflowStateId);
+	public final WorkflowState byId(final String workflowStateId) {
+		return WorkflowState.class.cast(statesById.get(workflowStateId));
 	}
 
 	public <T extends WorkflowState> T get(final Class<T> workflowStateClass) {
 		try {
-			return (T) cache.get(workflowStateClass);
+			return workflowStateClass.cast(cache.get(workflowStateClass));
 		}
 		catch (final ExecutionException e) {
 			throw new WorkflowStateException("Failed to get workflow state by type [{}]", workflowStateClass, e);

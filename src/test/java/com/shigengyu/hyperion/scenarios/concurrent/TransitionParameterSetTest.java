@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2013-2014 Gengyu Shi
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,18 +28,18 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.google.common.collect.Lists;
-import com.shigengyu.hyperion.core.WorkflowInstanceParameters;
+import com.shigengyu.hyperion.core.TransitionParameterSet;
 import com.shigengyu.hyperion.environment.TestEnvironment;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(TestEnvironment.APPLICATION_CONTEXT_CONFIG)
-public class WorkflowInstanceParametersTests {
+public class TransitionParameterSetTest {
 
 	private static class SetAndGetThread extends Thread {
 
-		private final WorkflowInstanceParameters parameters;
+		private final TransitionParameterSet parameters;
 
-		private SetAndGetThread(WorkflowInstanceParameters parameters) {
+		private SetAndGetThread(TransitionParameterSet parameters) {
 			this.parameters = parameters;
 		}
 
@@ -51,7 +51,7 @@ public class WorkflowInstanceParametersTests {
 					int number = RandomUtils.nextInt();
 					parameters.set(parameterKey, number);
 					Thread.sleep(RandomUtils.nextInt(5));
-					Assert.assertEquals(number, parameters.get(parameterKey));
+					Assert.assertEquals(number, parameters.get(Integer.class, parameterKey).intValue());
 				}
 				catch (InterruptedException e) {
 				}
@@ -75,7 +75,7 @@ public class WorkflowInstanceParametersTests {
 
 	@Test
 	public void setAndGetParameterValues() {
-		WorkflowInstanceParameters parameters = new WorkflowInstanceParameters();
+		TransitionParameterSet parameters = TransitionParameterSet.create();
 
 		ThreadUncaughtExceptionHandler exceptionHandler = new ThreadUncaughtExceptionHandler();
 		Thread.setDefaultUncaughtExceptionHandler(exceptionHandler);

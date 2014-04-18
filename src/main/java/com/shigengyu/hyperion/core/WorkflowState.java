@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2013-2014 Gengyu Shi
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,7 +38,7 @@ public abstract class WorkflowState {
 		@Resource
 		private WorkflowStateCache workflowStateCache;
 
-		private final <T extends WorkflowState> T byId(final String workflowStateId) {
+		private final WorkflowState byId(final String workflowStateId) {
 			return workflowStateCache.byId(workflowStateId);
 		}
 
@@ -52,8 +52,8 @@ public abstract class WorkflowState {
 		}
 	}
 
-	public static <T extends WorkflowState> T byId(final String workflowStateId) {
-		T state = WorkflowStateFactory.instance.byId(workflowStateId);
+	public static WorkflowState byId(final String workflowStateId) {
+		WorkflowState state = WorkflowStateFactory.instance.byId(workflowStateId);
 		if (state == null) {
 			throw new WorkflowStateException(StringMessage.with("Workflow state not found by ID [{}]", workflowStateId));
 		}

@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2013-2014 Gengyu Shi
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,6 +23,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.shigengyu.hyperion.core.WorkflowContext;
+import com.shigengyu.hyperion.core.WorkflowContextException;
 import com.shigengyu.hyperion.utils.ReflectionsHelper;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
@@ -52,8 +53,24 @@ public class WorkflowContextXmlSerializer implements WorkflowContextSerializer, 
 	}
 
 	@Override
-	public <T extends WorkflowContext> T deserialize(final String input) {
-		return (T) xStream.fromXML(input);
+	public <T extends WorkflowContext> T deserialize(final Class<T> clazz, final String input) {
+		Object workflowContext = null;
+		try {
+			workflowContext = xStream.fromXML(input);
+			if (workflowContext == null) {
+				return null;
+			}
+			return clazz.cast(workflowContext);
+		}
+		catch (ClassCastException e) {
+			if (workflowContext != null) {
+				throw new WorkflowContextException("Unable to cast workflow context of type ["
+						+ workflowContext.getClass().getName() + "] to [" + clazz.getName() + "]");
+			}
+			else {
+				throw new WorkflowContextException(e);
+			}
+		}
 	}
 
 	public void initialize(final String... packageNames) {

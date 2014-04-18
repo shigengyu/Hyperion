@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2013-2014 Gengyu Shi
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,7 +34,7 @@ public class WorkflowInstance {
 
 	/**
 	 * Creates a new workflow instance with the specified workflow definition
-	 * 
+	 *
 	 * @param workflowDefinition
 	 */
 	public WorkflowInstance(WorkflowDefinition workflowDefinition) {
@@ -44,7 +44,7 @@ public class WorkflowInstance {
 
 	/**
 	 * Create a {@link WorkflowInstance} object from an existing workflow instance
-	 * 
+	 *
 	 * @param workflowDefinition
 	 * @param entity
 	 */
@@ -54,11 +54,11 @@ public class WorkflowInstance {
 		workflowStateSet = WorkflowStateSet.from(Lists.transform(entity.getWorkflowStateEntities(),
 				new Function<WorkflowStateEntity, String>() {
 
-					@Override
-					public String apply(WorkflowStateEntity input) {
-						return input.getWorkflowStateId();
-					}
-				}));
+			@Override
+			public String apply(WorkflowStateEntity input) {
+				return input.getWorkflowStateId();
+			}
+		}));
 	}
 
 	private WorkflowInstance(WorkflowInstance workflowInstance) {
@@ -78,8 +78,8 @@ public class WorkflowInstance {
 				+ workflowInstanceId + IOUtils.LINE_SEPARATOR + "State = " + workflowStateSet;
 	}
 
-	public <T> T getParameter(String name) {
-		return parameters.get(name);
+	public <T> T getParameter(final Class<T> clazz, String name) {
+		return parameters.get(clazz, name);
 	}
 
 	public WorkflowDefinition getWorkflowDefinition() {

@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2013-2014 Gengyu Shi
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,7 +27,7 @@ public class RecursiveTransitionWorkflow extends WorkflowDefinition {
 	@Transition(fromStates = States.WorkInProgress.class, auto = true, multiEntry = true, maxEntry = 5)
 	public WorkflowStateSet recursive(final WorkflowInstance workflowInstance) {
 
-		Integer count = workflowInstance.getParameter("Count");
+		Integer count = workflowInstance.getParameter(Integer.class, "Count");
 		if (count > 0) {
 			workflowInstance.setParameter("Count", count - 1);
 			return WorkflowStateSet.from(States.WorkInProgress.class);
@@ -51,8 +51,8 @@ public class RecursiveTransitionWorkflow extends WorkflowDefinition {
 	}
 
 	@Transition(name = "startExceedLimit",
-				fromStates = States.Initialized.class,
-				toStates = States.WorkInProgress.class)
+			fromStates = States.Initialized.class,
+			toStates = States.WorkInProgress.class)
 	public void startExceedLimit(final WorkflowInstance workflowInstance) {
 		workflowInstance.setParameter("Count", 10);
 	}
