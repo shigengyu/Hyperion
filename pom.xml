@@ -8,8 +8,25 @@
 	<packaging>jar</packaging>
 
 	<name>Hyperion</name>
+	<description>A lightweight workflow engine</description>
 	<url>http://hyperion.shigengyu.com</url>
-
+	
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+	
+	<developers>
+		<developer>
+			<name>Gengyu Shi</name>
+			<email>univer.shi@gmail.com</email>
+			<organization>shigengyu</organization>
+			<organizationUrl>http://www.shigengyu.com</organizationUrl>
+		</developer>
+	</developers>
+	
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
 		<artifactId>oss-parent</artifactId>
