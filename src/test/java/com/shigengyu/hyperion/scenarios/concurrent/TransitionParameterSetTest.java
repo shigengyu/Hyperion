@@ -46,7 +46,7 @@ public class TransitionParameterSetTest {
 
 		@Override
 		public void run() {
-			for (int i = 0; i <= 30; i++) {
+			for (int i = 0; i <= NUM_OF_THREADS; i++) {
 				try {
 					String parameterKey = Thread.currentThread().getName() + "_number";
 					int number = RandomUtils.nextInt();
@@ -55,6 +55,7 @@ public class TransitionParameterSetTest {
 					Assert.assertEquals(number, parameters.get(Integer.class, parameterKey).intValue());
 				}
 				catch (InterruptedException e) {
+					Assert.fail(ExceptionUtils.getFullStackTrace(e));
 				}
 			}
 		}
@@ -74,6 +75,8 @@ public class TransitionParameterSetTest {
 		}
 	}
 
+	public static final int NUM_OF_THREADS = 10;
+
 	@Test
 	public void setAndGetParameterValues() {
 		TransitionParameterSet parameters = TransitionParameterSet.create();
@@ -83,7 +86,7 @@ public class TransitionParameterSetTest {
 
 		Set<Thread> threads = new HashSet<Thread>();
 
-		for (int i = 0; i < 30; i++) {
+		for (int i = 0; i < NUM_OF_THREADS; i++) {
 			SetAndGetThread thread = new SetAndGetThread(parameters);
 			thread.start();
 			threads.add(thread);
@@ -94,7 +97,7 @@ public class TransitionParameterSetTest {
 				thread.join();
 			}
 			catch (InterruptedException e) {
-				e.printStackTrace();
+				Assert.fail(ExceptionUtils.getFullStackTrace(e));
 			}
 		}
 
