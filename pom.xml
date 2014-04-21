@@ -10,6 +10,18 @@
 	<name>Hyperion</name>
 	<url>http://hyperion.shigengyu.com</url>
 
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+
+	<scm>
+		<connection>scm:git:git@github.com:shigengyu/hyperion.git</connection>
+		<developerConnection>scm:git:git@github.com:shigengyu/hyperion.git</developerConnection>
+		<url>git@github.com:shigengyu/hyperion.git</url>
+	</scm>
+
 	<build>
 		<resources>
 			<resource>
@@ -68,8 +80,8 @@
 		<spring.version>3.2.3.RELEASE</spring.version>
 		<hibernate.version>3.5.6-Final</hibernate.version>
 		<cxf.version>2.6.8</cxf.version>
-	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 	<dependencies>
 		<dependency>
