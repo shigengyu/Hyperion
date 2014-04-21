@@ -48,11 +48,11 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 		return new WorkflowStateSet(Lists.transform(Lists.newArrayList(workflowStates),
 				new Function<Class<? extends WorkflowState>, WorkflowState>() {
 
-			@Override
-			public WorkflowState apply(Class<? extends WorkflowState> input) {
-				return WorkflowState.of(input);
-			}
-		}));
+					@Override
+					public WorkflowState apply(Class<? extends WorkflowState> input) {
+						return WorkflowState.of(input);
+					}
+				}));
 	}
 
 	public static WorkflowStateSet from(Collection<String> workflowStateIds) {
@@ -60,11 +60,11 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 		List<WorkflowState> workflowStates = Lists.transform(Lists.newArrayList(workflowStateIds),
 				new Function<String, WorkflowState>() {
 
-			@Override
-			public WorkflowState apply(String input) {
-				return WorkflowState.byId(input);
-			}
-		});
+					@Override
+					public WorkflowState apply(String input) {
+						return WorkflowState.byId(input);
+					}
+				});
 
 		return WorkflowStateSet.from(workflowStates);
 	}
@@ -122,16 +122,16 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 		return workflowStates.iterator();
 	}
 
-	public WorkflowStateSet merge(
-			@SuppressWarnings("unchecked") final Class<? extends WorkflowState>... workflowStateClasses) {
+	@SuppressWarnings("unchecked")
+	public WorkflowStateSet merge(final Class<? extends WorkflowState>... workflowStateClasses) {
 		return merge(Lists.transform(Arrays.asList(workflowStateClasses),
 				new Function<Class<? extends WorkflowState>, WorkflowState>() {
 
-			@Override
-			public WorkflowState apply(final Class<? extends WorkflowState> input) {
-				return WorkflowState.of(input);
-			}
-		}));
+					@Override
+					public WorkflowState apply(final Class<? extends WorkflowState> input) {
+						return WorkflowState.of(input);
+					}
+				}));
 	}
 
 	public WorkflowStateSet merge(final Iterable<WorkflowState> workflowStates) {
