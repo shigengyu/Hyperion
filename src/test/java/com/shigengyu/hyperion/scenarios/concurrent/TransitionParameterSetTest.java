@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -98,7 +99,7 @@ public class TransitionParameterSetTest {
 		}
 
 		if (exceptionHandler.getExceptions().size() > 0) {
-			Assert.fail(exceptionHandler.getExceptions().get(0).getMessage());
+			ExceptionUtils.getFullStackTrace(exceptionHandler.getExceptions().get(0));
 		}
 	}
 }
