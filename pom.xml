@@ -68,6 +68,8 @@
 		<spring.version>3.2.3.RELEASE</spring.version>
 		<hibernate.version>3.5.6-Final</hibernate.version>
 		<cxf.version>2.6.8</cxf.version>
+	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 	<dependencies>
 		<dependency>
