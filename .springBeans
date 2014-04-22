@@ -1,13 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beansProjectDescription>
 	<version>1</version>
-	<pluginVersion><![CDATA[2.6.0.201103160035-RELEASE]]></pluginVersion>
+	<pluginVersion><![CDATA[3.5.0.201404011509-RELEASE]]></pluginVersion>
 	<configSuffixes>
 		<configSuffix><![CDATA[xml]]></configSuffix>
 	</configSuffixes>
 	<enableImports><![CDATA[false]]></enableImports>
 	<configs>
+		<config>src/main/java/com/shigengyu/hyperion/config/application-context-shared.xml</config>
+		<config>src/test/java/com/shigengyu/hyperion/config/application-context-test.xml</config>
+		<config>src/main/java/com/shigengyu/hyperion/config/application-context.xml</config>
+		<config>src/main/java/com/shigengyu/hyperion/config/hyperion-common.xml</config>
+		<config>src/main/java/com/shigengyu/hyperion/config/hyperion-dao.xml</config>
+		<config>src/main/java/com/shigengyu/hyperion/config/hyperion-services.xml</config>
+		<config>java:com.shigengyu.hyperion.config.HyperionProperties</config>
+		<config>java:com.shigengyu.hyperion.server.controllers.HyperionRuntimeEnvironmentController</config>
+		<config>java:com.shigengyu.hyperion.server.controllers.IndexController</config>
+		<config>java:com.shigengyu.hyperion.core.validation.transitions.MultipleTransitionsWithDynamicViolation</config>
+		<config>java:com.shigengyu.hyperion.core.validation.transitions.TransitionValidator$TransitionValidationPolicies</config>
+		<config>java:com.shigengyu.hyperion.logging.services.WorkflowExecutionServiceLoggingAspect</config>
+		<config>java:com.shigengyu.hyperion.logging.cache.WorkflowStateCacheLoaderLoggingAspect</config>
+		<config>java:com.shigengyu.hyperion.services.WorkflowStateIncrementalTransitor</config>
+		<config>java:com.shigengyu.hyperion.services.WorkflowStateReplaceTransitor</config>
 	</configs>
+	<autoconfigs>
+	</autoconfigs>
 	<configSets>
 	</configSets>
 </beansProjectDescription>
