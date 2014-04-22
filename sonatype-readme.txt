@@ -4,19 +4,8 @@
 //
 /////////////////////////////////////////////
 
-1. Add the following section into Hyperion pom.xml
-
-	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>7</version>
-	</parent>
-
-	<scm>
-		<connection>scm:git:git@github.com:shigengyu/hyperion.git</connection>
-		<developerConnection>scm:git:git@github.com:shigengyu/hyperion.git</developerConnection>
-		<url>git@github.com:shigengyu/hyperion.git</url>
-	</scm>
+1. Add required information to Hyperion pom.xml
+   http://central.sonatype.org/pages/requirements.html
 
 2. Add the following section to settings.xml in Maven conf directory:
 
