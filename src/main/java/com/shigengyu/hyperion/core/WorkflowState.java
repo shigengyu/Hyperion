@@ -18,16 +18,14 @@ package com.shigengyu.hyperion.core;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
-import net.jcip.annotations.Immutable;
-
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.shigengyu.common.StringMessage;
 import com.shigengyu.hyperion.cache.WorkflowStateCache;
+import com.shigengyu.hyperion.cache.WorkflowStateCacheLoader;
 import com.shigengyu.hyperion.entities.WorkflowStateEntity;
 
-@Immutable
 public abstract class WorkflowState {
 
 	@Service
@@ -70,6 +68,11 @@ public abstract class WorkflowState {
 
 	private final String workflowStateId;
 
+	/**
+	 * This field is set by {@link WorkflowStateCacheLoader} using reflection
+	 */
+	private StateOwner stateOwner;
+
 	protected WorkflowState() {
 		final State annotation = this.getClass().getAnnotation(State.class);
 		if (annotation == null) {
@@ -96,6 +99,10 @@ public abstract class WorkflowState {
 		return false;
 	}
 
+	public boolean belongsToWorkflow(Class<? extends WorkflowDefinition> workflowDefinitionClass) {
+		return stateOwner != null && workflowDefinitionClass.isAssignableFrom(stateOwner.workflow());
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof WorkflowState)) {
@@ -111,6 +118,10 @@ public abstract class WorkflowState {
 
 	public String getName() {
 		return name;
+	}
+
+	public StateOwner getStateOwner() {
+		return stateOwner;
 	}
 
 	public String getWorkflowStateId() {

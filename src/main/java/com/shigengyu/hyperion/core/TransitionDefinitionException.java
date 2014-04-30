@@ -15,9 +15,7 @@
  ******************************************************************************/
 package com.shigengyu.hyperion.core;
 
-import com.shigengyu.hyperion.HyperionException;
-
-public class TransitionDefinitionException extends HyperionException {
+public class TransitionDefinitionException extends HyperionDefinitionException {
 
 	private static final long serialVersionUID = 1L;
 
