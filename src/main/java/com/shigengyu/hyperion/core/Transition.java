@@ -26,6 +26,11 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface Transition {
 
+	/**
+	 * Whether the transition is auto performed. Auto transitions are only invoked as part of a non-auto transition
+	 *
+	 * @return
+	 */
 	boolean auto() default false;
 
 	Class<? extends TransitionCondition>[] conditions() default {};

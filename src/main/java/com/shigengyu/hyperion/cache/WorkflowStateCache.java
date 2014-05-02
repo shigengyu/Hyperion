@@ -32,6 +32,7 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.shigengyu.hyperion.core.State;
+import com.shigengyu.hyperion.core.StateDefinitionException;
 import com.shigengyu.hyperion.core.WorkflowState;
 import com.shigengyu.hyperion.core.WorkflowStateException;
 import com.shigengyu.hyperion.dao.WorkflowStateDao;
@@ -96,7 +97,7 @@ public class WorkflowStateCache {
 				LOGGER.info("Workflow state [{}] loaded into cache", state);
 			}
 			else {
-				throw new WorkflowStateException("Workflow state [{}] does not inherit [{}]", clazz.getName(),
+				throw new StateDefinitionException("Workflow state [{}] does not inherit [{}]", clazz.getName(),
 						WorkflowState.class.getName());
 			}
 		}
