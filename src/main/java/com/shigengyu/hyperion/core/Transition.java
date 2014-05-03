@@ -33,6 +33,8 @@ public @interface Transition {
 	 */
 	boolean auto() default false;
 
+	Compensation[] compensations() default {};
+
 	Class<? extends TransitionCondition>[] conditions() default {};
 
 	Class<? extends WorkflowState>[] fromStates() default {};

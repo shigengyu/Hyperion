@@ -34,8 +34,8 @@ public class TransitionConditionCache {
 	private final LoadingCache<Class<? extends TransitionCondition>, TransitionCondition> cache;
 
 	@Autowired
-	private TransitionConditionCache(final TransitionConditionClassLoader transitionConditionClassLoader) {
-		cache = CacheBuilder.newBuilder().build(transitionConditionClassLoader);
+	private TransitionConditionCache(final TransitionConditionCacheLoader transitionConditionCacheLoader) {
+		cache = CacheBuilder.newBuilder().build(transitionConditionCacheLoader);
 	}
 
 	public synchronized <T extends TransitionCondition> TransitionCondition get(final Class<T> transitionConditionClass) {

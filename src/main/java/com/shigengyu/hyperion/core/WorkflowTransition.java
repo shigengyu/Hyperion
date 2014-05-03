@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2013-2014 Gengyu Shi
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,6 +32,7 @@ public class WorkflowTransition {
 	private final boolean multiEntry;
 	private final String name;
 	private final StateTransitionStyle stateTransitionStyle;
+	private final TransitionCompensationList transitionCompensations;
 
 	private final WorkflowStateSet toStates;
 
@@ -70,6 +71,8 @@ public class WorkflowTransition {
 					"Transition method return type cannot be other types other than [{}]",
 					WorkflowStateSet.class.getName());
 		}
+
+		transitionCompensations = TransitionCompensationList.from(transition.compensations());
 	}
 
 	@Override
@@ -167,6 +170,10 @@ public class WorkflowTransition {
 
 	public WorkflowStateSet getToStates() {
 		return toStates;
+	}
+
+	public final TransitionCompensationList getTransitionCompensations() {
+		return transitionCompensations;
 	}
 
 	@Override
