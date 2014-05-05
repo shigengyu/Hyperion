@@ -19,6 +19,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import net.jcip.annotations.ThreadSafe;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,11 +29,16 @@ import com.google.common.collect.Maps;
 import com.shigengyu.hyperion.cache.WorkflowTransitionCache;
 import com.shigengyu.hyperion.core.AutoTransitionRecursionLimitExceededException;
 import com.shigengyu.hyperion.core.StateTransitionStyle;
+import com.shigengyu.hyperion.core.TransitionCompensation;
+import com.shigengyu.hyperion.core.TransitionCompensationResult;
+import com.shigengyu.hyperion.core.TransitionCompensationResult.Status;
+import com.shigengyu.hyperion.core.TransitionCompensator;
 import com.shigengyu.hyperion.core.TransitionCondition;
 import com.shigengyu.hyperion.core.TransitionConditionValidationResult;
 import com.shigengyu.hyperion.core.TransitionExecution;
 import com.shigengyu.hyperion.core.TransitionExecutionLog;
 import com.shigengyu.hyperion.core.TransitionExecutionResult;
+import com.shigengyu.hyperion.core.WorkflowBusinessViolationException;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
 import com.shigengyu.hyperion.core.WorkflowExecutionException;
 import com.shigengyu.hyperion.core.WorkflowInstance;
@@ -41,6 +48,7 @@ import com.shigengyu.hyperion.core.WorkflowTransitionSet;
 import com.shigengyu.hyperion.dao.WorkflowExecutionDao;
 
 @Service
+@ThreadSafe
 public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 
 	private static class AutoTransitionExecutionContext {
@@ -65,6 +73,31 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 			}
 			return map.get(workflowTransition);
 		}
+	}
+
+	private static final TransitionCompensationResult compensate(final WorkflowInstance workflowInstance,
+			final WorkflowTransition transition, final RuntimeException e) {
+
+		TransitionCompensationResult finalResult = TransitionCompensationResult.notCompensated();
+
+		for (TransitionCompensation compensation : transition.getTransitionCompensations()) {
+			if (!compensation.getException().isAssignableFrom(e.getClass())) {
+				continue;
+			}
+
+			TransitionCompensator compensator = compensation.getTransitionCompensator();
+			if (compensator.canHandle(e)) {
+				TransitionCompensationResult result = compensator.compensate(workflowInstance);
+				if (result.getStatus() == Status.FAILED) {
+					return result;
+				}
+				else {
+					finalResult = result;
+				}
+			}
+		}
+
+		return finalResult;
 	}
 
 	@Resource(name = "incrementalStateTransitor")
@@ -161,11 +194,14 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 			// Save the workflow instance in database
 			workflowPersistenceService.persistWorkflowInstance(workflowInstance);
 		}
-		catch (WorkflowExecutionException e) {
-			workflowInstance.restoreFrom(backupWorkflowInstance);
+		catch (WorkflowBusinessViolationException | WorkflowExecutionException e) {
+			TransitionCompensationResult compensationResult = compensate(workflowInstance, transition, e);
 
-			// Throwing this exception will trigger database transaction rollback
-			throw e;
+			// Restore the workflow instance if compensation failed
+			if (!compensationResult.isSuccess()) {
+				workflowInstance.restoreFrom(backupWorkflowInstance);
+				throw e;
+			}
 		}
 		catch (Exception e) {
 			workflowInstance.restoreFrom(backupWorkflowInstance);
@@ -187,7 +223,8 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 
 	private void stabilize(final WorkflowInstance workflowInstance,
 			final TransitionExecutionResult transitionExecutionResult,
-			AutoTransitionExecutionContext autoTransitionExecutionContext) {
+			final AutoTransitionExecutionContext autoTransitionExecutionContext) {
+
 		WorkflowTransitionSet autoWorkflowTransitions = WorkflowTransitionCache.getInstance()
 				.get(workflowInstance.getWorkflowDefinition(), workflowInstance.getWorkflowStateSet())
 				.getAutoTransitions();

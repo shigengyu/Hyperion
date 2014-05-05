@@ -23,7 +23,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import com.shigengyu.common.SpringBeanSet;
+import com.shigengyu.common.springextension.SpringBeanSet;
 import com.shigengyu.hyperion.core.WorkflowStateSet;
 import com.shigengyu.hyperion.core.WorkflowTransition;
 

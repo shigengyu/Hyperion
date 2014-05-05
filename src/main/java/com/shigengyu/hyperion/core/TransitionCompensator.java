@@ -1,6 +1,5 @@
 package com.shigengyu.hyperion.core;
 
-
 /**
  * The common interface for all compensators. Compensators need to be designed as stateless.
  *
@@ -9,5 +8,7 @@ package com.shigengyu.hyperion.core;
  */
 public interface TransitionCompensator {
 
-	void compensate(WorkflowInstance workflowInstance);
+	boolean canHandle(Exception exception);
+
+	TransitionCompensationResult compensate(WorkflowInstance workflowInstance);
 }
