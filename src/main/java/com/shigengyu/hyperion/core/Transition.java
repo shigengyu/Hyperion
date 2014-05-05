@@ -29,7 +29,7 @@ public @interface Transition {
 	/**
 	 * Whether the transition is auto performed. Auto transitions are only invoked as part of a non-auto transition
 	 *
-	 * @return
+	 * @return A boolean value indicating whether the transition is auto performed
 	 */
 	boolean auto() default false;
 
@@ -43,35 +43,37 @@ public @interface Transition {
 	 * Whether the transition is hidden. Hidden transitions can be executed programmatically but is not exposed to the
 	 * Hyperion runtime interface
 	 *
-	 * @return
+	 * @return A boolean value indicating whether the transition is hidden
 	 */
 	boolean hidden() default false;
 
 	/**
-	 * The maximum entries if the transition is multi-entry
+	 * The maximum entries if the transition is multi-entry. This value will be ignored if the transition is not
+	 * multi-entry
 	 *
-	 * @return
+	 * @return An integrate indicating the maximum entries allowed for the transition.
 	 */
 	int maxEntry() default 1;
 
 	/**
 	 * Whether multi-entry is allowed on this transition, i.e. transition triggering itself
 	 *
-	 * @return
+	 * @return A boolean value indicating whether the tranistion is multi-entry
 	 */
 	boolean multiEntry() default false;
 
 	/**
 	 * Name of the transition
 	 *
-	 * @return
+	 * @return The name of the transition
 	 */
 	String name() default "";
 
 	/**
 	 * Whether or not to override the values of the {@link TransitionShared} annotation
 	 *
-	 * @return
+	 * @return A boolean value indicating whether this {@link Transition} annotation can override the
+	 *         {@link TransitionShared} annotation
 	 */
 	boolean override() default true;
 
