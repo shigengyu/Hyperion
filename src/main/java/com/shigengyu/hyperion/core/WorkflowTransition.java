@@ -214,10 +214,10 @@ public class WorkflowTransition {
 			}
 			while (t instanceof InvocationTargetException);
 
-			throw new WorkflowExecutionException(t);
+			throw new TransitionInvocationException(t);
 		}
 		catch (Exception e) {
-			throw new WorkflowTransitionException(e);
+			throw new WorkflowExecutionException(e);
 		}
 	}
 

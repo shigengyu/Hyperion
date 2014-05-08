@@ -38,6 +38,7 @@ import com.shigengyu.hyperion.core.TransitionConditionValidationResult;
 import com.shigengyu.hyperion.core.TransitionExecution;
 import com.shigengyu.hyperion.core.TransitionExecutionLog;
 import com.shigengyu.hyperion.core.TransitionExecutionResult;
+import com.shigengyu.hyperion.core.TransitionInvocationException;
 import com.shigengyu.hyperion.core.WorkflowBusinessViolationException;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
 import com.shigengyu.hyperion.core.WorkflowExecutionException;
@@ -164,6 +165,7 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 		try {
 			WorkflowStateSet fromStates = workflowInstance.getWorkflowStateSet();
 			WorkflowStateSet toStates = null;
+
 			if (transition.isDynamic()) {
 				// Set the to states based on return value of dynamic transition
 				toStates = transition.invoke(workflowInstance);
@@ -194,7 +196,7 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 			// Save the workflow instance in database
 			workflowPersistenceService.persistWorkflowInstance(workflowInstance);
 		}
-		catch (WorkflowBusinessViolationException | WorkflowExecutionException e) {
+		catch (WorkflowBusinessViolationException | TransitionInvocationException e) {
 			TransitionCompensationResult compensationResult = compensate(workflowInstance, transition, e);
 
 			// Restore the workflow instance if compensation failed
@@ -203,7 +205,14 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 				throw e;
 			}
 		}
+		catch (WorkflowExecutionException e) {
+			workflowInstance.restoreFrom(backupWorkflowInstance);
+
+			// Rethrow the WorkflowExecutionException after rolling back workflow instance
+			throw e;
+		}
 		catch (Exception e) {
+			// Wrap all other exceptions into WorkflowExecutionException
 			workflowInstance.restoreFrom(backupWorkflowInstance);
 
 			// Throwing this exception will trigger database transaction rollback
