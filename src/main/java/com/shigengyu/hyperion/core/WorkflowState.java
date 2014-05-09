@@ -68,6 +68,8 @@ public abstract class WorkflowState {
 
 	private final String workflowStateId;
 
+	private final boolean intermediate;
+
 	/**
 	 * This field is set by {@link WorkflowStateCacheLoader} using reflection
 	 */
@@ -83,6 +85,7 @@ public abstract class WorkflowState {
 		workflowStateId = annotation.id();
 		name = StringUtils.isEmpty(annotation.name()) ? this.getClass().getSimpleName() : annotation.name();
 		displayName = StringUtils.isEmpty(annotation.displayName()) ? name : annotation.displayName();
+		intermediate = annotation.intermediate();
 	}
 
 	public boolean among(final Class<?>... workflowClasses) {
@@ -135,6 +138,10 @@ public abstract class WorkflowState {
 
 	public <T extends WorkflowState> boolean is(final Class<T> workflowClass) {
 		return this.getClass().equals(workflowClass);
+	}
+
+	public final boolean isIntermediate() {
+		return intermediate;
 	}
 
 	public WorkflowStateEntity toEntity() {

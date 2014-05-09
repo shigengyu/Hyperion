@@ -35,5 +35,7 @@ public @interface State {
 	 */
 	public String id();
 
+	public boolean intermediate() default false;
+
 	public String name() default "";
 }

@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.Maps;
 import com.shigengyu.hyperion.cache.WorkflowTransitionCache;
 import com.shigengyu.hyperion.core.AutoTransitionRecursionLimitExceededException;
@@ -43,6 +44,7 @@ import com.shigengyu.hyperion.core.WorkflowBusinessViolationException;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
 import com.shigengyu.hyperion.core.WorkflowExecutionException;
 import com.shigengyu.hyperion.core.WorkflowInstance;
+import com.shigengyu.hyperion.core.WorkflowState;
 import com.shigengyu.hyperion.core.WorkflowStateSet;
 import com.shigengyu.hyperion.core.WorkflowTransition;
 import com.shigengyu.hyperion.core.WorkflowTransitionSet;
@@ -188,9 +190,27 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 			TransitionExecution workflowExecution = new TransitionExecution(workflowInstance, transition.getName());
 			workflowExecutionDao.saveOrUpdate(workflowExecution.toEntity());
 
+			// Stabilize the workflow instance by executing available auto transitions based on current workflow states
 			if (!transition.isAuto()) {
 				// Invoke available auto transitions to stabilize the workflow instance
 				stabilize(workflowInstance, transitionExecutionResult, new AutoTransitionExecutionContext());
+			}
+
+			final WorkflowStateSet intermediateStates = workflowInstance.getWorkflowStateSet().filter(
+					new Predicate<WorkflowState>() {
+
+						@Override
+						public boolean apply(WorkflowState input) {
+							return input.isIntermediate();
+						}
+					});
+
+			// Detect intermediate states
+			if (intermediateStates.size() > 0) {
+				throw new WorkflowExecutionException(
+						"Intermediate states detected after stablizing workflow instance [{}] of definition [{}]. Intermediate states = [{}]",
+						workflowInstance.getWorkflowInstanceId(), workflowInstance.getWorkflowDefinition().getName(),
+						intermediateStates);
 			}
 
 			// Save the workflow instance in database

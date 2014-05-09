@@ -54,11 +54,11 @@ public class WorkflowInstance {
 		workflowStateSet = WorkflowStateSet.from(Lists.transform(entity.getWorkflowStateEntities(),
 				new Function<WorkflowStateEntity, String>() {
 
-			@Override
-			public String apply(WorkflowStateEntity input) {
-				return input.getWorkflowStateId();
-			}
-		}));
+					@Override
+					public String apply(WorkflowStateEntity input) {
+						return input.getWorkflowStateId();
+					}
+				}));
 	}
 
 	private WorkflowInstance(WorkflowInstance workflowInstance) {
