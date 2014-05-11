@@ -179,7 +179,7 @@ public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 			}
 
 			// Transit states based on transition style
-			if (transition.getStateTransitionStyle() == StateTransitionStyle.INCREMENTAL) {
+			if (transition.getStateTransitionStyle() == StateTransitionStyle.REMOVE_AND_ADD) {
 				incrementalStateTransitor.transit(workflowInstance, fromStates, toStates);
 			}
 			else {

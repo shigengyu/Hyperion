@@ -40,7 +40,7 @@ public @interface TransitionShared {
 
 	String name() default "";
 
-	StateTransitionStyle stateTransitionStyle() default StateTransitionStyle.INCREMENTAL;
+	StateTransitionStyle stateTransitionStyle() default StateTransitionStyle.REMOVE_AND_ADD;
 
 	Class<? extends WorkflowState>[] toStates() default {};
 }

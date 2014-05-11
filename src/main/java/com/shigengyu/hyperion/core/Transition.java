@@ -77,7 +77,7 @@ public @interface Transition {
 	 */
 	boolean override() default true;
 
-	StateTransitionStyle stateTransitionStyle() default StateTransitionStyle.INCREMENTAL;
+	StateTransitionStyle stateTransitionStyle() default StateTransitionStyle.REMOVE_AND_ADD;
 
 	Class<? extends WorkflowState>[] toStates() default {};
 }
