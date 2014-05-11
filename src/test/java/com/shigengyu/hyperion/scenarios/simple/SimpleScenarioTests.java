@@ -29,13 +29,13 @@ import com.shigengyu.hyperion.HyperionRuntime;
 import com.shigengyu.hyperion.cache.WorkflowTransitionCache;
 import com.shigengyu.hyperion.config.HyperionProperties;
 import com.shigengyu.hyperion.core.AutoTransitionRecursionLimitExceededException;
+import com.shigengyu.hyperion.core.WorkflowContextBinarySerializer;
+import com.shigengyu.hyperion.core.WorkflowContextXmlSerializer;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
 import com.shigengyu.hyperion.core.WorkflowInstance;
 import com.shigengyu.hyperion.core.WorkflowState;
 import com.shigengyu.hyperion.core.WorkflowStateSet;
 import com.shigengyu.hyperion.environment.TestEnvironment;
-import com.shigengyu.hyperion.services.WorkflowContextBinarySerializer;
-import com.shigengyu.hyperion.services.WorkflowContextXmlSerializer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(TestEnvironment.APPLICATION_CONTEXT_CONFIG)

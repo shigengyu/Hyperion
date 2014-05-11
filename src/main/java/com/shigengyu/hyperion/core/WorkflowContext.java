@@ -24,9 +24,7 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 @XStreamAlias("WorkflowContext")
 public class WorkflowContext implements Serializable {
 
-	public static final String MAP_ENTRIES_ELEMENT_NAME = "MapEntries";
-
-	private static final long serialVersionUID = -7410578804012994691L;
+	private static final long serialVersionUID = 53228700616826789L;
 
 	private final Map<String, Object> map = Maps.newHashMap();
 
@@ -42,6 +40,13 @@ public class WorkflowContext implements Serializable {
 			throw new WorkflowContextException("Unable to cast workflow context value of key [" + key
 					+ "] to the specified type", e);
 		}
+	}
+
+	/**
+	 * Override to specify custom logic to initialize the workflow context when it is deserialized, as the default
+	 * constructor will not be called.
+	 */
+	void initializeFieldsOnDeserialization() {
 	}
 
 	public <T> void put(final String key, final T value) {
