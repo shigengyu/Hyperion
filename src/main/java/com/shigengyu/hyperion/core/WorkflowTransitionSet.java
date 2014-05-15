@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2013-2014 Gengyu Shi
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,13 +15,14 @@
  ******************************************************************************/
 package com.shigengyu.hyperion.core;
 
+import java.util.Iterator;
 import java.util.List;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
-public class WorkflowTransitionSet {
+public class WorkflowTransitionSet implements Iterable<WorkflowTransition> {
 
 	public static WorkflowTransitionSet copyOf(Iterable<WorkflowTransition> transitions) {
 		return new WorkflowTransitionSet(ImmutableList.copyOf(transitions));
@@ -83,6 +84,11 @@ public class WorkflowTransitionSet {
 
 	public final boolean isEmpty() {
 		return transitions.isEmpty();
+	}
+
+	@Override
+	public Iterator<WorkflowTransition> iterator() {
+		return transitions.iterator();
 	}
 
 	public final int size() {

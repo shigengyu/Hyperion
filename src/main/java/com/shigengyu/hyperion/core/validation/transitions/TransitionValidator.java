@@ -15,7 +15,6 @@
  ******************************************************************************/
 package com.shigengyu.hyperion.core.validation.transitions;
 
-import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -25,7 +24,7 @@ import org.springframework.stereotype.Service;
 
 import com.shigengyu.common.springextension.SpringBeanSet;
 import com.shigengyu.hyperion.core.WorkflowStateSet;
-import com.shigengyu.hyperion.core.WorkflowTransition;
+import com.shigengyu.hyperion.core.WorkflowTransitionSet;
 
 /**
  *
@@ -52,7 +51,7 @@ public class TransitionValidator {
 		return transitionViolationBeanSet.getBeans();
 	}
 
-	public void validate(WorkflowStateSet currentWorkflowStates, Collection<WorkflowTransition> workflowTransitions) {
+	public void validate(WorkflowStateSet currentWorkflowStates, WorkflowTransitionSet workflowTransitions) {
 
 		for (TransitionValidationPolicy violation : transitionViolationBeanSet.getBeans()) {
 			violation.validate(currentWorkflowStates, workflowTransitions);

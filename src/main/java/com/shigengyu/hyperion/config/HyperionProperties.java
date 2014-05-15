@@ -32,20 +32,20 @@ public class HyperionProperties {
 
 	public static final String SEPARATOR_CHARACTER = ",";
 
-	private ImmutableList<String> workflowContextScanPackages;
+	@Value("${hyperion.workflow.definition.scan}")
+	private String workflowDefinitionScanPackageValue;
+
+	@Value("${hyperion.workflow.state.scan}")
+	private String workflowStateScanPackageValue;
 
 	@Value("${hyperion.workflow.context.scan}")
 	private String workflowContextScanPackageValue;
 
 	private ImmutableList<String> workflowDefinitionScanPackages;
 
-	@Value("${hyperion.workflow.definition.scan}")
-	private String workflowDefinitionScanPackageValue;
-
 	private ImmutableList<String> workflowStateScanPackages;
 
-	@Value("${hyperion.workflow.state.scan}")
-	private String workflowStateScanPackageValue;
+	private ImmutableList<String> workflowContextScanPackages;
 
 	public final String[] getWorkflowContextScanPackages() {
 		return workflowContextScanPackages.toArray(new String[0]);
@@ -72,8 +72,8 @@ public class HyperionProperties {
 	}
 
 	private void printProperties() {
-		LOGGER.info("Workflow context scan packages = [{}]", workflowContextScanPackageValue);
 		LOGGER.info("Workflow definition scan packages = [{}]", workflowDefinitionScanPackageValue);
 		LOGGER.info("Workflow state scan packages = [{}]", workflowStateScanPackageValue);
+		LOGGER.info("Workflow context scan packages = [{}]", workflowContextScanPackageValue);
 	}
 }

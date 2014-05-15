@@ -21,7 +21,6 @@ import javax.annotation.Resource;
 
 import net.jcip.annotations.ThreadSafe;
 
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,7 +49,6 @@ import com.shigengyu.hyperion.core.WorkflowTransition;
 import com.shigengyu.hyperion.core.WorkflowTransitionSet;
 import com.shigengyu.hyperion.dao.WorkflowExecutionDao;
 
-@Service
 @ThreadSafe
 public class WorkflowExecutionServiceImpl implements WorkflowExecutionService {
 

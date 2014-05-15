@@ -17,13 +17,13 @@ package com.shigengyu.hyperion.dao;
 
 import org.springframework.stereotype.Service;
 
-import com.shigengyu.hyperion.entities.WorkflowExecutionEntity;
+import com.shigengyu.hyperion.entities.WorkflowTransitionEntity;
 
 @Service("workflowExecutionDao")
-public class WorkflowExecutionDaoImpl extends HyperionDaoBase<WorkflowExecutionEntity, Integer> implements
+public class WorkflowExecutionDaoImpl extends HyperionDaoBase<WorkflowTransitionEntity, Integer> implements
 WorkflowExecutionDao {
 
 	protected WorkflowExecutionDaoImpl() {
-		super(WorkflowExecutionEntity.class, Integer.class);
+		super(WorkflowTransitionEntity.class, Integer.class);
 	}
 }

@@ -22,6 +22,7 @@
 		<config>java:com.shigengyu.hyperion.logging.cache.WorkflowStateCacheLoaderLoggingAspect</config>
 		<config>java:com.shigengyu.hyperion.services.WorkflowStateIncrementalTransitor</config>
 		<config>java:com.shigengyu.hyperion.services.WorkflowStateReplaceTransitor</config>
+		<config>src/test/java/com/shigengyu/hyperion/config/application-context-services.xml</config>
 	</configs>
 	<autoconfigs>
 	</autoconfigs>

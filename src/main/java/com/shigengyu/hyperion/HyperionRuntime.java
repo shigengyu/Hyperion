@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2013-2014 Gengyu Shi
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,7 +20,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.shigengyu.hyperion.cache.WorkflowDefinitionCache;
-import com.shigengyu.hyperion.cache.WorkflowInstanceCache;
+import com.shigengyu.hyperion.cache.WorkflowInstanceCacheProvider;
 import com.shigengyu.hyperion.cache.WorkflowStateCache;
 import com.shigengyu.hyperion.config.HyperionProperties;
 import com.shigengyu.hyperion.core.TransitionExecutionResult;
@@ -39,7 +39,7 @@ public class HyperionRuntime {
 	private WorkflowExecutionService workflowExecutionService;
 
 	@Resource
-	private WorkflowInstanceCache workflowInstanceCache;
+	private WorkflowInstanceCacheProvider workflowInstanceCacheProvider;
 
 	@Resource
 	private WorkflowPersistenceService workflowPersistenceService;
@@ -55,15 +55,15 @@ public class HyperionRuntime {
 	}
 
 	public WorkflowInstance getExistingWorkflowInstance(int workflowInstanceId) {
-		return workflowInstanceCache.get(workflowInstanceId);
+		return workflowInstanceCacheProvider.get(workflowInstanceId);
 	}
 
 	public final WorkflowDefinitionCache getWorkflowDefinitionCache() {
 		return workflowDefinitionCache;
 	}
 
-	public final WorkflowInstanceCache getWorkflowInstanceCache() {
-		return workflowInstanceCache;
+	public final WorkflowInstanceCacheProvider getWorkflowInstanceCache() {
+		return workflowInstanceCacheProvider;
 	}
 
 	public final WorkflowStateCache getWorkflowStateCache() {

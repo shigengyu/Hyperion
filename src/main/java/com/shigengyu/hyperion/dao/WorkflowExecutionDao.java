@@ -15,8 +15,8 @@
  ******************************************************************************/
 package com.shigengyu.hyperion.dao;
 
-import com.shigengyu.hyperion.entities.WorkflowExecutionEntity;
+import com.shigengyu.hyperion.entities.WorkflowTransitionEntity;
 
-public interface WorkflowExecutionDao extends HyperionDao<WorkflowExecutionEntity, Integer> {
+public interface WorkflowExecutionDao extends HyperionDao<WorkflowTransitionEntity, Integer> {
 
 }

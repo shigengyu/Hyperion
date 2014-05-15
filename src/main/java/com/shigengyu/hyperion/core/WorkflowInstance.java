@@ -15,14 +15,19 @@
  ******************************************************************************/
 package com.shigengyu.hyperion.core;
 
+import java.io.IOException;
+
 import org.apache.commons.io.IOUtils;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import com.hazelcast.nio.ObjectDataInput;
+import com.hazelcast.nio.ObjectDataOutput;
+import com.hazelcast.nio.serialization.DataSerializable;
 import com.shigengyu.hyperion.entities.WorkflowInstanceEntity;
 import com.shigengyu.hyperion.entities.WorkflowStateEntity;
 
-public class WorkflowInstance {
+public class WorkflowInstance implements DataSerializable {
 
 	private final TransitionParameterSet parameters = TransitionParameterSet.create();
 
@@ -54,11 +59,11 @@ public class WorkflowInstance {
 		workflowStateSet = WorkflowStateSet.from(Lists.transform(entity.getWorkflowStateEntities(),
 				new Function<WorkflowStateEntity, String>() {
 
-					@Override
-					public String apply(WorkflowStateEntity input) {
-						return input.getWorkflowStateId();
-					}
-				}));
+			@Override
+			public String apply(WorkflowStateEntity input) {
+				return input.getWorkflowStateId();
+			}
+		}));
 	}
 
 	private WorkflowInstance(WorkflowInstance workflowInstance) {
@@ -92,6 +97,12 @@ public class WorkflowInstance {
 
 	public WorkflowStateSet getWorkflowStateSet() {
 		return workflowStateSet;
+	}
+
+	@Override
+	public void readData(ObjectDataInput in) throws IOException {
+		workflowInstanceId = in.readInt();
+		workflowStateSet = in.readObject();
 	}
 
 	public void restoreFrom(WorkflowInstance workflowInstance) {
@@ -128,5 +139,9 @@ public class WorkflowInstance {
 	@Override
 	public String toString() {
 		return "<" + workflowDefinition.getName() + "> (" + workflowInstanceId + ")";
+	}
+
+	@Override
+	public void writeData(ObjectDataOutput out) throws IOException {
 	}
 }

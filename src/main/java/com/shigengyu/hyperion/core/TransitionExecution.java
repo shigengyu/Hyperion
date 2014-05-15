@@ -15,7 +15,7 @@
  ******************************************************************************/
 package com.shigengyu.hyperion.core;
 
-import com.shigengyu.hyperion.entities.WorkflowExecutionEntity;
+import com.shigengyu.hyperion.entities.WorkflowTransitionEntity;
 
 public class TransitionExecution {
 
@@ -47,8 +47,8 @@ public class TransitionExecution {
 		this.workflowInstance = workflowInstance;
 	}
 
-	public WorkflowExecutionEntity toEntity() {
-		WorkflowExecutionEntity entity = new WorkflowExecutionEntity();
+	public WorkflowTransitionEntity toEntity() {
+		WorkflowTransitionEntity entity = new WorkflowTransitionEntity();
 		entity.setTransitionName(transitionName);
 		entity.setWorkflowInstanceEntity(workflowInstance.toEntity());
 		entity.setWorkflowStateEntities(workflowInstance.getWorkflowStateSet().toEntityList());
