@@ -45,7 +45,7 @@ public class LocalWorkflowInstanceCache implements WorkflowInstanceCacheProvider
 	}
 
 	@Override
-	public <T extends WorkflowInstance> WorkflowInstance get(final Integer workflowInstanceId) {
+	public <T extends WorkflowInstance> WorkflowInstance acquire(final Integer workflowInstanceId) {
 		try {
 			return cache.get(workflowInstanceId);
 		}
@@ -62,5 +62,9 @@ public class LocalWorkflowInstanceCache implements WorkflowInstanceCacheProvider
 	private void initialize() {
 		cache = CacheBuilder.newBuilder().expireAfterAccess(timeoutDuration, timeoutTimeUnit)
 				.build(workflowInstanceCacheLoader);
+	}
+
+	@Override
+	public <T extends WorkflowInstance> void release(Integer workflowInstanceId) {
 	}
 }

@@ -53,7 +53,6 @@ public class WorkflowContext implements Serializable {
 		map.put(key, value);
 	}
 
-	@SuppressWarnings("unchecked")
 	public <T> T unsafeGet(final String key) {
 		return (T) map.get(key);
 	}

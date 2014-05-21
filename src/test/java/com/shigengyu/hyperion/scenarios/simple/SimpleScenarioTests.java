@@ -26,6 +26,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.shigengyu.hyperion.HyperionRuntime;
+import com.shigengyu.hyperion.HyperionRuntime.WorkflowInstanceHolder;
 import com.shigengyu.hyperion.cache.WorkflowTransitionCache;
 import com.shigengyu.hyperion.config.HyperionProperties;
 import com.shigengyu.hyperion.core.AutoTransitionRecursionLimitExceededException;
@@ -69,18 +70,22 @@ public class SimpleScenarioTests {
 
 	@Test
 	@Transactional
-	public void getSetParameters() {
-		WorkflowInstance workflowInstance = hyperionRuntime.newWorkflowInstance(SimpleWorkflow.class);
-		Assert.assertNotNull(workflowInstance);
+	public void getSetParameters() throws Exception {
+		try (WorkflowInstanceHolder workflowInstanceHolder = hyperionRuntime.newWorkflowInstance(SimpleWorkflow.class)) {
 
-		workflowInstance.setParameter("Name", "Hyperion");
-		workflowInstance.setParameter("Number", 42);
+			WorkflowInstance workflowInstance = workflowInstanceHolder.getWorkflowInstance();
 
-		String name = workflowInstance.getParameter(String.class, "Name");
-		Integer number = workflowInstance.getParameter(Integer.class, "Number");
+			Assert.assertNotNull(workflowInstance);
 
-		Assert.assertEquals("Hyperion", name);
-		Assert.assertEquals(new Integer(42), number);
+			workflowInstance.setParameter("Name", "Hyperion");
+			workflowInstance.setParameter("Number", 42);
+
+			String name = workflowInstance.getParameter(String.class, "Name");
+			Integer number = workflowInstance.getParameter(Integer.class, "Number");
+
+			Assert.assertEquals("Hyperion", name);
+			Assert.assertEquals(new Integer(42), number);
+		}
 	}
 
 	@Before
@@ -108,70 +113,86 @@ public class SimpleScenarioTests {
 
 	@Test
 	@Transactional
-	public void testAutoTransitions() {
-		WorkflowInstance workflowInstance = hyperionRuntime.newWorkflowInstance(AutoTransitionWorkflow.class);
-		Assert.assertNotNull(workflowInstance);
-		Assert.assertTrue(workflowInstance.getWorkflowStateSet().isSameWith(
-				WorkflowStateSet.from(States.WorkCompleted.class)));
+	public void testAutoTransitions() throws Exception {
+		try (WorkflowInstanceHolder workflowInstanceHolder = hyperionRuntime
+				.newWorkflowInstance(AutoTransitionWorkflow.class)) {
+
+			WorkflowInstance workflowInstance = workflowInstanceHolder.getWorkflowInstance();
+
+			Assert.assertNotNull(workflowInstance);
+			Assert.assertTrue(workflowInstance.getWorkflowStateSet().isSameWith(
+					WorkflowStateSet.from(States.WorkCompleted.class)));
+		}
 	}
 
 	@Test
 	@Transactional
-	public void testGetExistingWorkflowInstance() {
-		WorkflowInstance workflowInstance = hyperionRuntime.newWorkflowInstance(SimpleWorkflow.class);
-		hyperionRuntime.getExistingWorkflowInstance(workflowInstance.getWorkflowInstanceId());
-	}
+	public void testRecursion() throws Exception {
+		try (WorkflowInstanceHolder workflowInstanceHolder = hyperionRuntime
+				.newWorkflowInstance(RecursiveTransitionWorkflow.class)) {
 
-	@Test
-	@Transactional
-	public void testRecursion() {
-		WorkflowInstance workflowInstance = hyperionRuntime.newWorkflowInstance(RecursiveTransitionWorkflow.class);
-		Assert.assertNotNull(workflowInstance);
-		Assert.assertTrue(workflowInstance.getWorkflowStateSet().isSameWith(
-				WorkflowStateSet.from(States.Initialized.class)));
+			WorkflowInstance workflowInstance = workflowInstanceHolder.getWorkflowInstance();
 
-		hyperionRuntime.executeTransition(workflowInstance, "start");
-		Assert.assertTrue(workflowInstance.getWorkflowStateSet().isSameWith(
-				WorkflowStateSet.from(States.WorkCompleted.class)));
+			Assert.assertNotNull(workflowInstance);
+			Assert.assertTrue(workflowInstance.getWorkflowStateSet().isSameWith(
+					WorkflowStateSet.from(States.Initialized.class)));
+
+			hyperionRuntime.executeTransition(workflowInstance, "start");
+			Assert.assertTrue(workflowInstance.getWorkflowStateSet().isSameWith(
+					WorkflowStateSet.from(States.WorkCompleted.class)));
+		}
 	}
 
 	@Test(expected = AutoTransitionRecursionLimitExceededException.class)
 	@Transactional
-	public void testRecursionEndless() {
-		WorkflowInstance workflowInstance = hyperionRuntime.newWorkflowInstance(RecursiveTransitionWorkflow.class);
-		Assert.assertNotNull(workflowInstance);
-		Assert.assertTrue(workflowInstance.getWorkflowStateSet().isSameWith(
-				WorkflowStateSet.from(States.Initialized.class)));
+	public void testRecursionEndless() throws Exception {
+		try (WorkflowInstanceHolder workflowInstanceHolder = hyperionRuntime
+				.newWorkflowInstance(RecursiveTransitionWorkflow.class)) {
 
-		hyperionRuntime.executeTransition(workflowInstance, "startEndless");
+			WorkflowInstance workflowInstance = workflowInstanceHolder.getWorkflowInstance();
+
+			Assert.assertNotNull(workflowInstance);
+			Assert.assertTrue(workflowInstance.getWorkflowStateSet().isSameWith(
+					WorkflowStateSet.from(States.Initialized.class)));
+
+			hyperionRuntime.executeTransition(workflowInstance, "startEndless");
+		}
 	}
 
 	@Test(expected = AutoTransitionRecursionLimitExceededException.class)
 	@Transactional
-	public void testRecursionExceedLimit() {
-		WorkflowInstance workflowInstance = hyperionRuntime.newWorkflowInstance(RecursiveTransitionWorkflow.class);
-		Assert.assertNotNull(workflowInstance);
-		Assert.assertTrue(workflowInstance.getWorkflowStateSet().isSameWith(
-				WorkflowStateSet.from(States.Initialized.class)));
+	public void testRecursionExceedLimit() throws Exception {
+		try (WorkflowInstanceHolder workflowInstanceHolder = hyperionRuntime
+				.newWorkflowInstance(RecursiveTransitionWorkflow.class)) {
+			WorkflowInstance workflowInstance = workflowInstanceHolder.getWorkflowInstance();
 
-		hyperionRuntime.executeTransition(workflowInstance, "startExceedLimit");
+			Assert.assertNotNull(workflowInstance);
+			Assert.assertTrue(workflowInstance.getWorkflowStateSet().isSameWith(
+					WorkflowStateSet.from(States.Initialized.class)));
+
+			hyperionRuntime.executeTransition(workflowInstance, "startExceedLimit");
+		}
 	}
 
 	@Test
 	@Transactional
-	public void testTransition() {
-		WorkflowInstance workflowInstance = hyperionRuntime.newWorkflowInstance(SimpleWorkflow.class);
-		Assert.assertNotNull(workflowInstance);
-		Assert.assertTrue(workflowInstance.getWorkflowStateSet().isSameWith(
-				WorkflowStateSet.from(States.Initialized.class)));
+	public void testTransition() throws Exception {
+		try (WorkflowInstanceHolder workflowInstanceHolder = hyperionRuntime.newWorkflowInstance(SimpleWorkflow.class)) {
 
-		hyperionRuntime.executeTransition(workflowInstance, "start");
-		Assert.assertTrue(workflowInstance.getWorkflowStateSet().isSameWith(
-				WorkflowStateSet.from(States.WorkInProgress.class)));
+			WorkflowInstance workflowInstance = workflowInstanceHolder.getWorkflowInstance();
 
-		hyperionRuntime.executeTransition(workflowInstance, "complete");
-		Assert.assertTrue(workflowInstance.getWorkflowStateSet().isSameWith(
-				WorkflowStateSet.from(States.WorkCompleted.class)));
+			Assert.assertNotNull(workflowInstance);
+			Assert.assertTrue(workflowInstance.getWorkflowStateSet().isSameWith(
+					WorkflowStateSet.from(States.Initialized.class)));
+
+			hyperionRuntime.executeTransition(workflowInstance, "start");
+			Assert.assertTrue(workflowInstance.getWorkflowStateSet().isSameWith(
+					WorkflowStateSet.from(States.WorkInProgress.class)));
+
+			hyperionRuntime.executeTransition(workflowInstance, "complete");
+			Assert.assertTrue(workflowInstance.getWorkflowStateSet().isSameWith(
+					WorkflowStateSet.from(States.WorkCompleted.class)));
+		}
 	}
 
 	@Test

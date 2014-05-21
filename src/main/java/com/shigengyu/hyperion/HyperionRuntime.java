@@ -32,6 +32,47 @@ import com.shigengyu.hyperion.services.WorkflowPersistenceService;
 @Service
 public class HyperionRuntime {
 
+	public static class WorkflowInstanceHolder implements AutoCloseable {
+
+		private boolean isReleased = false;
+
+		private final WorkflowInstance workflowInstance;
+
+		private final WorkflowInstanceCacheProvider workflowInstanceCacheProvider;
+
+		private WorkflowInstanceHolder(final WorkflowInstance workflowInstance,
+				final WorkflowInstanceCacheProvider workflowInstanceCacheProvider) {
+
+			this.workflowInstance = workflowInstance;
+			this.workflowInstanceCacheProvider = workflowInstanceCacheProvider;
+		}
+
+		@Override
+		public void close() throws Exception {
+			if (isReleased) {
+				return;
+			}
+
+			workflowInstanceCacheProvider.release(workflowInstance.getWorkflowInstanceId());
+			isReleased = true;
+		}
+
+		public final WorkflowInstance getWorkflowInstance() {
+			return workflowInstance;
+		}
+
+		public void release() {
+			try {
+				if (!isReleased) {
+					close();
+				}
+			}
+			catch (Exception e) {
+				throw new HyperionException(e);
+			}
+		}
+	}
+
 	@Resource
 	private WorkflowDefinitionCache workflowDefinitionCache;
 
@@ -50,12 +91,20 @@ public class HyperionRuntime {
 	@Resource
 	private HyperionProperties hyperionProperties;
 
-	public TransitionExecutionResult executeTransition(WorkflowInstance workflowInstance, String transitionName) {
-		return workflowExecutionService.execute(workflowInstance, transitionName);
+	/**
+	 * Acquire the workflow instance and lock it. The workflow instance holder must be close after use in order to
+	 * release the workflow instance.
+	 * 
+	 * @param workflowInstanceId
+	 * @return the {@link WorkflowInstanceHolder} containing the retrieved workflow instance
+	 */
+	public WorkflowInstanceHolder acquireWorkflowInstance(int workflowInstanceId) {
+		WorkflowInstance workflowInstance = workflowInstanceCacheProvider.acquire(workflowInstanceId);
+		return new WorkflowInstanceHolder(workflowInstance, workflowInstanceCacheProvider);
 	}
 
-	public WorkflowInstance getExistingWorkflowInstance(int workflowInstanceId) {
-		return workflowInstanceCacheProvider.get(workflowInstanceId);
+	public TransitionExecutionResult executeTransition(WorkflowInstance workflowInstance, String transitionName) {
+		return workflowExecutionService.execute(workflowInstance, transitionName);
 	}
 
 	public final WorkflowDefinitionCache getWorkflowDefinitionCache() {
@@ -70,11 +119,12 @@ public class HyperionRuntime {
 		return workflowStateCache;
 	}
 
-	public WorkflowInstance newWorkflowInstance(Class<? extends WorkflowDefinition> workflowDefinitionClass) {
+	public WorkflowInstanceHolder newWorkflowInstance(Class<? extends WorkflowDefinition> workflowDefinitionClass) {
 		WorkflowDefinition workflowDefinition = workflowDefinitionCache.get(workflowDefinitionClass);
 		WorkflowInstance workflowInstance = workflowPersistenceService.createWorkflowInstance(workflowDefinition);
-		workflowExecutionService.stabilize(workflowInstance);
-		return workflowInstance;
+
+		WorkflowInstance cached = workflowInstanceCacheProvider.acquire(workflowInstance.getWorkflowInstanceId());
+		return new WorkflowInstanceHolder(cached, workflowInstanceCacheProvider);
 	}
 
 	/**

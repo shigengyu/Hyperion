@@ -39,7 +39,7 @@ public class WorkflowInstance implements DataSerializable {
 
 	/**
 	 * Creates a new workflow instance with the specified workflow definition
-	 *
+	 * 
 	 * @param workflowDefinition
 	 */
 	public WorkflowInstance(WorkflowDefinition workflowDefinition) {
@@ -49,21 +49,23 @@ public class WorkflowInstance implements DataSerializable {
 
 	/**
 	 * Create a {@link WorkflowInstance} object from an existing workflow instance
-	 *
+	 * 
 	 * @param workflowDefinition
 	 * @param entity
 	 */
 	public WorkflowInstance(WorkflowDefinition workflowDefinition, WorkflowInstanceEntity entity) {
 		this(workflowDefinition);
 
+		workflowInstanceId = entity.getWorkflowInstanceId();
+
 		workflowStateSet = WorkflowStateSet.from(Lists.transform(entity.getWorkflowStateEntities(),
 				new Function<WorkflowStateEntity, String>() {
 
-			@Override
-			public String apply(WorkflowStateEntity input) {
-				return input.getWorkflowStateId();
-			}
-		}));
+					@Override
+					public String apply(WorkflowStateEntity input) {
+						return input.getWorkflowStateId();
+					}
+				}));
 	}
 
 	private WorkflowInstance(WorkflowInstance workflowInstance) {

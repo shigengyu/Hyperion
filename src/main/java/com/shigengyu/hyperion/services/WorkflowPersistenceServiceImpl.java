@@ -25,11 +25,21 @@ import com.shigengyu.hyperion.core.WorkflowInstance;
 import com.shigengyu.hyperion.dao.WorkflowInstanceDao;
 import com.shigengyu.hyperion.entities.WorkflowInstanceEntity;
 
+/**
+ * The workflow persistent service is the layer between Hyperion runtime and database. Responsible for creating new
+ * instances and persisting existing instances.
+ * 
+ * @author Univer
+ * 
+ */
 @Service
 public class WorkflowPersistenceServiceImpl implements WorkflowPersistenceService {
 
 	@Resource
 	private WorkflowInstanceDao workflowInstanceDao;
+
+	@Resource
+	private WorkflowExecutionService workflowExecutionService;
 
 	@Override
 	@Transactional
@@ -37,6 +47,13 @@ public class WorkflowPersistenceServiceImpl implements WorkflowPersistenceServic
 		WorkflowInstance workflowInstance = new WorkflowInstance(workflowDefinition);
 		WorkflowInstanceEntity entity = workflowInstanceDao.saveOrUpdate(workflowInstance.toEntity());
 		workflowInstance.setWorkflowInstanceId(entity.getWorkflowInstanceId());
+
+		// Stabilize workflow instance
+		workflowExecutionService.stabilize(workflowInstance);
+
+		// Persist workflow instance
+		persistWorkflowInstance(workflowInstance);
+
 		return workflowInstance;
 	}
 
