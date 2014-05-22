@@ -121,9 +121,13 @@ public class HyperionRuntime {
 
 	public WorkflowInstanceHolder newWorkflowInstance(Class<? extends WorkflowDefinition> workflowDefinitionClass) {
 		WorkflowDefinition workflowDefinition = workflowDefinitionCache.get(workflowDefinitionClass);
+
+		// Create the workflow instance in database
 		WorkflowInstance workflowInstance = workflowPersistenceService.createWorkflowInstance(workflowDefinition);
 
+		// Load the workflow instance into cache and lock it
 		WorkflowInstance cached = workflowInstanceCacheProvider.acquire(workflowInstance.getWorkflowInstanceId());
+
 		return new WorkflowInstanceHolder(cached, workflowInstanceCacheProvider);
 	}
 

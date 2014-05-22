@@ -15,8 +15,10 @@
  ******************************************************************************/
 package com.shigengyu.hyperion.cache;
 
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -25,6 +27,8 @@ import org.springframework.beans.factory.annotation.Value;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.Maps;
+import com.shigengyu.hyperion.HyperionException;
 import com.shigengyu.hyperion.core.WorkflowInstance;
 import com.shigengyu.hyperion.core.WorkflowStateException;
 
@@ -41,17 +45,32 @@ public class LocalWorkflowInstanceCache implements WorkflowInstanceCacheProvider
 	@Resource
 	private WorkflowInstanceCacheLoader workflowInstanceCacheLoader;
 
+	private final Map<Integer, ReentrantLock> locks = Maps.newConcurrentMap();
+
 	private LocalWorkflowInstanceCache() {
 	}
 
 	@Override
 	public <T extends WorkflowInstance> WorkflowInstance acquire(final Integer workflowInstanceId) {
 		try {
-			return cache.get(workflowInstanceId);
+			ReentrantLock lock = getLock(workflowInstanceId);
+			lock.lock();
+
+			WorkflowInstance workflowInstance = cache.get(workflowInstanceId);
+			return workflowInstance;
 		}
 		catch (final ExecutionException e) {
 			throw new WorkflowStateException("Failed to get workflow instance [{}]", workflowInstanceId, e);
 		}
+	}
+
+	private synchronized ReentrantLock getLock(final Integer workflowInstanceId) {
+		ReentrantLock lock = locks.get(workflowInstanceId);
+		if (lock == null) {
+			lock = new ReentrantLock();
+			locks.put(workflowInstanceId, lock);
+		}
+		return lock;
 	}
 
 	public int getTimeoutDuration() {
@@ -66,5 +85,11 @@ public class LocalWorkflowInstanceCache implements WorkflowInstanceCacheProvider
 
 	@Override
 	public <T extends WorkflowInstance> void release(Integer workflowInstanceId) {
+		ReentrantLock lock = getLock(workflowInstanceId);
+		if (!lock.isHeldByCurrentThread()) {
+			throw new HyperionException(
+					"Cannot release workflow instance [{}] as current thread does not own the lock", workflowInstanceId);
+		}
+		lock.unlock();
 	}
 }
