@@ -15,15 +15,20 @@
  ******************************************************************************/
 package com.shigengyu.hyperion.core;
 
+import java.io.IOException;
+
 import net.jcip.annotations.Immutable;
 
 import org.springframework.util.StringUtils;
 
+import com.hazelcast.nio.ObjectDataInput;
+import com.hazelcast.nio.ObjectDataOutput;
+import com.hazelcast.nio.serialization.DataSerializable;
 import com.shigengyu.common.StringMessage;
 import com.shigengyu.hyperion.entities.WorkflowDefinitionEntity;
 
 @Immutable
-public abstract class WorkflowDefinition {
+public abstract class WorkflowDefinition implements DataSerializable {
 
 	private final WorkflowState initialState;
 
@@ -86,6 +91,10 @@ public abstract class WorkflowDefinition {
 		return workflowDefinitionId.hashCode();
 	}
 
+	@Override
+	public void readData(ObjectDataInput in) throws IOException {
+	}
+
 	public WorkflowDefinitionEntity toEntity() {
 		WorkflowDefinitionEntity entity = new WorkflowDefinitionEntity();
 		entity.setWorkflowDefinitionId(workflowDefinitionId);
@@ -96,5 +105,9 @@ public abstract class WorkflowDefinition {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	@Override
+	public void writeData(ObjectDataOutput out) throws IOException {
 	}
 }

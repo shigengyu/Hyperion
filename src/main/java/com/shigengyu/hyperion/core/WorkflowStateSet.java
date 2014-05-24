@@ -15,6 +15,7 @@
  ******************************************************************************/
 package com.shigengyu.hyperion.core;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -31,10 +32,13 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.hazelcast.nio.ObjectDataInput;
+import com.hazelcast.nio.ObjectDataOutput;
+import com.hazelcast.nio.serialization.DataSerializable;
 import com.shigengyu.hyperion.entities.WorkflowStateEntity;
 
 @Immutable
-public class WorkflowStateSet implements Iterable<WorkflowState> {
+public class WorkflowStateSet implements Iterable<WorkflowState>, DataSerializable {
 
 	public static WorkflowStateSet empty() {
 		return new WorkflowStateSet();
@@ -49,11 +53,11 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 		return new WorkflowStateSet(Lists.transform(Lists.newArrayList(workflowStates),
 				new Function<Class<? extends WorkflowState>, WorkflowState>() {
 
-			@Override
-			public WorkflowState apply(Class<? extends WorkflowState> input) {
-				return WorkflowState.of(input);
-			}
-		}));
+					@Override
+					public WorkflowState apply(Class<? extends WorkflowState> input) {
+						return WorkflowState.of(input);
+					}
+				}));
 	}
 
 	public static WorkflowStateSet from(Collection<String> workflowStateIds) {
@@ -61,11 +65,11 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 		List<WorkflowState> workflowStates = Lists.transform(Lists.newArrayList(workflowStateIds),
 				new Function<String, WorkflowState>() {
 
-			@Override
-			public WorkflowState apply(String input) {
-				return WorkflowState.byId(input);
-			}
-		});
+					@Override
+					public WorkflowState apply(String input) {
+						return WorkflowState.byId(input);
+					}
+				});
 
 		return WorkflowStateSet.from(workflowStates);
 	}
@@ -78,7 +82,11 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 		return new WorkflowStateSet(workflowStates);
 	}
 
-	private final ImmutableSet<WorkflowState> workflowStates;
+	private ImmutableSet<WorkflowState> workflowStates;
+
+	private WorkflowStateSet() {
+		workflowStates = ImmutableSet.of();
+	}
 
 	private WorkflowStateSet(final Iterable<WorkflowState> workflowStates) {
 		this.workflowStates = ImmutableSet.copyOf(workflowStates);
@@ -141,11 +149,11 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 		return merge(Lists.transform(Arrays.asList(workflowStateClasses),
 				new Function<Class<? extends WorkflowState>, WorkflowState>() {
 
-			@Override
-			public WorkflowState apply(final Class<? extends WorkflowState> input) {
-				return WorkflowState.of(input);
-			}
-		}));
+					@Override
+					public WorkflowState apply(final Class<? extends WorkflowState> input) {
+						return WorkflowState.of(input);
+					}
+				}));
 	}
 
 	public WorkflowStateSet merge(final Iterable<WorkflowState> workflowStates) {
@@ -164,6 +172,21 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 
 	public WorkflowStateSet merge(WorkflowStateSet workflowStateSet) {
 		return merge(workflowStateSet.workflowStates);
+	}
+
+	@Override
+	public void readData(ObjectDataInput in) throws IOException {
+		int size = in.readInt();
+		if (size == 0) {
+			workflowStates = ImmutableSet.of();
+			return;
+		}
+
+		List<WorkflowState> workflowStates = Lists.newArrayList();
+		for (int i = 0; i < size; i++) {
+			workflowStates.add(in.<WorkflowState> readObject());
+		}
+		this.workflowStates = ImmutableSet.copyOf(workflowStates);
 	}
 
 	public WorkflowStateSet remove(Class<? extends WorkflowState> workflowState) {
@@ -185,7 +208,13 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 	}
 
 	public int size() {
-		return workflowStates.size();
+		try {
+			return workflowStates.size();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 	}
 
 	public List<WorkflowStateEntity> toEntityList() {
@@ -201,5 +230,13 @@ public class WorkflowStateSet implements Iterable<WorkflowState> {
 	@Override
 	public String toString() {
 		return StringUtils.join(workflowStates, ",");
+	}
+
+	@Override
+	public void writeData(ObjectDataOutput out) throws IOException {
+		out.writeInt(workflowStates.size());
+		for (WorkflowState workflowState : workflowStates) {
+			out.writeObject(workflowState);
+		}
 	}
 }

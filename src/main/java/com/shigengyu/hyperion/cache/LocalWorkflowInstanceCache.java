@@ -84,11 +84,12 @@ public class LocalWorkflowInstanceCache implements WorkflowInstanceCacheProvider
 	}
 
 	@Override
-	public <T extends WorkflowInstance> void release(Integer workflowInstanceId) {
-		ReentrantLock lock = getLock(workflowInstanceId);
+	public <T extends WorkflowInstance> void release(final T workflowInstance) {
+		ReentrantLock lock = getLock(workflowInstance.getWorkflowInstanceId());
 		if (!lock.isHeldByCurrentThread()) {
 			throw new HyperionException(
-					"Cannot release workflow instance [{}] as current thread does not own the lock", workflowInstanceId);
+					"Cannot release workflow instance [{}] as current thread does not own the lock",
+					workflowInstance.getWorkflowInstanceId());
 		}
 		lock.unlock();
 	}

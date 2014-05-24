@@ -37,6 +37,10 @@ public class WorkflowInstance implements DataSerializable {
 
 	private WorkflowStateSet workflowStateSet;
 
+	@SuppressWarnings("unused")
+	private WorkflowInstance() {
+	}
+
 	/**
 	 * Creates a new workflow instance with the specified workflow definition
 	 * 
@@ -104,6 +108,7 @@ public class WorkflowInstance implements DataSerializable {
 	@Override
 	public void readData(ObjectDataInput in) throws IOException {
 		workflowInstanceId = in.readInt();
+		workflowDefinition = in.readObject();
 		workflowStateSet = in.readObject();
 	}
 
@@ -145,5 +150,8 @@ public class WorkflowInstance implements DataSerializable {
 
 	@Override
 	public void writeData(ObjectDataOutput out) throws IOException {
+		out.writeInt(workflowInstanceId);
+		out.writeObject(workflowDefinition);
+		out.writeObject(workflowStateSet);
 	}
 }

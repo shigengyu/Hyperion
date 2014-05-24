@@ -21,5 +21,5 @@ public interface WorkflowInstanceCacheProvider {
 
 	<T extends WorkflowInstance> WorkflowInstance acquire(final Integer workflowInstanceId);
 
-	<T extends WorkflowInstance> void release(final Integer workflowInstanceId);
+	<T extends WorkflowInstance> void release(final T workflowInstance);
 }

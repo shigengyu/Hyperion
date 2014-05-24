@@ -123,6 +123,9 @@ public class SimpleScenarioTests {
 			Assert.assertTrue(workflowInstance.getWorkflowStateSet().isSameWith(
 					WorkflowStateSet.from(States.WorkCompleted.class)));
 		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test

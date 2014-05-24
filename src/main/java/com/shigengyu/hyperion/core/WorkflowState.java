@@ -15,18 +15,23 @@
  ******************************************************************************/
 package com.shigengyu.hyperion.core;
 
+import java.io.IOException;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.hazelcast.nio.ObjectDataInput;
+import com.hazelcast.nio.ObjectDataOutput;
+import com.hazelcast.nio.serialization.DataSerializable;
 import com.shigengyu.common.StringMessage;
 import com.shigengyu.hyperion.cache.WorkflowStateCache;
 import com.shigengyu.hyperion.cache.WorkflowStateCacheLoader;
 import com.shigengyu.hyperion.entities.WorkflowStateEntity;
 
-public abstract class WorkflowState {
+public abstract class WorkflowState implements DataSerializable {
 
 	@Service
 	public static class WorkflowStateFactory {
@@ -144,6 +149,10 @@ public abstract class WorkflowState {
 		return intermediate;
 	}
 
+	@Override
+	public void readData(ObjectDataInput in) throws IOException {
+	}
+
 	public WorkflowStateEntity toEntity() {
 		WorkflowStateEntity entity = new WorkflowStateEntity();
 		entity.setWorkflowStateId(workflowStateId);
@@ -155,5 +164,9 @@ public abstract class WorkflowState {
 	@Override
 	public String toString() {
 		return !StringUtils.isEmpty(displayName) ? displayName : name;
+	}
+
+	@Override
+	public void writeData(ObjectDataOutput out) throws IOException {
 	}
 }

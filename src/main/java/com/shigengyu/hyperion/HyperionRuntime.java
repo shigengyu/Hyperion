@@ -53,7 +53,7 @@ public class HyperionRuntime {
 				return;
 			}
 
-			workflowInstanceCacheProvider.release(workflowInstance.getWorkflowInstanceId());
+			workflowInstanceCacheProvider.release(workflowInstance);
 			isReleased = true;
 		}
 
