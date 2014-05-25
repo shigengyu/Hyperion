@@ -22,7 +22,6 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 import com.hazelcast.config.Config;
 import com.hazelcast.core.Hazelcast;
@@ -35,7 +34,6 @@ import com.shigengyu.common.StringMessage;
 import com.shigengyu.hyperion.HyperionException;
 import com.shigengyu.hyperion.core.WorkflowInstance;
 
-@Service
 public class DistributedWorkflowInstanceCache implements WorkflowInstanceCacheProvider {
 
 	public static class WorkflowInstanceHolder implements DataSerializable {
@@ -111,12 +109,8 @@ public class DistributedWorkflowInstanceCache implements WorkflowInstanceCachePr
 	@Resource
 	private WorkflowInstanceCacheLoader workflowInstanceCacheLoader;
 
-	public DistributedWorkflowInstanceCache() {
+	DistributedWorkflowInstanceCache() {
 		Config config = new Config();
-
-		// SerializerConfig sc = new SerializerConfig();
-		// sc.setImplementation(new WorkflowInstanceSerializer()).setTypeClass(WorkflowInstanceHolder.class);
-		// config.getSerializationConfig().addSerializerConfig(sc);
 		hazelcastInstance = Hazelcast.newHazelcastInstance(config);
 
 		map = hazelcastInstance.<Integer, WorkflowInstanceHolder> getMap(WORKFLOW_INSTANCE_MAP_NAME);

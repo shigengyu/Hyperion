@@ -120,7 +120,7 @@
 		</plugins>
 	</build>
 	<properties>
-		<spring.version>3.2.3.RELEASE</spring.version>
+		<spring.version>4.0.5.RELEASE</spring.version>
 		<hibernate.version>3.5.6-Final</hibernate.version>
 		<cxf.version>2.6.8</cxf.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

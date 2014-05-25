@@ -47,7 +47,7 @@ public class LocalWorkflowInstanceCache implements WorkflowInstanceCacheProvider
 
 	private final Map<Integer, ReentrantLock> locks = Maps.newConcurrentMap();
 
-	private LocalWorkflowInstanceCache() {
+	LocalWorkflowInstanceCache() {
 	}
 
 	@Override
