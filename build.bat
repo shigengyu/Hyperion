@@ -1,4 +1,4 @@
 cd /d %~dp0
-mvn package
+mvn package -Ponly-library
 
 mvn clean install

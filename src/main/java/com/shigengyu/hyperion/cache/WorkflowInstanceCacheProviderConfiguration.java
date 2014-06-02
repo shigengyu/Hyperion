@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import com.shigengyu.hyperion.HyperionException;
 
 @Configuration
-public class ConfigurableWorkflowInstanceCacheProvider implements ApplicationContextAware {
+public class WorkflowInstanceCacheProviderConfiguration implements ApplicationContextAware {
 
 	private ApplicationContext applicationContext;
 
@@ -22,7 +22,7 @@ public class ConfigurableWorkflowInstanceCacheProvider implements ApplicationCon
 		this.applicationContext = applicationContext;
 	}
 
-	@Bean
+	@Bean(name = "workflowInstanceCacheProvider")
 	public WorkflowInstanceCacheProvider workflowInstanceCacheProvider() {
 
 		WorkflowInstanceCacheProvider workflowInstanceCacheProvider = null;

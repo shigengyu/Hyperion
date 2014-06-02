@@ -35,7 +35,7 @@ import org.hibernate.annotations.IndexColumn;
 @Table(name = "WORKFLOW_INSTANCE")
 public class WorkflowInstanceEntity implements Serializable {
 
-	private static final long serialVersionUID = 3680613315489463538L;
+	private static final long serialVersionUID = 1583544169063543603L;
 
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@ForeignKey(name = "WORKFLOW_DEFINITION_ID")
@@ -51,6 +51,13 @@ public class WorkflowInstanceEntity implements Serializable {
 	@IndexColumn(name = "WORKFLOW_STATE_ID")
 	private List<WorkflowStateEntity> workflowStateEntities;
 
+	@Column(name = "WORKFLOW_CONTEXT", columnDefinition = "TEXT")
+	private String workflowContext;
+
+	public final String getWorkflowContext() {
+		return workflowContext;
+	}
+
 	public WorkflowDefinitionEntity getWorkflowDefinitionEntity() {
 		return workflowDefinitionEntity;
 	}
@@ -61,6 +68,10 @@ public class WorkflowInstanceEntity implements Serializable {
 
 	public List<WorkflowStateEntity> getWorkflowStateEntities() {
 		return workflowStateEntities;
+	}
+
+	public final void setWorkflowContext(String workflowContext) {
+		this.workflowContext = workflowContext;
 	}
 
 	public void setWorkflowDefinitionEntity(WorkflowDefinitionEntity workflowDefinitionEntity) {

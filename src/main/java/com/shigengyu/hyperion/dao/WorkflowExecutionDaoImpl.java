@@ -21,7 +21,7 @@ import com.shigengyu.hyperion.entities.WorkflowTransitionEntity;
 
 @Service("workflowExecutionDao")
 public class WorkflowExecutionDaoImpl extends HyperionDaoBase<WorkflowTransitionEntity, Integer> implements
-WorkflowExecutionDao {
+		WorkflowExecutionDao {
 
 	protected WorkflowExecutionDaoImpl() {
 		super(WorkflowTransitionEntity.class, Integer.class);

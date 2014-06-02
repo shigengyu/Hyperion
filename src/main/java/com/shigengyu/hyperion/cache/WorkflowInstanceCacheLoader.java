@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import com.google.common.cache.CacheLoader;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
 import com.shigengyu.hyperion.core.WorkflowInstance;
+import com.shigengyu.hyperion.core.WorkflowInstance.WorkflowInstanceFactory;
 import com.shigengyu.hyperion.dao.WorkflowInstanceDao;
 import com.shigengyu.hyperion.entities.WorkflowInstanceEntity;
 
@@ -34,6 +35,9 @@ public class WorkflowInstanceCacheLoader extends CacheLoader<Integer, WorkflowIn
 	@Resource
 	private WorkflowDefinitionCache workflowDefinitionCache;
 
+	@Resource
+	private WorkflowInstanceFactory workflowInstanceFactory;
+
 	@Override
 	public WorkflowInstance load(final Integer key) throws Exception {
 		final WorkflowInstanceEntity entity = workflowInstanceDao.get(key);
@@ -41,6 +45,6 @@ public class WorkflowInstanceCacheLoader extends CacheLoader<Integer, WorkflowIn
 		WorkflowDefinition workflowDefinition = workflowDefinitionCache.get(entity.getWorkflowDefinitionEntity()
 				.getWorkflowDefinitionId());
 
-		return new WorkflowInstance(workflowDefinition, entity);
+		return workflowInstanceFactory.create(workflowDefinition, entity);
 	}
 }

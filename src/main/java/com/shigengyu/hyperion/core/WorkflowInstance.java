@@ -17,7 +17,10 @@ package com.shigengyu.hyperion.core;
 
 import java.io.IOException;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.io.IOUtils;
+import org.springframework.stereotype.Service;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
@@ -29,6 +32,31 @@ import com.shigengyu.hyperion.entities.WorkflowStateEntity;
 
 public class WorkflowInstance implements DataSerializable {
 
+	@Service
+	public static class WorkflowInstanceFactory {
+
+		@Resource
+		private WorkflowContextSerializer workflowContextSerializer;
+
+		public WorkflowInstance create(WorkflowDefinition workflowDefinition) {
+
+			WorkflowInstance workflowInstance = new WorkflowInstance(workflowDefinition);
+			workflowInstance.workflowContextSerializer = workflowContextSerializer;
+			return workflowInstance;
+		}
+
+		public WorkflowInstance create(WorkflowDefinition workflowDefinition, WorkflowInstanceEntity entity) {
+
+			WorkflowInstance workflowInstance = new WorkflowInstance(workflowDefinition, entity);
+			workflowInstance.workflowContextSerializer = workflowContextSerializer;
+			workflowInstance.workflowContext = WorkflowContextSerializers.get().deserialize(
+					workflowDefinition.getWorkflowContextType(), entity.getWorkflowContext());
+			return workflowInstance;
+		}
+	}
+
+	private WorkflowContextSerializer workflowContextSerializer;
+
 	private final TransitionParameterSet parameters = TransitionParameterSet.create();
 
 	private WorkflowDefinition workflowDefinition;
@@ -37,7 +65,8 @@ public class WorkflowInstance implements DataSerializable {
 
 	private WorkflowStateSet workflowStateSet;
 
-	@SuppressWarnings("unused")
+	private WorkflowContext workflowContext;
+
 	private WorkflowInstance() {
 	}
 
@@ -46,9 +75,16 @@ public class WorkflowInstance implements DataSerializable {
 	 * 
 	 * @param workflowDefinition
 	 */
-	public WorkflowInstance(WorkflowDefinition workflowDefinition) {
+	private WorkflowInstance(WorkflowDefinition workflowDefinition) {
 		this.workflowDefinition = workflowDefinition;
 		workflowStateSet = WorkflowStateSet.from(workflowDefinition.getInitialState());
+		try {
+			workflowContext = workflowDefinition.getWorkflowContextType().newInstance();
+		}
+		catch (Exception e) {
+			throw new WorkflowContextException("Failed to create new workflow context of type ["
+					+ workflowDefinition.getWorkflowContextType().getName() + "]");
+		}
 	}
 
 	/**
@@ -57,7 +93,7 @@ public class WorkflowInstance implements DataSerializable {
 	 * @param workflowDefinition
 	 * @param entity
 	 */
-	public WorkflowInstance(WorkflowDefinition workflowDefinition, WorkflowInstanceEntity entity) {
+	private WorkflowInstance(WorkflowDefinition workflowDefinition, WorkflowInstanceEntity entity) {
 		this(workflowDefinition);
 
 		workflowInstanceId = entity.getWorkflowInstanceId();
@@ -93,6 +129,10 @@ public class WorkflowInstance implements DataSerializable {
 		return parameters.get(clazz, name);
 	}
 
+	public final <T extends WorkflowContext> T getWorkflowContext() {
+		return (T) workflowDefinition.getWorkflowContextType().cast(workflowContext);
+	}
+
 	public WorkflowDefinition getWorkflowDefinition() {
 		return workflowDefinition;
 	}
@@ -110,6 +150,8 @@ public class WorkflowInstance implements DataSerializable {
 		workflowInstanceId = in.readInt();
 		workflowDefinition = in.readObject();
 		workflowStateSet = in.readObject();
+		workflowContext = WorkflowContextSerializers.get().deserialize(workflowDefinition.getWorkflowContextType(),
+				in.readUTF());
 	}
 
 	public void restoreFrom(WorkflowInstance workflowInstance) {
@@ -140,6 +182,7 @@ public class WorkflowInstance implements DataSerializable {
 		entity.setWorkflowDefinitionEntity(workflowDefinition.toEntity());
 		entity.setWorkflowInstanceId(workflowInstanceId);
 		entity.setWorkflowStateEntities(workflowStateSet.toEntityList());
+		entity.setWorkflowContext(WorkflowContextSerializers.get().serialize(workflowContext));
 		return entity;
 	}
 
@@ -153,5 +196,6 @@ public class WorkflowInstance implements DataSerializable {
 		out.writeInt(workflowInstanceId);
 		out.writeObject(workflowDefinition);
 		out.writeObject(workflowStateSet);
+		out.writeUTF(WorkflowContextSerializers.get().serialize(workflowContext));
 	}
 }

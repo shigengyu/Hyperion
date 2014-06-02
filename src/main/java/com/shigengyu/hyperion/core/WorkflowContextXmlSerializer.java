@@ -17,10 +17,7 @@ package com.shigengyu.hyperion.core;
 
 import org.reflections.Reflections;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Service;
 
 import com.shigengyu.hyperion.utils.ReflectionsHelper;
 import com.thoughtworks.xstream.XStream;
@@ -28,26 +25,16 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.converters.basic.DateConverter;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
-@Service("workflowContextXmlSerializer")
-@Lazy(false)
 public class WorkflowContextXmlSerializer implements WorkflowContextSerializer, BeanPostProcessor {
-
-	private static WorkflowContextXmlSerializer instance;
-
-	public static WorkflowContextXmlSerializer getInstance() {
-		return instance;
-	}
-
-	@Value("${hyperion.workflow.context.format.datetime}")
-	private String dateTimeFormat;
 
 	protected XStream xStream = new XStream(new DomDriver());
 
-	private WorkflowContextXmlSerializer() {
+	private final String dateTimeFormat;
+
+	public WorkflowContextXmlSerializer(final String dateTimeFormat) {
+		this.dateTimeFormat = dateTimeFormat;
 		xStream.registerConverter(new DateConverter(dateTimeFormat, new String[0]));
 		xStream.autodetectAnnotations(true);
-
-		instance = this;
 	}
 
 	@Override
@@ -74,6 +61,11 @@ public class WorkflowContextXmlSerializer implements WorkflowContextSerializer, 
 				throw new WorkflowContextException(e);
 			}
 		}
+	}
+
+	@Override
+	public WorkflowContextSerializer getCloned() {
+		return new WorkflowContextXmlSerializer(dateTimeFormat);
 	}
 
 	public void initialize(final String... packageNames) {

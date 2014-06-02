@@ -17,11 +17,7 @@ package com.shigengyu.hyperion.core;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.SerializationUtils;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Service;
 
-@Service("workflowContextBinarySerializer")
-@Lazy(false)
 public class WorkflowContextBinarySerializer implements WorkflowContextSerializer {
 
 	@Override
@@ -43,6 +39,11 @@ public class WorkflowContextBinarySerializer implements WorkflowContextSerialize
 				throw new WorkflowContextException(e);
 			}
 		}
+	}
+
+	@Override
+	public WorkflowContextSerializer getCloned() {
+		return new WorkflowContextBinarySerializer();
 	}
 
 	@Override

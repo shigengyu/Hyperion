@@ -15,10 +15,11 @@
  ******************************************************************************/
 package com.shigengyu.hyperion.core;
 
-
 public interface WorkflowContextSerializer {
 
-	public <T extends WorkflowContext> T deserialize(final Class<T> clazz, final String input);
+	<T extends WorkflowContext> T deserialize(final Class<T> clazz, final String input);
 
-	public String serialize(final WorkflowContext workflowContext);
+	WorkflowContextSerializer getCloned();
+
+	String serialize(final WorkflowContext workflowContext);
 }

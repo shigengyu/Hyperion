@@ -31,6 +31,7 @@ import com.shigengyu.hyperion.cache.WorkflowTransitionCache;
 import com.shigengyu.hyperion.config.HyperionProperties;
 import com.shigengyu.hyperion.core.AutoTransitionRecursionLimitExceededException;
 import com.shigengyu.hyperion.core.WorkflowContextBinarySerializer;
+import com.shigengyu.hyperion.core.WorkflowContextSerializer;
 import com.shigengyu.hyperion.core.WorkflowContextXmlSerializer;
 import com.shigengyu.hyperion.core.WorkflowDefinition;
 import com.shigengyu.hyperion.core.WorkflowInstance;
@@ -43,20 +44,17 @@ import com.shigengyu.hyperion.environment.TestEnvironment;
 public class SimpleScenarioTests {
 
 	@Resource
-	private WorkflowContextBinarySerializer binarySerializer;
-
-	@Resource
 	private HyperionProperties hyperionProperties;
 
 	@Resource
 	private HyperionRuntime hyperionRuntime;
 
-	@Resource
-	private WorkflowContextXmlSerializer xmlSerializer;
-
 	@Test
 	@Transactional
 	public void binarySerialization() {
+
+		WorkflowContextSerializer binarySerializer = new WorkflowContextBinarySerializer();
+
 		SimpleWorkflowContext workflowContext = new SimpleWorkflowContext();
 		workflowContext.setName("shigengyu");
 		workflowContext.setNumber(42);
@@ -201,6 +199,9 @@ public class SimpleScenarioTests {
 	@Test
 	@Transactional
 	public void xmlSerialization() {
+
+		WorkflowContextXmlSerializer xmlSerializer = new WorkflowContextXmlSerializer("yyyy-MM-dd HH:m:ss.SSS");
+
 		SimpleWorkflowContext workflowContext = new SimpleWorkflowContext();
 		workflowContext.setName("shigengyu");
 		workflowContext.setNumber(42);
